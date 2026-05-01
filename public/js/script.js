@@ -54,9 +54,11 @@ $(document).ready(function () {
         $(".add-card").fadeIn();
     })
 
-    $(document).on("click", "#close-form", function() {
-        $(".add-card").fadeOut();
-        $(".dashboard-container").removeClass('blurred');
+    $(document).on("click keydown", function(e) {
+        if ($(e.target).is("#close-form") || e.key === "Escape") {
+            $(".add-card").fadeOut();
+            $(".dashboard-container").removeClass('blurred');            
+        }
     })
 
     $(document).on("click", "#add-btn", function () {
@@ -226,9 +228,11 @@ $(document).ready(function () {
         $("#exp_date").val(date);
     });
 
-    $(document).on("click", "#cancel-btn", function () {
-        $(".container").removeClass("blurred");
-        $(".edit-card").fadeOut();
+    $(document).on("click keydown", function (e) {
+        if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
+            $(".container").removeClass("blurred");
+            $(".edit-card").fadeOut();
+        }
     });
 
     // Update expense data

@@ -1,0 +1,63 @@
+<?php
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExpenseController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return Auth::check() ? redirect('/dashboard') : redirect('/login');
+});
+
+// Show login form
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+// Show register form
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+
+// User login 
+Route::post('/login', [AuthController::class, 'login']);
+
+// User registration
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/history', function () {
+        return view('history');
+    })->name('history');
+
+    Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {
+
+        Route::get('/fetch-expense', 'fetch')->name('fetch');
+
+        Route::get('/chart-data', 'getChartData')->name('pieChart');
+
+        Route::get('/chart-category', 'getChartData')->name('barChart');
+
+        Route::put('/edit-expense/{expense}', 'edit')->name('edit');
+
+        Route::delete('/delete-expense/{expense}', 'delete')->name('delete');
+
+        Route::post('/add-expense', 'store')->name('store');
+
+        Route::get('/export-csv', 'exportCsv')->name('exportCsv');
+    });
+
+    Route::post('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect('/login');
+    })->name('logout');
+
+});

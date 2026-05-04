@@ -96,8 +96,8 @@
     margin-top: 15px;
 }
 
-#expenseChart,
-#categoryChart {
+#pie-chart,
+#bar-chart {
     cursor: pointer;
 }
 

@@ -26,8 +26,8 @@
             <div class="stat-card chart-card">
                 <span class="stat-label category-label">Spending Distribution</span>
                 <div class="chart-wrapper">
-                    <canvas id="expenseChart"></canvas>
-                    <canvas id="categoryChart" style="display: none"></canvas>
+                    <canvas id="pie-chart"></canvas>
+                    <canvas id="bar-chart" style="display: none"></canvas>
                 </div>
             </div>
         </div>

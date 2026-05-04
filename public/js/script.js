@@ -26,25 +26,26 @@ $(document).ready(function () {
 
     // Dark mode toggle
     $("#checkbox").on("change", function () {
-        if ($(this).is(":checked")) {
-            $("html").addClass("dark-mode");
-            localStorage.setItem("theme", "dark");
-        } else {
-            $("html").removeClass("dark-mode");
-            localStorage.setItem("theme", "light");
-        }
+        const isDark = $(this).is(":checked");
+        $("html").toggleClass("dark-mode", isDark);
+        localStorage.setItem("theme", isDark ? "dark" : "light");
 
-        if (typeof pieChart === "function") {
-            pieChart();
-        }
+        requestAnimationFrame(() => {
+            const category = $(".select-category").val();
+            const month = $(".select-month").val();
 
-        if (typeof barChart === "function") {
-            barChart($(".select-category").val());
-        }
+            if ($("#pie-chart").is(":visible") && typeof pieChart === "function") {
+                pieChart();
+            }
 
-        if (typeof lineChart === "function") {
-            lineChart($(".select-category").val(), $(".select-month").val());
-        }
+            if ($("#bar-chart").is(":visible") && typeof barChart === "function") {
+                barChart(category);
+            }
+
+            if (typeof lineChart === "function") {
+                lineChart(category, month);
+            }
+        });
     });
 
 // ============================================= Add Expense(CREATE) ===========================================
@@ -121,11 +122,11 @@ $(document).ready(function () {
 
                     $(".select-category").val(category);
 
-                    $("#expenseChart").fadeOut(200);
+                    $("#pie-chart").fadeOut(200);
                     setTimeout(function() {
-                        $('#categoryChart').show();
+                        $('#bar-chart').show();
                         barChart(category);
-                        $('#categoryChart').hide().fadeIn(200);
+                        $('#bar-chart').hide().fadeIn(200);
                     }, 50);
                 } else {
                     showToast(response.message || "Failed to add expense", "error");
@@ -200,9 +201,9 @@ $(document).ready(function () {
             if (selectedCategory === "All") {
                 pieChart();
                 
-                $("#categoryChart").fadeOut()
+                $("#bar-chart").fadeOut()
                 setTimeout(function() {
-                    $("#expenseChart").fadeIn();
+                    $("#pie-chart").fadeIn();
                 },500);
 
                 $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
@@ -215,8 +216,8 @@ $(document).ready(function () {
             barChart(selectedCategory);
             lineChart(selectedCategory, '');
             $("#lineChart").fadeIn();
-            $("#expenseChart").fadeOut(100, function() {
-                $("#categoryChart").fadeIn();
+            $("#pie-chart").fadeOut(100, function() {
+                $("#bar-chart").fadeIn();
             });
             $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
             $(".select-month").val("");
@@ -667,7 +668,7 @@ function pieChart() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            const canvas = document.getElementById("expenseChart");
+            const canvas = document.getElementById("pie-chart");
             if (!response.data || response.data.length === 0) {
                 showEmptyChartState(canvas);
                 return;
@@ -772,7 +773,7 @@ function barChart(category) {
         data: { category: category },
         dataType: "json",
         success: function (response) {
-            const canvas = document.getElementById("categoryChart");
+            const canvas = document.getElementById("bar-chart");
             if (!canvas) return;
 
             const labels = [

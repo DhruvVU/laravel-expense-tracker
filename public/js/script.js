@@ -195,6 +195,7 @@ $(document).ready(function () {
     $(document).on("change", ".select-category", function () {
         let selectedCategory = $(this).val();
         $(".table-data").fadeOut();
+        $(".back-button").fadeOut();
 
         setTimeout(function() {
             if (selectedCategory === "All") {
@@ -1003,7 +1004,10 @@ function showTable(label, category) {
             }
 
             $(".category-data").html(rows);
-            $(".table-data").fadeIn();
+
+            setTimeout(function() {
+                $(".table-data").fadeIn();
+            }, 500);
         },
         error: function (xhr) {
             showToast("Error displaying data! Check console", "error");

@@ -352,6 +352,15 @@
         width: 100%;
     }
 
+    .back-button {
+        position: relative;
+        top: 0;
+        right: auto;
+        left: 10px;
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
     .line-chart {
         margin-bottom: 15px;
         width: 100%;

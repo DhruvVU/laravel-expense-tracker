@@ -217,7 +217,7 @@ $(document).ready(function () {
         const id = $(this).data("id");
         const row = $(this).closest("tr");
         const description = row.find('[data-field="description"]').text();
-        const amount = row.find('[data-field="amount"]').text();
+        const amount = row.find('[data-field="amount"]').text().trim().replace(/[^\d.-]/g, '');
         const category = row.find('[data-field="category"] span').text().trim();
         const date = row.find('[data-field="expense_date"]').text();
 

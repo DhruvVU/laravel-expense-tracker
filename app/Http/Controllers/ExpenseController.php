@@ -43,9 +43,14 @@ class ExpenseController extends Controller
 
             // Fetch the data for a specific day
             if ($request->filled('label')) {
-                $query->whereRaw('DAYNAME(expense_date) = ?', [$request->label])
-                      ->orWhereRaw('DAY(expense_date) = ?', [$request->label])
-                      ->orWhereRaw('MONTH(expense_date) = ?', [$request->label]);
+                $label = $request->label;
+
+                $query->where(function($q) use ($label) {
+                    $q->whereRaw('DATE_FORMAT(expense_date, "%d %b") = ?', [$label])
+                      ->orWhereRaw('DAYNAME(expense_date) = ?', [$label])
+                      ->orWhereRaw('DAY(expense_date) = ?', [$label])
+                      ->orWhereRaw('MONTH(expense_date) = ?', [$label]);
+                });                
             }
 
             $expenses = $query->orderBy('expense_date', 'desc')->get();

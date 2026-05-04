@@ -804,7 +804,7 @@ function barChart(category) {
                             data: expenseData,
                             backgroundColor: activeColor,
                             borderRadius: 5,
-                            borderWidth: 0,
+                            borderWidth: 3,
                             hoverBorderWidth: 1
                         },
                     ],

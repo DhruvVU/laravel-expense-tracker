@@ -128,6 +128,22 @@
     background-color: var(--input-hover);
 }
 
+.back-button {
+    display: none;
+    position: fixed;
+    right: 40px;
+    left: auto;
+    top: 70px;
+}
+
+#back-to-chart {
+    background-color: #3b82f6;
+    color: var(--text-main);
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+}
+
 .line-chart {
     max-height: 450px;
     width: auto;

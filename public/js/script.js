@@ -57,7 +57,8 @@ $(document).ready(function () {
     $(document).on("click keydown", function(e) {
         if ($(e.target).is("#close-form") || e.key === "Escape") {
             $(".add-card").fadeOut();
-            $(".dashboard-container").removeClass('blurred');            
+            $(".dashboard-container").removeClass('blurred'); 
+            $(document).off("keydown");           
         }
     })
 
@@ -176,8 +177,18 @@ $(document).ready(function () {
     $(document).on("change", ".select-month", function() {
         const selectedMonth = $('.select-month').val();
         const selectedCategory = $(".select-category").val() ?? 'All';
+        $('.table-data').fadeOut();
         lineChart(selectedCategory, selectedMonth);        
-    })    
+    })  
+    
+    // Go back to chart from table 
+    $(document).on("click", "#back-to-chart", function() {
+        $(".table-data").fadeOut();
+        setTimeout(function() {
+            $("#lineChart").fadeIn();
+            $(".back-button").fadeOut();
+        }, 500);
+    }); 
 
     // ====================== Chart Data based on User selection ======================
 
@@ -185,26 +196,31 @@ $(document).ready(function () {
         let selectedCategory = $(this).val();
         $(".table-data").fadeOut();
 
-        if (selectedCategory === "All") {
-            pieChart();
-            $("#categoryChart").fadeOut(100, function() {
-                $("#expenseChart").fadeIn();
-            });
-            $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
+        setTimeout(function() {
+            if (selectedCategory === "All") {
+                pieChart();
+                
+                $("#categoryChart").fadeOut()
+                setTimeout(function() {
+                    $("#expenseChart").fadeIn();
+                },500);
+
+                $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
+                lineChart(selectedCategory, '');
+                $("#lineChart").fadeIn();
+                $(".select-month").val("");
+                return;
+            }
+
+            barChart(selectedCategory);
             lineChart(selectedCategory, '');
             $("#lineChart").fadeIn();
+            $("#expenseChart").fadeOut(100, function() {
+                $("#categoryChart").fadeIn();
+            });
+            $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
             $(".select-month").val("");
-            return;
-        }
-
-        barChart(selectedCategory);
-        lineChart(selectedCategory, '');
-        $("#lineChart").fadeIn();
-        $("#expenseChart").fadeOut(100, function() {
-            $("#categoryChart").fadeIn();
-        });
-        $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
-        $(".select-month").val("");
+        }, 500);
     });
 
 // ============================================ Edit Expense(UPDATE) ===========================================
@@ -232,6 +248,7 @@ $(document).ready(function () {
         if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
             $(".container").removeClass("blurred");
             $(".edit-card").fadeOut();
+            $(document).off("keydown");
         }
     });
 
@@ -837,66 +854,6 @@ function barChart(category) {
     });
 }
 
-// function to show data when a bar is clicked in bar chart
-function showTable(label, category) {
-    $.ajax({
-        url: "expenses/fetch-expense",
-        type: "GET",
-        data: {
-            table_data : 1,
-            label: label,
-            category: category,
-        },
-        dataType: "json",
-        success: function (response) {
-            $("#lineChart").fadeOut();
-            let rows = "";
-
-            if (response.data && response.data.length > 0) {
-                response.data.forEach(function (item) {
-                    let categoryColor = item.category
-                        .toLowerCase()
-                        .replace(/\s+/g, "-");
-
-                    rows += `
-                        <tr>
-                            <td data-field="expense_date">${item.expense_date}</td>
-                            <td data-field="description">${item.description}</td>
-                            <td data-field="category">
-                                <span class="pill pill-${categoryColor}">${item.category}</span>
-                            </td>
-                            <td data-field="amount">${item.amount}</td>
-                        </tr>
-                    `;
-                });
-            } else {
-                rows = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 60px 20px;">
-                            No expenses found for this day!
-                        </td>
-                    </tr>
-                `;
-            }
-
-            $(".category-data").html(rows);
-            $(".table-data").fadeIn();
-        },
-        error: function (xhr) {
-            showToast("Error displaying data! Check console", "error");
-            console.log(xhr.response);
-        },
-    });
-
-    // $(document).on("keydown", function(e) {
-    //     if (e.key === 'Escape') {
-    //         $(".table-data").fadeOut();
-    //         // Remove the universal listener 
-    //         $(document).off("keydown");
-    //     }
-    // });
-}
-
 let expenseLineChart;
 // Line Chart for displaying overall data 
 function lineChart(category = 'All', month = '') {
@@ -952,6 +909,15 @@ function lineChart(category = 'All', month = '') {
                     }]
                 },
                 options: {
+                    onClick: (events, elements) => {
+                        if (elements.length > 0) {
+                            const curr = elements[0].index;
+                            const label = expenseLineChart.data.labels[curr];
+
+                            // Show data for current bar
+                            showTable(label, category);
+                        }
+                    },
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
@@ -991,4 +957,57 @@ function lineChart(category = 'All', month = '') {
             console.log(xhr.response);
         },
     });
-}   
+} 
+
+// function to show table
+function showTable(label, category) {
+    $.ajax({
+        url: "expenses/fetch-expense",
+        type: "GET",
+        data: {
+            table_data : 1,
+            label: label,
+            category: category,
+        },
+        dataType: "json",
+        success: function (response) {
+            $("#lineChart").fadeOut();
+            $(".back-button").fadeIn();
+            let rows = "";
+
+            if (response.data && response.data.length > 0) {
+                response.data.forEach(function (item) {
+                    let categoryColor = item.category
+                        .toLowerCase()
+                        .replace(/\s+/g, "-");
+
+                    rows += `
+                        <tr>
+                            <td data-field="expense_date">${item.expense_date}</td>
+                            <td data-field="description">${item.description}</td>
+                            <td data-field="category">
+                                <span class="pill pill-${categoryColor}">${item.category}</span>
+                            </td>
+                            <td data-field="amount">${item.amount}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                rows = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 60px 20px;">
+                            No expenses found for this day!
+                        </td>
+                    </tr>
+                `;
+            }
+
+            $(".category-data").html(rows);
+            $(".table-data").fadeIn();
+        },
+        error: function (xhr) {
+            showToast("Error displaying data! Check console", "error");
+            console.log(xhr.response);
+        },
+    });
+}

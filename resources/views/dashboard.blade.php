@@ -51,6 +51,10 @@
                     <option value="12">December</option>
                 </select>                
 
+                <div class="back-button">
+                    <button id="back-to-chart">📉 Back to chart</button>
+                </div>
+
                 {{-- chart display for user expenses --}}
                 <div class="line-chart">
                     <canvas id="lineChart"></canvas>

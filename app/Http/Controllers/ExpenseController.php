@@ -43,7 +43,9 @@ class ExpenseController extends Controller
 
             // Fetch the data for a specific day
             if ($request->filled('label')) {
-                $query->whereRaw('DAYNAME(expense_date) = ?', [$request->label]);
+                $query->whereRaw('DAYNAME(expense_date) = ?', [$request->label])
+                      ->orWhereRaw('DAY(expense_date) = ?', [$request->label])
+                      ->orWhereRaw('MONTH(expense_date) = ?', [$request->label]);
             }
 
             $expenses = $query->orderBy('expense_date', 'desc')->get();
@@ -51,7 +53,7 @@ class ExpenseController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data fetch from different url successful',
+                'message' => 'Data fetch for table successful',
                 'data' => $expenses,
                 'total' => $totalAmount
             ]);

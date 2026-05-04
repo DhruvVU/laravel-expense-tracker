@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
     protected $fillable = [
+        'user_id',
         'description',
         'amount',
         'category',
@@ -19,10 +19,4 @@ class Expense extends Model
         return $this->belongsTo(User::class);
     }
 
-
-    // Added a date format for better output
-    protected function serializeDate(DateTimeInterface $date): string
-    {
-        return $date->format('Y-m-d');
-    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
+use DateTime;
 use Gate;
 use Illuminate\Http\Request;
 class ExpenseController extends Controller
@@ -16,16 +18,16 @@ class ExpenseController extends Controller
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'category' => 'required|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'required|date'
+            'expense_date' => 'required|date|before_or_equal:today'
         ]);
 
         $expense = $request->user()->expenses()->create($validated);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Expense added successfully!',
-            'data' => $expense
-        ]);
+        return (new ExpenseResource($expense))
+                ->additional([
+                    'status' => 'success',
+                    'message' => 'Data added successfully'
+                ]);
     }
 
 // =========================================== Fetch Expense(READ) =============================================
@@ -36,7 +38,7 @@ class ExpenseController extends Controller
         $query = $user->expenses();
 
         // Filter for table data
-        if ($request->has('table_data') && $request->has('table_data') == 1) {
+        if ($request->boolean('table_data')) {
             if ($request->has('category') && $request->category !== 'All') {
                 $query->where('category', $request->category);
             }
@@ -45,27 +47,40 @@ class ExpenseController extends Controller
             if ($request->filled('label')) {
                 $label = $request->label;
 
-                $query->where(function($q) use ($label) {
-                    $q->whereRaw('DATE_FORMAT(expense_date, "%d %b") = ?', [$label])
-                      ->orWhereRaw('DAYNAME(expense_date) = ?', [$label])
-                      ->orWhereRaw('DAY(expense_date) = ?', [$label])
-                      ->orWhereRaw('MONTH(expense_date) = ?', [$label]);
-                });                
+                if (preg_match('/^\d{1,2}$/', $label)) {
+                    $date = DateTime::createFromFormat('n', $label);
+                    $query->whereMonth('expense_date', $date->format('m'));
+                } 
+                
+                elseif (preg_match('/^\d{1,2}\s[A-Za-z]{3}$/', $label)) {
+                    $date = DateTime::createFromFormat('d M', $label);
+                    $query->whereDay('expense_date', $date->format('d'))
+                          ->whereMonth('expense_date', $date->format('m'));
+                } 
+                
+                elseif (preg_match('/^[A-Za-z]{3}\s\d{4}$/', $label)) {
+                    $date = DateTime::createFromFormat('M Y', $label);
+                    $query->whereMonth('expense_date', $date->format('m'))
+                          ->whereYear('expense_date', $date->format('Y'));
+                } 
+                
+                else {
+                    $query->whereRaw('DAYNAME(expense_date) = ?', [$label]);
+                }
             }
 
             $expenses = $query->orderBy('expense_date', 'desc')->get();
-            $totalAmount = $query->sum('amount');
+            $totalAmount = $expenses->sum('amount');
 
-            return response()->json([
+            return ExpenseResource::collection($expenses)->additional([
                 'status' => 'success',
-                'message' => 'Data fetch for table successful',
-                'data' => $expenses,
+                'message' => 'Table data fetched successfully',
                 'total' => $totalAmount
             ]);
         }
 
         // Filter for line chart 
-        if ($request->has('for_chart') && $request->has('for_chart') == 1) {
+        if ($request->boolean('for_chart')) {
 
             if ($request->has('category') && $request->category !== 'All') {
                 $query->where('category', $request->category);
@@ -90,7 +105,7 @@ class ExpenseController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Line Chart data fetched',
-                'data' => $expenses,
+                'data' => $expenses
             ]);
         }
      
@@ -108,10 +123,9 @@ class ExpenseController extends Controller
         // Pagination 
         $expenses = $query->orderBy('expense_date', 'desc')->paginate(5);
 
-        return response()->json([
+        return ExpenseResource::collection($expenses)->additional([
             'status' => 'success',
             'message' => 'Data fetch successful',
-            'data' => $expenses->items(),
             'total' => $totalAmount,
             'pages' => $expenses->lastPage(),
             'curr_page' => $expenses->currentPage()

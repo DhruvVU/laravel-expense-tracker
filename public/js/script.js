@@ -57,8 +57,7 @@ $(document).ready(function () {
     $(document).on("click keydown", function(e) {
         if ($(e.target).is("#close-form") || e.key === "Escape") {
             $(".add-card").fadeOut();
-            $(".dashboard-container").removeClass('blurred'); 
-            $(document).off("keydown");           
+            $(".dashboard-container").removeClass('blurred');      
         }
     })
 
@@ -249,7 +248,6 @@ $(document).ready(function () {
         if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
             $(".container").removeClass("blurred");
             $(".edit-card").fadeOut();
-            $(document).off("keydown");
         }
     });
 

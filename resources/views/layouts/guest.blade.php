@@ -23,6 +23,6 @@
         </div>
     </div>
 
-    <div id="toast-container"></div>
+    @include('components.toast')
 </body>
 </html>

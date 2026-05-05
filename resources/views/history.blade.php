@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="filter-wrapper">
-                    <label>Filter by Category:</label>
+                    <label>Category:</label>
                     <select id="filter-category">
                         <option value="All">All Categories</option>
                         <option value="Food">Food</option>

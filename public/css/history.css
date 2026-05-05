@@ -87,7 +87,7 @@ h1::before {
 
 .select-date {
     margin: 0;
-    width: 140px !important;
+    width: 155px !important;
     background-color: var(--bg-main);
 }
 

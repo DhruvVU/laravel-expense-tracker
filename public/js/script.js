@@ -212,9 +212,11 @@ $(document).ready(function () {
         let current_filter = $("#filter-category").val();
         let search_input = $("#search-input").val();
 
-        if (start_date > end_date) {
-            showToast('Invalid date range', 'error');
-            return;
+        if (start_date && end_date) {
+            if (new Date(start_date) > new Date(end_date)) {
+                showToast('End date cannot be set before start date', 'error');
+                return;
+            }
         }
 
         loadExpenses(current_filter, 1, search_input, start_date, end_date);

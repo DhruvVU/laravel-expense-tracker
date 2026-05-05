@@ -47,8 +47,8 @@ class ExpenseController extends Controller
             if ($request->filled('label')) {
                 $label = $request->label;
 
-                if (preg_match('/^\d{1,2}$/', $label)) {
-                    $date = DateTime::createFromFormat('n', $label);
+                if (preg_match('/^[A-Za-z]{3}$/', $label)) {
+                    $date = DateTime::createFromFormat('M', $label);
                     $query->whereMonth('expense_date', $date->format('m'));
                 } 
                 
@@ -95,7 +95,7 @@ class ExpenseController extends Controller
                       ->groupBy('label')
                       ->orderByRaw('MIN(expense_date) ASC');
             } else {
-                $query->selectRaw("MONTH(expense_date) as label, SUM(amount) as total")
+                $query->selectRaw("DATE_FORMAT(expense_date, '%b') as label, SUM(amount) as total")
                       ->groupBy('label')
                       ->orderByRaw('MIN(expense_date) ASC');
             }

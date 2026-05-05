@@ -119,6 +119,15 @@ class ExpenseController extends Controller
             $query->where('description', 'like', '%' . $request->search . '%');
         }
 
+        // Filter based on date range 
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('expense_date', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('start_date')) {
+            $query->where('expense_date', '>=', $request->start_date);
+        } elseif ($request->filled('end_date')) {
+            $query->where('expense_date', '<=', $request->end_date);
+        }
+
         $totalAmount = $query->sum('amount');
         // Pagination 
         $expenses = $query->orderBy('expense_date', 'desc')->paginate(5);
@@ -213,9 +222,38 @@ class ExpenseController extends Controller
 
     public function exportCsv(Request $request)
     {
-        $expenses = $request->user()->expenses()
-            ->select('expense_date', 'description', 'category', 'amount')
-            ->get();
+        $query = $request->user()->expenses()->select('expense_date', 'description', 'category', 'amount');
+        
+        // Filter based on category
+        if ($request->filled('category') && $request->category !== 'All') {
+            $query->where('category', $request->category);
+        }
+
+        // Filter based on description
+        if ($request->filled('search')) {
+            $query->where('description', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter based on date range 
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('expense_date', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('start_date')) {
+            $query->where('expense_date', '>=', $request->start_date);
+        } elseif ($request->filled('end_date')) {
+            $query->where('expense_date', '<=', $request->end_date);
+        }
+
+        $expenses = $query->orderBy('expense_date', 'desc')->get();
+
+        $fileName = 'expenses_' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
 
         $callback = function () use ($expenses) {
             $file = fopen('php://output', 'w');
@@ -231,11 +269,6 @@ class ExpenseController extends Controller
             }
             fclose($file);
         };
-
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="expenses.csv"',
-        ];
 
         return response()->stream($callback, 200, $headers);
     }

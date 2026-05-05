@@ -193,6 +193,27 @@ $(document).ready(function () {
             lineChart(selectedCategory, selectedMonth);        
         }
     })  
+
+    // ========================== Fetch Data based on Date range provided ==========================
+    $(document).on("change", ".select-date", function() {
+        let start_date = $("#start-date").val();
+        let end_date = $("#end-date").val();
+        let current_filter = $("#filter-category").val();
+        let search_input = $("#search-input").val();
+
+        if (start_date > end_date) {
+            showToast('Invalid date range', 'error');
+            return;
+        }
+
+        loadExpenses(
+            current_filter,
+            1,
+            search_input,
+            start_date,
+            end_date
+        );
+    })
     
     // Go back to chart from table 
     $(document).on("click", "#back-to-chart", function() {
@@ -498,9 +519,18 @@ $(document).ready(function () {
             buttonsStyling: false   
         });
 
+        const params = {
+            category: $("#filter-category").val() || 'All',
+            search: $("#search-input").val() || '',
+            start_date: $("#start-date").val() || '',
+            end_date: $("#end-date").val() || ''
+        }
+
+        const urlParams = new URLSearchParams(params).toString();
+
         swalButtons.fire({
             title: "Download File",
-            text: "Do you want to download the csv file?",
+            text: "This file will include your current filtered results.",
             icon: "info",
             showCancelButton: true,
             confirmButtonColor: "#3b82f6",
@@ -511,7 +541,7 @@ $(document).ready(function () {
             color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "/expenses/export-csv";
+                window.location.href = `/expenses/export-csv?${urlParams}`;
                 $(".container").removeClass("blurred");
                 showToast("File download in progress!", "success");
             } else {
@@ -543,7 +573,7 @@ function showToast(message, type) {
 
 // ======================================== Main Function to load data =========================================
 
-function loadExpenses(category = "All", page_no = 1, search = "") {
+function loadExpenses(category = "All", page_no = 1, search = "", start_date = "", end_date = "") {
     $.ajax({
         url: "/expenses/fetch-expense",
         type: "GET",
@@ -551,6 +581,8 @@ function loadExpenses(category = "All", page_no = 1, search = "") {
             category: category,
             page: page_no,
             search: search,
+            start_date: start_date,
+            end_date: end_date
         },
         dataType: "json",
         success: function (response) {
@@ -1015,8 +1047,8 @@ function showTable(label, category) {
                 rows += ` 
                     <tr>
                         <td colspan="6" style="text-align:center; font-weight: 600">
-                            To view full data, visit the history page ➡️ 
-                                <a href="/history" style="color: #6aa0f7; text-decoration: none">History</a>
+                            To view full data, visit the history page 
+                                <a href="/history" style="color: #6aa0f7; text-decoration: none"> ➡️History</a>
                         </td>
                     </tr>
                 `;

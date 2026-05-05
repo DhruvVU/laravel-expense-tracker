@@ -47,14 +47,14 @@ h1::before {
     border-radius: 12px;
     border: 1px solid var(--border-color);
     margin-bottom: 25px;
-    gap: 20px;
+    gap: 15px;
 }
 
 .search-wrapper,
 .filter-wrapper {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
 }
 
@@ -67,6 +67,16 @@ h1::before {
 }
 
 #filter-category:hover {
+    background-color: var(--input-hover);
+}
+
+.select-date {
+    margin: 0px 5px 0 5px;
+    width: 34% !important;
+    background-color: var(--bg-main);
+}
+
+.select-date:hover {
     background-color: var(--input-hover);
 }
 

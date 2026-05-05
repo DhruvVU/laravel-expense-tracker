@@ -24,6 +24,13 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
+
+                <div class="date-range-wrapper">
+                    <label>Select Date: </label>
+                    <input type="date" name="start-date" id="start-date" class="select-date">
+                    <span> To </span>
+                    <input type="date" name="end-date" id="end-date" class="select-date">
+                </div>
             </div>
 
             <!-- Total Amount spent(based on category) and the value is dynamically filled using JQuery -->

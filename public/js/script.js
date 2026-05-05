@@ -1061,7 +1061,9 @@ function showTable(label, category) {
                     <tr>
                         <td colspan="6" style="text-align:center; font-weight: 600">
                             To view full data, visit the history page 
-                                <a href="/history" style="color: #6aa0f7; text-decoration: none"> ➡️History</a>
+                                <a href="/history" style="color: #6aa0f7; text-decoration: none">
+                                    ➡️History
+                                </a>
                         </td>
                     </tr>
                 `;

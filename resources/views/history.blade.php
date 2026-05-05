@@ -31,6 +31,12 @@
                     <span> To </span>
                     <input type="date" name="end-date" id="end-date" class="select-date">
                 </div>
+
+                <div class="reset-btn-container">
+                    <button id="reset-filters" class="btn-reset">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
             </div>
 
             <!-- Total Amount spent(based on category) and the value is dynamically filled using JQuery -->

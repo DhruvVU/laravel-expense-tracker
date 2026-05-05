@@ -151,6 +151,19 @@ $(document).ready(function () {
 
 // ============================================ Search Expense(READ) ===========================================
 
+    // ================================ Search operation filters section ================================
+    
+    // Clear all filters
+    $(document).on("click", "#reset-filters", function() {
+        $("#search-input").val('');
+        $("#filter-category").val('All');
+        $("#start-date").val('');
+        $("#end-date").val('');
+
+        loadExpenses('All', 1, '', '', '');
+    })
+
+    //  Filter based on name 
     $(document).on("input", "#search-input", function () {
         let searchVal = $(this).val();
         clearTimeout(searchTimer);
@@ -161,16 +174,14 @@ $(document).ready(function () {
         }, 300);
     });
 
-    // ===================== Filter Expense =====================
-
+    //  Filter based on category 
     $(document).on("change", "#filter-category", function () {
         defaultPageNo = 1;
         loadExpenses($(this).val(), defaultPageNo, $("#search-input").val());
         $('#selected-category').text($(this).val());
     });
 
-    // ================= Fetch Current Page Data =================
-
+    //  Filter based on page number 
     $(document).on("click", ".page-btn", function () {
         defaultPageNo = $(this).data("page");
         loadExpenses(
@@ -180,7 +191,7 @@ $(document).ready(function () {
         );
     });
 
-    // ======================= Fetch Monthly data =======================
+    // Filter based on month 
     $(document).on("change", ".select-month", function() {
         const selectedMonth = $('.select-month').val();
         const selectedCategory = $(".select-category").val() ?? 'All';
@@ -194,7 +205,7 @@ $(document).ready(function () {
         }
     })  
 
-    // ========================== Fetch Data based on Date range provided ==========================
+    //  Filter Data based on Date range provided 
     $(document).on("change", ".select-date", function() {
         let start_date = $("#start-date").val();
         let end_date = $("#end-date").val();
@@ -206,15 +217,10 @@ $(document).ready(function () {
             return;
         }
 
-        loadExpenses(
-            current_filter,
-            1,
-            search_input,
-            start_date,
-            end_date
-        );
+        loadExpenses(current_filter, 1, search_input, start_date, end_date);
     })
-    
+    // ==================================== End of Filters section ====================================
+
     // Go back to chart from table 
     $(document).on("click", "#back-to-chart", function() {
         const selectedMonth = $('.select-month').val();

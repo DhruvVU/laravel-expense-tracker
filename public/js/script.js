@@ -964,8 +964,6 @@ function lineChart(category = 'All', month = '') {
                         pointBackgroundColor: "red",
                         tension: 0.4,
                         fill: true,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
                     }]
                 },
                 options: {
@@ -1008,6 +1006,13 @@ function lineChart(category = 'All', month = '') {
                                 label: (context) => "Amount: ₹" + context.parsed.y.toLocaleString("en-IN")
                             },
                         },
+                    },
+                    elements: {
+                        point: {
+                            radius: 4,
+                            hitRadius: 10,
+                            hoverRadius: 6
+                        }
                     }
                 }
             });

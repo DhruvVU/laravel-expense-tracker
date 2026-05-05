@@ -121,8 +121,6 @@
         </div>
     </div>
 
-    <!-- This container holds toast element -->
-    <div id="toast-container"></div>
     <script>
         $(document).ready(function () {
             loadExpenses('All', 1, '');

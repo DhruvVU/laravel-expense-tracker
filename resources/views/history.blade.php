@@ -114,10 +114,7 @@
             <button id="cancel-btn">Cancel</button>
         </div>
     </div>
-
-
-    <!-- This container handles the toast element  -->
-    <div id="toast-container"></div>
+    
     <script>
         $(document).ready(function () {
             loadExpenses('All', 1, '');

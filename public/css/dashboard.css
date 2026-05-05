@@ -131,17 +131,24 @@
 .back-button {
     display: none;
     position: fixed;
-    right: 40px;
+    right: 50px;
     left: auto;
-    top: 70px;
+    top: 75px;
 }
 
 #back-to-chart {
-    background-color: #3b82f6;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
     color: white;
     padding: 10px;
     border-radius: 12px;
-    border: none;
+    border: none;   
+    cursor: pointer;
+    font-weight: 650;
+    transition: transform 0.3s;
+}
+
+#back-to-chart:hover {
+    transform: translateY(-2px);
 }
 
 .line-chart {
@@ -183,12 +190,6 @@
     color: var(--text-main);
     padding: 15px 10px;
     border-bottom: 2px solid var(--border-color);
-}
-
-.category-table th:nth-child(4),
-.category-table td:nth-child(4) {
-    text-align: right;
-    padding-right: 40px;
 }
 
 #show-btn {

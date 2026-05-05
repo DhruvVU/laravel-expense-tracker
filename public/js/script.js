@@ -988,7 +988,7 @@ function showTable(label, category) {
                             <td data-field="category">
                                 <span class="pill pill-${categoryColor}">${item.category}</span>
                             </td>
-                            <td data-field="amount">${item.amount}</td>
+                            <td data-field="amount">₹${item.amount}</td>
                         </tr>
                     `;
                 });

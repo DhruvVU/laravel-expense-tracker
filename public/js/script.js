@@ -30,7 +30,7 @@ $(document).ready(function () {
         $("html").toggleClass("dark-mode", isDark);
         localStorage.setItem("theme", isDark ? "dark" : "light");
 
-        requestAnimationFrame(() => {
+        setTimeout(() => {
             const category = $(".select-category").val();
             const month = $(".select-month").val();
 
@@ -40,12 +40,19 @@ $(document).ready(function () {
 
             if ($("#bar-chart").is(":visible") && typeof barChart === "function") {
                 barChart(category);
+            }   
+
+            if ($(".table-data").is(":visible") && typeof showTable === "function") {
+                const label = response.label;
+                showTable(label);
             }
 
-            if (typeof lineChart === "function") {
+            if ($("#lineChart").is(":visible") && typeof lineChart === "function") {
                 lineChart(category, month);
             }
-        });
+
+            window.dispatchEvent(new Event('resize'));
+        }, 100);
     });
 
 // ============================================= Add Expense(CREATE) ===========================================
@@ -763,6 +770,12 @@ let categoryBarChart = null;
 
 // Bar Chart for categorical data
 function barChart(category) {
+
+    if (categoryBarChart instanceof Chart) {
+        categoryBarChart.destroy();
+        categoryBarChart = null;
+    }
+
     const colorMap = {
         Food: "#ffcc22",
         Transport: "#fb7100",
@@ -869,11 +882,7 @@ let expenseLineChart;
 // Line Chart for displaying overall data 
 function lineChart(category = 'All', month = '') {
     const activeColor = '#4e73df';
-    let textColor = 'black';
-
-    if ($("html").hasClass("dark-mode")) {
-        textColor = 'white';
-    }   
+    let textColor = $("html").hasClass("dark-mode") ? "white" : "black";
 
     $.ajax({
         url: '/expenses/fetch-expense',
@@ -1007,7 +1016,7 @@ function showTable(label, category) {
                     <tr>
                         <td colspan="6" style="text-align:center; font-weight: 600">
                             To view full data, visit the history page ➡️ 
-                                <a href="/history" style="color: #6aa0f7;">History</a>
+                                <a href="/history" style="color: #6aa0f7; text-decoration: none">History</a>
                         </td>
                     </tr>
                 `;

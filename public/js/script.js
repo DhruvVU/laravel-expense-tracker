@@ -173,18 +173,29 @@ $(document).ready(function () {
         );
     });
 
-    // ===================== Fetch Monthly Line Chart data =====================
+    // ======================= Fetch Monthly data =======================
     $(document).on("change", ".select-month", function() {
         const selectedMonth = $('.select-month').val();
         const selectedCategory = $(".select-category").val() ?? 'All';
-        $('.table-data').fadeOut();
-        lineChart(selectedCategory, selectedMonth);        
+
+        if ($(".table-data").is(":visible")) {
+            showTable(selectedMonth, selectedCategory);
+        } else {
+            $(".table-data").fadeOut();
+            $(".back-button").fadeOut();
+            lineChart(selectedCategory, selectedMonth);        
+        }
     })  
     
     // Go back to chart from table 
     $(document).on("click", "#back-to-chart", function() {
+        const selectedMonth = $('.select-month').val();
+        const selectedCategory = $(".select-category").val() ?? 'All';
+
         $(".table-data").fadeOut();
+
         setTimeout(function() {
+            lineChart(selectedCategory, selectedMonth);
             $("#lineChart").fadeIn();
             $(".back-button").fadeOut();
         }, 500);
@@ -540,9 +551,9 @@ function loadExpenses(category = "All", page_no = 1, search = "") {
 
             if (response.status === "success") {
                 // Total Amount calculation and Value printing
-                $("#total-amount").text(parseFloat(response.total).toFixed(2));
+                $("#total-amount").text((response.total));
                 $("#dashboard-amount").text(
-                    parseFloat(response.total).toFixed(2),
+                    (response.total),
                 );
 
                 // Handled empty response (if no data is present)
@@ -676,7 +687,7 @@ function pieChart() {
             if (!canvas) return;
 
             const labels = response.data.map((item) => item.category);
-            const totals = response.data.map((item) => parseFloat(item.total));
+            const totals = response.data.map((item) => item.total);
             const bgColors = labels.map(
                 (cat) => colorMap[cat] || colorMap["Other"],
             );
@@ -889,7 +900,7 @@ function lineChart(category = 'All', month = '') {
                 data = [0];
             } else {
                 labels = response.data.map((item) => item.label);
-                data = response.data.map((item) => parseFloat(item.total));
+                data = response.data.map((item) => item.total);
             }
 
             expenseLineChart = new Chart(context, {
@@ -992,6 +1003,14 @@ function showTable(label, category) {
                         </tr>
                     `;
                 });
+                rows += ` 
+                    <tr>
+                        <td colspan="6" style="text-align:center; font-weight: 600">
+                            To view full data, visit the history page ➡️ 
+                                <a href="/history" style="color: #6aa0f7;">History</a>
+                        </td>
+                    </tr>
+                `;
             } else {
                 rows = `
                     <tr>

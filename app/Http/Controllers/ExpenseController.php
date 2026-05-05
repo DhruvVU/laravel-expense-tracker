@@ -69,7 +69,7 @@ class ExpenseController extends Controller
                 }
             }
 
-            $expenses = $query->orderBy('expense_date', 'desc')->get();
+            $expenses = $query->orderBy('expense_date', 'desc')->limit(6)->get();
             $totalAmount = $expenses->sum('amount');
 
             return ExpenseResource::collection($expenses)->additional([
@@ -88,7 +88,7 @@ class ExpenseController extends Controller
 
             if ($request->has('month') && $request->month > 0) {
                 $year = $request->year ?? date('Y');
-                // $query->whereMonth('expense_date', $request->month)->ddRawSql();
+
                 $query->whereMonth('expense_date', $request->month)
                       ->whereYear('expense_date', $year)
                       ->selectRaw("DATE_FORMAT(expense_date, '%d %b') as label, SUM(amount) as total")

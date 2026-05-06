@@ -294,7 +294,7 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
-.add-form-btn {
+.form-btn-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -320,7 +320,7 @@
     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 
-#close-form {
+#cancel-btn {
     width: 50%;
     padding: 18px;
     font-size: 1.2rem;
@@ -336,7 +336,7 @@
         box-shadow 0.2s;
 }
 
-#close-form:hover {
+#cancel-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(235, 37, 37, 0.4);
 }

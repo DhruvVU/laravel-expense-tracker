@@ -95,40 +95,7 @@
     </div>
 
     {{-- Hidden form to add expense --}}
-    <div class="add-card">
-        <h2>Add New Expense</h2>
-
-        <div class="input-group">
-            <label>Description</label>
-            <input type="text" id="description" placeholder="e.g., Grocery Shopping">
-        </div>
-
-        <div class="input-group">
-            <label>Amount (₹)</label>
-            <input type="number" id="amount" placeholder="0.00" step="0.01">
-        </div>
-
-        <div class="input-group">
-            <label>Category</label>
-            <select id="category">
-                <option value="Food">Food</option>
-                <option value="Transport">Transport</option>
-                <option value="Bills">Bills</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label>Date</label>
-            <input type="date" id="exp_date" value="{{ date('Y-m-d') }}">
-        </div>
-
-        <div class="add-form-btn">
-            <button id="add-btn">Save</button>
-            <button id="close-form">Cancel</button>
-        </div>
-    </div>
+    <x-form mode="add" title="Add Expense"></x-form>
 
     <script>
         $(document).ready(function () {

@@ -1,8 +1,6 @@
-@extends('layouts.main')
-
-@section('title', 'History - Tracker.io')
-
-@section('content')
+<x-main>
+    @section('title', 'History - Tracker.io')
+    
     <div class="container">
 
         <div class="show-container">
@@ -114,10 +112,10 @@
             <button id="cancel-btn">Cancel</button>
         </div>
     </div>
-    
+
     <script>
         $(document).ready(function () {
             loadExpenses('All', 1, '');
         })
     </script>
-@endsection
+</x-main>

@@ -1,8 +1,6 @@
-@extends('layouts.main')
-
-@section('title', 'Dashboard - Tracker.io')
-
-@section('content')
+<x-main>
+    @section('title', 'Dashboard - Tracker.io')
+    
     <div class="dashboard-container">
         <div class="dashboard-left">
             <div class="stat-card">
@@ -44,8 +42,8 @@
                     @endforeach
                 </select>
 
-                {{-- Month selection  --}}
-                <select class="select-month" >
+                {{-- Month selection --}}
+                <select class="select-month">
                     <option value="">Full Year Stats</option>
                     <option value="" disabled selected> -- Select a month -- </option>
                     <option value="1">January</option>
@@ -60,7 +58,7 @@
                     <option value="10">October</option>
                     <option value="11">November</option>
                     <option value="12">December</option>
-                </select>                
+                </select>
 
                 <div class="back-button">
                     <button id="back-to-chart">📉 Back to chart</button>
@@ -88,7 +86,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 {{-- button to show add expense form --}}
                 <button id="show-btn">Add Expense</button>
             </div>
@@ -140,4 +138,4 @@
             lineChart('All', '', year);
         });
     </script>
-@endsection
+</x-main>

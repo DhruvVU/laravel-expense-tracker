@@ -83,10 +83,10 @@
 
         <main id="main-content" class="content-area">
             {{-- Main content --}}
-            @yield('content')
+            {{ $slot }}
         </main>
 
         {{-- Toast component --}}
-        @include('components.toast')
+        <x-toast></x-toast>
     </div>
 </body>

@@ -34,8 +34,18 @@
 
         <div class="dashboard-right">
             <div class="data-display">
+                {{-- Year selection --}}
+                <select class="select-year">
+                    <option value="" disabled selected> -- Select a year -- </option>
+                    @foreach ($years as $year)
+                        <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                            {{ $year }}
+                        </option>
+                    @endforeach
+                </select>
+
+                {{-- Month selection  --}}
                 <select class="select-month" >
-                    <option value="">All time stats</option>
                     <option value="" disabled selected> -- Select a month -- </option>
                     <option value="1">January</option>
                     <option value="2">February</option>

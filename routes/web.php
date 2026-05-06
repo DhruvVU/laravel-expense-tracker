@@ -27,9 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [ExpenseController::class, 'fetchYear'])->name('dashboard');
 
     Route::get('/history', function () {
         return view('history');

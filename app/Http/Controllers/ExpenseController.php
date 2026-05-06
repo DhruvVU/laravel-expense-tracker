@@ -32,6 +32,21 @@ class ExpenseController extends Controller
 
 // =========================================== Fetch Expense(READ) =============================================
 
+    // Fetch Years 
+    public function fetchYear(Request $request) {
+        $years = $request->user()->expenses()
+                ->selectRaw('YEAR(expense_date) as year')
+                ->distinct()
+                ->orderBy('year', 'desc')
+                ->pluck('year');
+        
+        if ($years->isEmpty()) {
+            $years = collect([date('Y')]);
+        }
+
+        return view('dashboard', compact('years'));
+    }
+
     public function fetch(Request $request)
     {
         $user = $request->user();  

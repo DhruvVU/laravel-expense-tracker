@@ -9,7 +9,11 @@ use Gate;
 use Illuminate\Http\Request;
 class ExpenseController extends Controller
 {
-
+    // Using expense service to make the controller thinner
+    protected $expenseService;
+    public function __construct(\App\Services\ExpenseService $expenseService) {
+        $this->expenseService = $expenseService;
+    }
 // ============================================ Add Expense(CREATE) ============================================
 
     public function store(Request $request)
@@ -49,43 +53,14 @@ class ExpenseController extends Controller
 
     public function fetch(Request $request)
     {
-        $user = $request->user();  
-        $query = $user->expenses();
+        $query = $this->expenseService->getFilteredQuery($request);
 
         // Filter for table data
         if ($request->boolean('table_data')) {
-            if ($request->has('category') && $request->category !== 'All') {
-                $query->where('category', $request->category);
-            }
-
-            if ($request->filled('year')) {
-                $query->whereYear('expense_date', $request->year);
-            }
-
+            
             // Fetch the data for a specific day
             if ($request->filled('label')) {
-                $label = $request->label;
-
-                if (preg_match('/^[A-Za-z]{3}$/', $label)) {
-                    $date = DateTime::createFromFormat('M', $label);
-                    $query->whereMonth('expense_date', $date->format('m'));
-                } 
-                
-                elseif (preg_match('/^\d{1,2}\s[A-Za-z]{3}$/', $label)) {
-                    $date = DateTime::createFromFormat('d M', $label);
-                    $query->whereDay('expense_date', $date->format('d'))
-                          ->whereMonth('expense_date', $date->format('m'));
-                } 
-                
-                elseif (preg_match('/^[A-Za-z]{3}\s\d{4}$/', $label)) {
-                    $date = DateTime::createFromFormat('M Y', $label);
-                    $query->whereMonth('expense_date', $date->format('m'))
-                          ->whereYear('expense_date', $date->format('Y'));
-                } 
-                
-                else {
-                    $query->whereRaw('DAYNAME(expense_date) = ?', [$label]);
-                }
+                $this->expenseService->applyLabelFilters($query, $request->label);
             }
 
             $expenses = $query->orderBy('expense_date', 'desc')->limit(6)->get();
@@ -100,13 +75,7 @@ class ExpenseController extends Controller
 
         // Filter for line chart 
         if ($request->boolean('for_chart')) {
-
-            if ($request->has('category') && $request->category !== 'All') {
-                $query->where('category', $request->category);
-            }
-
             $year = $request->year ?? date('Y');
-            $query->whereYear("expense_date", $year);
 
             if ($request->has('month') && $request->month > 0) {
                 $query->whereMonth('expense_date', $request->month)
@@ -127,30 +96,6 @@ class ExpenseController extends Controller
                 'message' => 'Line Chart data fetched',
                 'data' => $expenses
             ]);
-        }
-     
-        // Fetch annual data
-        if ($request->filled('year')) {
-            $query->whereYear('expense_date', $request->year);
-        }
-
-        // Filter based on category
-        if ($request->has('category') && $request->category !== 'All') {
-            $query->where('category', $request->category);
-        }
-
-        // Filter based on description
-        if ($request->filled('search')) {
-            $query->where('description', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter based on date range 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('expense_date', [$request->start_date, $request->end_date]);
-        } elseif ($request->filled('start_date')) {
-            $query->where('expense_date', '>=', $request->start_date);
-        } elseif ($request->filled('end_date')) {
-            $query->where('expense_date', '<=', $request->end_date);
         }
 
         $totalAmount = $query->sum('amount');
@@ -249,28 +194,11 @@ class ExpenseController extends Controller
 
     public function exportCsv(Request $request)
     {
-        $query = $request->user()->expenses()->select('expense_date', 'description', 'category', 'amount');
-        
-        // Filter based on category
-        if ($request->filled('category') && $request->category !== 'All') {
-            $query->where('category', $request->category);
-        }
+        $query = $this->expenseService->getFilteredQuery($request);
 
-        // Filter based on description
-        if ($request->filled('search')) {
-            $query->where('description', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter based on date range 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('expense_date', [$request->start_date, $request->end_date]);
-        } elseif ($request->filled('start_date')) {
-            $query->where('expense_date', '>=', $request->start_date);
-        } elseif ($request->filled('end_date')) {
-            $query->where('expense_date', '<=', $request->end_date);
-        }
-
-        $expenses = $query->orderBy('expense_date', 'desc')->get();
+        $expenses = $query->select('expense_date', 'description', 'category', 'amount')
+                          ->orderBy('expense_date', 'desc')
+                          ->get();
 
         $fileName = 'expenses_' . now()->format('Y-m-d') . '.csv';
 

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ExpenseResource;
+use App\Http\Requests\StoreExpenseRequest;
+use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Expense;
-use DateTime;
 use Gate;
 use Illuminate\Http\Request;
 class ExpenseController extends Controller
@@ -16,16 +17,9 @@ class ExpenseController extends Controller
     }
 // ============================================ Add Expense(CREATE) ============================================
 
-    public function store(Request $request)
+    public function store(StoreExpenseRequest $request)
     {
-        $validated = $request->validate([
-            'description' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'category' => 'required|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'required|date|before_or_equal:today'
-        ]);
-
-        $expense = $request->user()->expenses()->create($validated);
+        $expense = $request->user()->expenses()->create($request->validated());
 
         return (new ExpenseResource($expense))
                 ->additional([
@@ -154,19 +148,12 @@ class ExpenseController extends Controller
 
 // ============================================ Edit Expense(UPDATE) ===========================================
 
-    public function edit(Request $request, Expense $expense)
+    public function edit(UpdateExpenseRequest $request, Expense $expense)
     {
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('update', $expense);
 
-        $validated = $request->validate([
-            'description' => 'sometimes|string|max:255',
-            'amount' => 'sometimes|numeric',
-            'category' => 'sometimes|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'sometimes|date',
-        ]);
-
-        $expense->update($validated);
+        $expense->update($request->validated());
 
         return response()->json([
             'status' => 'success',

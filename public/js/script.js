@@ -66,23 +66,8 @@ $(document).ready(function () {
         let amount = $("#amount").val();
         let category = $("#category").val();
         let exp_date = $("#exp_date").val();
-        let check_date = new Date(exp_date);
-
-        let curr_Date = new Date();
-        check_date.setHours(0, 0, 0, 0);
-        curr_Date.setHours(0, 0, 0, 0);
-
-        if (check_date > curr_Date) {
-            showToast("You cannot select a future date!");
-            return;
-        }
 
         $("#dashboard-category").text(category);
-
-        // console.log(description);
-        // console.log(amount);
-        // console.log(category);
-        // console.log(exp_date);
 
         let expenseData = {
             description: description,
@@ -90,11 +75,6 @@ $(document).ready(function () {
             category: category,
             expense_date: exp_date,
         };
-
-        if (expenseData.description === "" || expenseData.amount === "") {
-            showToast("Please fill in Description and Amount", "error");
-            return;
-        }
 
         $.ajax({
             url: "/expenses/add-expense",
@@ -131,11 +111,16 @@ $(document).ready(function () {
                     showToast(response.message || "Failed to add expense", "error");
                 }
             },
-            error: function (xhr, status, error) {
-                showToast("Server error. Please try again", "error");
-                console.log("Status:", status);
-                console.log("Error:", error);
-                console.log("Raw Server Response:", xhr.responseText);
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+
+                    Object.keys(errors).forEach(key => {
+                        showToast(errors[key][0], 'error');
+                    })
+                } else {
+                    showToast('An unexpected error occured!', 'error');
+                }
             },
         });
     });
@@ -310,16 +295,6 @@ $(document).ready(function () {
         let amount = $("#amount").val();
         let category = $("#category").val();
         let exp_date = $("#exp_date").val();
-        let check_date = new Date(exp_date);
-
-        let curr_Date = new Date();
-        check_date.setHours(0, 0, 0, 0);
-        curr_Date.setHours(0, 0, 0, 0);
-
-        if (check_date > curr_Date) {
-            showToast("You cannot select a future date!");
-            return;
-        }
 
         let updatedData = {
             id: id,
@@ -343,6 +318,16 @@ $(document).ready(function () {
             error: function (xhr) {
                 if (xhr.status === 403) {
                     showToast("Unauthorized!", "error");
+                }
+
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+
+                    Object.keys(errors).forEach(key => {
+                        showToast(errors[key][0], 'error');
+                    })
+                } else {
+                    showToast('An unexpected error occured!', 'error');
                 }
             },
         });

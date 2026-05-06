@@ -58,6 +58,10 @@ class ExpenseController extends Controller
                 $query->where('category', $request->category);
             }
 
+            if ($request->filled('year')) {
+                $query->whereYear('expense_date', $request->year);
+            }
+
             // Fetch the data for a specific day
             if ($request->filled('label')) {
                 $label = $request->label;
@@ -101,9 +105,10 @@ class ExpenseController extends Controller
                 $query->where('category', $request->category);
             }
 
-            if ($request->has('month') && $request->month > 0) {
-                $year = $request->year ?? date('Y');
+            $year = $request->year ?? date('Y');
+            $query->whereYear("expense_date", $year);
 
+            if ($request->has('month') && $request->month > 0) {
                 $query->whereMonth('expense_date', $request->month)
                       ->whereYear('expense_date', $year)
                       ->selectRaw("DATE_FORMAT(expense_date, '%d %b') as label, SUM(amount) as total")
@@ -124,6 +129,11 @@ class ExpenseController extends Controller
             ]);
         }
      
+        // Fetch annual data
+        if ($request->filled('year')) {
+            $query->whereYear('expense_date', $request->year);
+        }
+
         // Filter based on category
         if ($request->has('category') && $request->category !== 'All') {
             $query->where('category', $request->category);
@@ -159,24 +169,26 @@ class ExpenseController extends Controller
     // ============================= Fetch Chart Data =============================
     public function getChartData(Request $request)
     {
+        $query = $request->user()->expenses();
         $category = $request->category;
-        $user = $request->user();
+        
+        if ($request->filled('year')) {
+            $query->whereYear('expense_date', $request->year);
+        }
 
         if (!$category || $category === 'All') {
-            $data = $request->user()->expenses()
-                ->selectRaw('category, SUM(amount) as total')
-                ->groupBy('category')
-                ->get();
+            $data = $query->selectRaw('category, SUM(amount) as total')
+                          ->groupBy('category')
+                          ->get();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data fetch successful',
+                'message' => 'Data fetch for pie chart successful',
                 'data' => $data
             ]);
         }
 
-        $stats = $user->expenses()
-            ->where('category', $category)
+        $stats = $query->where('category', $category)
             ->selectRaw('DAYOFWEEK(expense_date) as day, SUM(amount) as total')
             ->groupBy('day')
             ->pluck('total', 'day')->toArray();
@@ -185,12 +197,12 @@ class ExpenseController extends Controller
         $daysMap = [2, 3, 4, 5, 6, 7, 1];
 
         foreach ($daysMap as $day) {
-            $data[] = isset($stats[$day]) ? (float)$stats[$day] : 0;
+            $data[] = (float)($stats[$day] ?? 0);
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data fetch successful',
+            'message' => 'Data fetch for bar chart successful',
             'data' => $data
         ]);
     }

@@ -12,7 +12,7 @@
 
             <div class="stat-card">
                 <span class="stat-label">Active Category</span>
-                <select class="select-category" disabled>
+                <select class="select-category">
                     <option value="" selected>-- No categories available --</option>
                     <option value="All">All Categories</option>
                     <option value="Food">Food</option>
@@ -46,6 +46,7 @@
 
                 {{-- Month selection  --}}
                 <select class="select-month" >
+                    <option value="">Full Year Stats</option>
                     <option value="" disabled selected> -- Select a month -- </option>
                     <option value="1">January</option>
                     <option value="2">February</option>
@@ -133,9 +134,10 @@
 
     <script>
         $(document).ready(function () {
-            loadExpenses('All', 1, '');
-            pieChart();
-            lineChart('All', '');
+            const year = $('.select-year').val();
+            loadExpenses('All', 1, '', '', '', year);
+            pieChart(year);
+            lineChart('All', '', year);
         });
     </script>
 @endsection

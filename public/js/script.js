@@ -32,24 +32,15 @@ $(document).ready(function () {
 
         setTimeout(() => {
             const category = $(".select-category").val();
-            const month = $(".select-month").val();
+            const year = $(".select-year").val();
 
-            if ($("#pie-chart").is(":visible") && typeof pieChart === "function") {
-                pieChart();
+            if (typeof pieChart === "function") {
+                pieChart(year);
             }
 
-            if ($("#bar-chart").is(":visible") && typeof barChart === "function") {
-                barChart(category);
-            }   
-
-            if ($(".table-data").is(":visible") && typeof showTable === "function") {
-                const label = response.label;
-                showTable(label);
-            }
-
-            if ($("#lineChart").is(":visible") && typeof lineChart === "function") {
-                lineChart(category, month);
-            }
+            if (typeof barChart === "function") {
+                barChart(category, year);
+            }  
 
             window.dispatchEvent(new Event('resize'));
         }, 100);
@@ -113,11 +104,11 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status === "success") {
                     showToast(response.message, response.status);
-
                     loadExpenses(
-                        $("#filter-category").val(),
-                        defaultPageNo,
-                        $("#search-input").val(),
+                        $("#filter-category").val(), 
+                        1, 
+                        "", "", "",
+                        $(".select-year").val()
                     );
 
                     $(".add-card").fadeOut();
@@ -132,13 +123,13 @@ $(document).ready(function () {
                     $("#pie-chart").fadeOut(200);
                     setTimeout(function() {
                         $('#bar-chart').show();
-                        barChart(category);
+                        barChart(category, $(".select-year").val());
                         $('#bar-chart').hide().fadeIn(200);
                     }, 50);
+                    pieChart($(".select-year").val());
                 } else {
                     showToast(response.message || "Failed to add expense", "error");
                 }
-                pieChart();
             },
             error: function (xhr, status, error) {
                 showToast("Server error. Please try again", "error");
@@ -191,17 +182,26 @@ $(document).ready(function () {
         );
     });
 
-    // Filter based on month 
-    $(document).on("change", ".select-month", function() {
-        const selectedMonth = $('.select-month').val();
-        const selectedCategory = $(".select-category").val() ?? 'All';
+    // Filter based on month and year
+    $(document).on("change", ".select-month, .select-year", function() {
+        const month = $('.select-month').val();
+        const category = $(".select-category").val() ?? 'All';
+        const year = $(".select-year").val();
+
+        loadExpenses(category, 1, '', '', '', year);
 
         if ($(".table-data").is(":visible")) {
-            showTable(selectedMonth, selectedCategory);
+            showTable(category, month, year);
         } else {
             $(".table-data").fadeOut();
             $(".back-button").fadeOut();
-            lineChart(selectedCategory, selectedMonth);        
+            lineChart(category, month, year);        
+        }
+
+        if (category === 'All') {
+            pieChart(year);
+        } else {
+            barChart(category, year);
         }
     })  
 
@@ -225,13 +225,14 @@ $(document).ready(function () {
 
     // Go back to chart from table 
     $(document).on("click", "#back-to-chart", function() {
-        const selectedMonth = $('.select-month').val();
-        const selectedCategory = $(".select-category").val() ?? 'All';
+        const month = $('.select-month').val();
+        const category = $(".select-category").val() ?? 'All';
+        const year = $(".select-year").val();
 
         $(".table-data").fadeOut();
 
         setTimeout(function() {
-            lineChart(selectedCategory, selectedMonth);
+            lineChart(category, month, year);
             $("#lineChart").fadeIn();
             $(".back-button").fadeOut();
         }, 500);
@@ -241,32 +242,33 @@ $(document).ready(function () {
 
     $(document).on("change", ".select-category", function () {
         let selectedCategory = $(this).val();
+        const year = $(".select-year").val();
         $(".table-data").fadeOut();
         $(".back-button").fadeOut();
 
         setTimeout(function() {
             if (selectedCategory === "All") {
-                pieChart();
+                pieChart(year);
                 
                 $("#bar-chart").fadeOut()
                 setTimeout(function() {
                     $("#pie-chart").fadeIn();
                 },500);
 
-                $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
-                lineChart(selectedCategory, '');
+                $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, "", "", "", year));
+                lineChart(selectedCategory, '', year);
                 $("#lineChart").fadeIn();
                 $(".select-month").val("");
                 return;
             }
 
-            barChart(selectedCategory);
-            lineChart(selectedCategory, '');
+            barChart(selectedCategory, year);
+            lineChart(selectedCategory, '', year);
             $("#lineChart").fadeIn();
             $("#pie-chart").fadeOut(100, function() {
                 $("#bar-chart").fadeIn();
             });
-            $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, ""));
+            $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, "", "", "", year));
             $(".select-month").val("");
         }, 500);
     });
@@ -581,7 +583,7 @@ function showToast(message, type) {
 
 // ======================================== Main Function to load data =========================================
 
-function loadExpenses(category = "All", page_no = 1, search = "", start_date = "", end_date = "") {
+function loadExpenses(category = "All", page_no = 1, search = "", start_date = "", end_date = "", year = "") {
     $.ajax({
         url: "/expenses/fetch-expense",
         type: "GET",
@@ -590,7 +592,8 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
             page: page_no,
             search: search,
             start_date: start_date,
-            end_date: end_date
+            end_date: end_date,
+            year: year
         },
         dataType: "json",
         success: function (response) {
@@ -605,7 +608,6 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
 
                 // Handled empty response (if no data is present)
                 if (response.data.length === 0) {
-                    $(".select-category").prop("disabled", true);
                     $(".select-category option:first").text(
                         "-- No data in table --",
                     );
@@ -624,7 +626,6 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                     $("#dashboard-category").text("No expense!");
                     return;
                 } else {
-                    $(".select-category").prop("disabled", false);
                     $(".select-category option:first")
                         .text("-- Select a category --")
                         .prop('disabled', 'true');
@@ -634,7 +635,6 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                     $(".select-category option:first").text(
                         "-- Select a category --",
                     );
-                    $(".select-category").prop("disabled", false);
 
                     let categoryColor = item.category
                         .toLowerCase()
@@ -705,7 +705,7 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
 let expensesPieChart;
 
 // Pie chart for viewing entire dataset
-function pieChart() {
+function pieChart(year = '') {
     const colorMap = {
         Food: "#ffcc22",
         Transport: "#fb7100",
@@ -724,6 +724,7 @@ function pieChart() {
     $.ajax({
         url: "/expenses/chart-data",
         type: "GET",
+        data: { year: year },
         dataType: "json",
         success: function (response) {
             const canvas = document.getElementById("pie-chart");
@@ -761,7 +762,7 @@ function pieChart() {
                     onClick: (events, elements) => {
                         const curr = elements[0].index;
                         const category = expensesPieChart.data.labels[curr];
-                        showTable('', category);
+                        showTable(category, '', $(".select-year").val());
                     },
                     responsive: true,
                     maintainAspectRatio: false,
@@ -809,7 +810,7 @@ function showEmptyChartState(canvas) {
 let categoryBarChart = null;
 
 // Bar Chart for categorical data
-function barChart(category) {
+function barChart(category, year) {
 
     if (categoryBarChart instanceof Chart) {
         categoryBarChart.destroy();
@@ -834,7 +835,7 @@ function barChart(category) {
     $.ajax({
         url: "/expenses/chart-category",
         type: "GET",
-        data: { category: category },
+        data: { category: category, year: year },
         dataType: "json",
         success: function (response) {
             const canvas = document.getElementById("bar-chart");
@@ -879,7 +880,7 @@ function barChart(category) {
                             const label = categoryBarChart.data.labels[curr];
 
                             // Show data for current bar
-                            showTable(label, category);
+                            showTable(category, label, $(".select-year").val());
                         }
                     },
                     responsive: true,
@@ -920,9 +921,8 @@ function barChart(category) {
 
 let expenseLineChart;
 // Line Chart for displaying overall data 
-function lineChart(category = 'All', month = '') {
+function lineChart(category = 'All', month = '', year = '') {
     const activeColor = '#4e73df';
-    let textColor = $("html").hasClass("dark-mode") ? "white" : "black";
 
     $.ajax({
         url: '/expenses/fetch-expense',
@@ -930,7 +930,8 @@ function lineChart(category = 'All', month = '') {
         data: {
             for_chart: 1,
             category: category,
-            month: month
+            month: month,
+            year: year
         },
         dataType: 'json',
         success: function(response) {
@@ -973,7 +974,7 @@ function lineChart(category = 'All', month = '') {
                             const label = expenseLineChart.data.labels[curr];
 
                             // Show data for current bar
-                            showTable(label, category);
+                            showTable(category, label, $(".select-year").val());
                         }
                     },
                     responsive: true,
@@ -982,24 +983,15 @@ function lineChart(category = 'All', month = '') {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                color: textColor,
                                 callback: function(value) {
                                     return "₹" + value.toLocaleString("en-IN");
                                 }
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: textColor
                             }
                         } 
                     },
                     plugins: {
                         legend: { 
-                            position: "bottom",
-                            labels: {
-                                color: textColor
-                            }
+                            position: "bottom"
                         },
                         tooltip: {
                             callbacks: {
@@ -1025,14 +1017,15 @@ function lineChart(category = 'All', month = '') {
 } 
 
 // function to show table
-function showTable(label, category) {
+function showTable(category, label, year) {
     $.ajax({
         url: "expenses/fetch-expense",
         type: "GET",
         data: {
             table_data : 1,
-            label: label,
             category: category,
+            label: label,
+            year: year,
         },
         dataType: "json",
         success: function (response) {

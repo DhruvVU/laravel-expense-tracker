@@ -179,6 +179,8 @@ $(document).ready(function () {
             $('#filter-category').val(),
             defaultPageNo,
             $("#search-input").val(),
+            $("#start-date").val(),
+            $("#end-date").val()
         );
     });
 

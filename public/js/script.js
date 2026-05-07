@@ -67,7 +67,6 @@ $(document).ready(function () {
     })
 
     $(document).on("click", "#add-btn", function () {
-        //console.log("Button clicks");
         let description = $("#description").val();
         let amount = $("#amount").val();
         let category = $("#category").val();

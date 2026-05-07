@@ -43,11 +43,10 @@
 .stat-card {
     background: var(--container-bg);
     padding: 20px;
-    border-radius: 15px;
     border: 1px solid var(--border-color);
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    transition: transform 0.3s, border-radius 0.3s;
 }
 
 .stat-card:nth-child(2) {
@@ -74,6 +73,7 @@
     background-color: var(--bg-main);
     transform: translateY(-5px);
     border: 1px solid #3b82f6;
+    border-radius: 15px;
 }
 
 #dashboard-amount {

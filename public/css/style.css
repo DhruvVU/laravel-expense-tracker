@@ -7,11 +7,12 @@
 
 /* Variables for switching to dark theme   */
 :root {
-    --bg-main: #f0f2f5;
-    --container-bg: #ffffff;
+    --bg-main: #ffffff;
+    --container-bg: #f0f2f5;
     --text-main: #333333;
     --border-color: rgba(0, 0, 0, 0.1);
-    --input-hover: #efefef;
+    --input-hover: #e8e8e8;
+    --table-header: #ececee;
 }
 
 html {
@@ -19,11 +20,12 @@ html {
 }
 
 html.dark-mode {
-    --bg-main: #121212;
-    --container-bg: #1e1e1e;
+    --bg-main: #181818;
+    --container-bg: #121212;
     --text-main: #e0e0e0;
     --border-color: rgba(255, 255, 255, 0.1);
     --input-hover: #343333;
+    --table-header: #2f2f2f;
 }
 
 body {  
@@ -50,7 +52,7 @@ body.theme-initialized table {
 
 /* ===================================== Home.php Styling ====================================== */
 
-.app-shell {
+.body-main {
     display: flex;
     width: 100vw;
     height: 100vh;
@@ -61,7 +63,7 @@ body.theme-initialized table {
 /* Sidebar Styling */
 .sidebar {
     width: 280px;
-    background: var(--container-bg);
+    background: var(--bg-main);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;

@@ -137,6 +137,64 @@ h1::before {
     height: auto;
 }
 
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-main);
+}
+
+#expense-list tr:hover {
+    background-color: var(--input-hover);
+    transition: background-color 0.2s ease;
+}
+
+.history-table th:nth-child(4),
+.history-table td:nth-child(4) {
+    text-align: right;
+    padding-right: 40px;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: var(--table-header);
+    color: var(--text-main);
+    z-index: 10;
+}
+
+thead {
+    background-color: var(--bg-main);
+    border-bottom: 2px solid #edf2f7;
+}
+
+th {
+    text-align: left;
+    color: var(--text-main);
+    padding: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05rem;
+}
+
+td {
+    padding: 16px 15px;
+    color: var(--text-main);
+    border-bottom: 1px solid #edf2f7;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#expense-list th:nth-child(2),
+#expense-list td:nth-child(2) {
+    width: 30%;
+    word-wrap: break-word;
+}
+
 /* Category color coding */
 .pill {
     padding: 4px 12px;
@@ -179,73 +237,6 @@ html.dark-mode .pill-transport {
 html.dark-mode .pill-entertainment {
     background-color: #4a148c;
     color: #e1bee7;
-}
-
-.history-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--container-bg);
-}
-
-tbody tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.02);
-}
-
-tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    transition: background-color 0.2s ease;
-}
-
-.history-table th:nth-child(4),
-.history-table td:nth-child(4) {
-    text-align: right;
-    padding-right: 40px;
-}
-
-thead th {
-    position: sticky;
-    top: 0;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    z-index: 10;
-}
-
-thead {
-    background-color: var(--bg-main);
-    border-bottom: 2px solid #edf2f7;
-}
-
-th {
-    text-align: left;
-    color: var(--text-main);
-    padding: 15px;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.05rem;
-}
-
-td {
-    padding: 16px 15px;
-    color: var(--text-main);
-    border-bottom: 1px solid #edf2f7;
-    font-size: 14px;
-    vertical-align: middle;
-}
-
-tbody tr:hover {
-    background-color: var(--bg-main);
-    transition: background 0.2s ease;
-}
-
-tbody tr:last-child td {
-    border-bottom: none;
-}
-
-#expense-list th:nth-child(2),
-#expense-list td:nth-child(2) {
-    width: 30%;
-    word-wrap: break-word;
 }
 
 /* Button to delete an entry */

@@ -197,17 +197,22 @@
 .category-table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--container-bg);
+    background: var(--bg-main);
 }
 
 .category-table th {
     position: sticky;
     z-index: 999;
     top: 0;
-    background-color: var(--bg-main);
+    background-color: var(--table-header);
     color: var(--text-main);
     padding: 15px 10px;
     border-bottom: 2px solid var(--border-color);
+}
+
+.category-data tr:hover {
+    background-color: var(--input-hover);
+    transition: background-color 0.2s ease;
 }
 
 #show-btn {

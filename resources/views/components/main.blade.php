@@ -29,7 +29,7 @@
 </head>
 
 <body>
-    <div class="app-shell">
+    <div class="body-main">
 
         <aside class="sidebar">
 

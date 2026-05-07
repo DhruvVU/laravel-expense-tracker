@@ -69,6 +69,7 @@
 
     @media (max-width: 768px) {
         #toast-container {
+            font-size: 0.85rem;
             top: 2vh;
             left: 50%;
             transform: translateX(-50%);

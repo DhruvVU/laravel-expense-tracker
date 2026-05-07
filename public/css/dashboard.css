@@ -43,10 +43,11 @@
 .stat-card {
     background: var(--container-bg);
     padding: 20px;
+    border-radius: 15px;
     border: 1px solid var(--border-color);
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s, border-radius 0.3s;
+    transition: transform 0.3s;
 }
 
 .stat-card:nth-child(2) {
@@ -73,7 +74,6 @@
     background-color: var(--bg-main);
     transform: translateY(-5px);
     border: 1px solid #3b82f6;
-    border-radius: 15px;
 }
 
 #dashboard-amount {
@@ -197,14 +197,14 @@
 .category-table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--bg-main);
+    background: var(--container-bg);
 }
 
 .category-table th {
     position: sticky;
     z-index: 999;
     top: 0;
-    background-color: var(--table-header);
+    background-color: var(--bg-main);
     color: var(--text-main);
     padding: 15px 10px;
     border-bottom: 2px solid var(--border-color);
@@ -299,7 +299,7 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
-.form-btn-container {
+.add-form-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -325,7 +325,7 @@
     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 
-#cancel-btn {
+#close-form {
     width: 50%;
     padding: 18px;
     font-size: 1.2rem;
@@ -341,7 +341,7 @@
         box-shadow 0.2s;
 }
 
-#cancel-btn:hover {
+#close-form:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(235, 37, 37, 0.4);
 }

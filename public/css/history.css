@@ -135,7 +135,7 @@
 }
 
 #expense-list tr:hover {
-    background-color: var(--table-header);
+    background-color: var(--table-hover);
     transition: background-color 0.2s ease;
 }
 

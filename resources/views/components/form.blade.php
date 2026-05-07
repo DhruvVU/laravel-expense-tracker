@@ -28,7 +28,7 @@
 
     <div class="input-group">
         <label>Date</label>
-        <input type="date" id="exp_date">
+        <input type="date" id="exp_date" value="{{ date('Y-m-d') }}">
     </div>
 
     <div class="form-btn-container">

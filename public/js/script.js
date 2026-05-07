@@ -53,10 +53,16 @@ $(document).ready(function () {
         $(".add-card").fadeIn();
     })
 
+    // This listener works for both add and edit forms
     $(document).on("click keydown", function(e) {
         if ($(e.target).is("#close-form") || e.key === "Escape") {
+            // If add form is open
             $(".add-card").fadeOut();
-            $(".dashboard-container").removeClass('blurred');      
+            $(".dashboard-container").removeClass('blurred'); 
+            
+            // If edit form is open
+            $(".edit-card").fadeOut();
+            $(".container").removeClass('blurred')     
         }
     })
 
@@ -279,13 +285,6 @@ $(document).ready(function () {
         $("#amount").val(amount);
         $("#category").val(category);
         $("#exp_date").val(date);
-    });
-
-    $(document).on("click keydown", function (e) {
-        if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
-            $(".container").removeClass("blurred");
-            $(".edit-card").fadeOut();
-        }
     });
 
     // Update expense data

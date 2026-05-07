@@ -512,10 +512,16 @@ html.dark-mode .pill-entertainment {
     }
 
     .btn-reset {
+        background-color: #eb2525;
+        color: white;
         font-size: 1rem;
         border-radius: 10px;
         padding: 8px;
         width: 50%;
+    }
+
+    .btn-reset:hover {
+        box-shadow: none;
     }
 
     .table-container {

@@ -61,7 +61,7 @@
                 </select>
 
                 <div class="back-button">
-                    <button id="back-to-chart">📉 Back to chart</button>
+                    <button id="toggle-view">📒 Table View</button>
                 </div>
 
                 {{-- chart display for user expenses --}}

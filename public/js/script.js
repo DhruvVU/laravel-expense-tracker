@@ -186,7 +186,7 @@ $(document).ready(function () {
             showTable(category, month, year);
         } else {
             $(".table-data").fadeOut();
-            $(".back-button").fadeOut();
+            $("#toggle-view").text("📒 Table View");
             lineChart(category, month, year);        
         }
 
@@ -216,18 +216,28 @@ $(document).ready(function () {
     // ==================================== End of Filters section ====================================
 
     // Go back to chart from table 
-    $(document).on("click", "#back-to-chart", function() {
+    $(document).on("click", "#toggle-view", function() {
         const month = $('.select-month').val();
         const category = $(".select-category").val() ?? 'All';
         const year = $(".select-year").val();
 
-        $(".table-data").fadeOut();
+        if ($(".table-data").is(":visible")) {
+            $(".table-data").fadeOut();
+    
+            setTimeout(function() {
+                lineChart(category, month, year);
+                $("#lineChart").fadeIn();
+                $("#toggle-view").text("📒 Table View");
+            }, 500);
+        } else {
+            $("#lineChart").fadeOut();
 
-        setTimeout(function() {
-            lineChart(category, month, year);
-            $("#lineChart").fadeIn();
-            $(".back-button").fadeOut();
-        }, 500);
+            setTimeout(function() {
+                showTable(category, month, year);
+                $(".table-data").fadeIn();
+                $("#toggle-view").text("📉 Chart View");
+            }, 500);
+        }
     }); 
 
     // ====================== Chart Data based on User selection ======================
@@ -236,7 +246,7 @@ $(document).ready(function () {
         let selectedCategory = $(this).val();
         const year = $(".select-year").val();
         $(".table-data").fadeOut();
-        $(".back-button").fadeOut();
+        $("#toggle-view").text("📒 Table View");
 
         setTimeout(function() {
             if (selectedCategory === "All") {
@@ -1015,7 +1025,7 @@ function showTable(category, label, year) {
         dataType: "json",
         success: function (response) {
             $("#lineChart").fadeOut();
-            $(".back-button").fadeIn();
+            $("#toggle-view").text("📉 Chart View");
             let rows = "";
 
             if (response.data && response.data.length > 0) {

@@ -125,9 +125,11 @@
     margin-right: 15px;    
 }
 
-.select-year:hover {
+.select-year:hover,
+.select-month:hover {
     cursor: pointer;
     background-color: var(--input-hover);
+    border: 1px solid #3b82f6;
 }
 
 .select-month {
@@ -142,32 +144,27 @@
     margin-bottom: 10px;
 }
 
-.select-month:hover {
-    cursor: pointer;
-    background-color: var(--input-hover);
-}
-
 .back-button {
-    display: none;
     position: fixed;
     right: 50px;
     left: auto;
     top: 75px;
 }
 
-#back-to-chart {
+#toggle-view {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
     color: white;
     padding: 10px;
     border-radius: 12px;
-    border: none;   
     cursor: pointer;
     font-weight: 650;
     transition: transform 0.3s;
 }
 
-#back-to-chart:hover {
+#toggle-view:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 
 .line-chart {
@@ -197,22 +194,34 @@
 .category-table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--container-bg);
+    background: var(--bg-main);
 }
 
 .category-table th {
     position: sticky;
     z-index: 999;
     top: 0;
-    background-color: var(--bg-main);
+    background-color: var(--table-header);
     color: var(--text-main);
     padding: 15px 10px;
     border-bottom: 2px solid var(--border-color);
 }
 
+.category-data tr td {
+    border-bottom: none;
+}
+
+.category-data tr:nth-child(6) td {
+    border-bottom: 1px solid var(--border-color);
+}
+
 .category-data tr:hover {
-    background-color: var(--input-hover);
+    background-color: var(--table-header);
     transition: background-color 0.2s ease;
+}
+
+.category-data tr:last-child:hover {
+    background-color: var(--bg-main);
 }
 
 #show-btn {
@@ -381,8 +390,12 @@
         top: 0;
         right: auto;
         left: 10px;
-        margin-bottom: 5px;
+        margin: 5px 0 10px 0;
         width: 100%;
+    }
+
+    #toggle-view {
+        background-color: #3b82f6;
     }
 
     .line-chart {

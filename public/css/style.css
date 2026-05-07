@@ -11,7 +11,7 @@
     --container-bg: #f0f2f5;
     --text-main: #333333;
     --border-color: rgba(0, 0, 0, 0.1);
-    --input-hover: #e8e8e8;
+    --input-hover: #ffffff;
     --table-header: #ececee;
 }
 
@@ -24,7 +24,7 @@ html.dark-mode {
     --container-bg: #121212;
     --text-main: #e0e0e0;
     --border-color: rgba(255, 255, 255, 0.1);
-    --input-hover: #343333;
+    --input-hover: #282828;
     --table-header: #2f2f2f;
 }
 

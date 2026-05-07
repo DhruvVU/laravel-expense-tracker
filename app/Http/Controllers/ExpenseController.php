@@ -20,7 +20,6 @@ class ExpenseController extends Controller
     public function store(StoreExpenseRequest $request)
     {
         $expense = $request->user()->expenses()->create($request->validated());
-
         return (new ExpenseResource($expense))
                 ->additional([
                     'status' => 'success',
@@ -84,7 +83,6 @@ class ExpenseController extends Controller
             }
 
             $expenses = $query->get();
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Line Chart data fetched',
@@ -152,7 +150,6 @@ class ExpenseController extends Controller
     {
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('update', $expense);
-
         $expense->update($request->validated());
 
         return response()->json([
@@ -165,10 +162,8 @@ class ExpenseController extends Controller
 
     public function delete(Expense $expense)
     {
-
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('delete', $expense);
-
         $expense->delete();
 
         return response()->json([
@@ -182,7 +177,6 @@ class ExpenseController extends Controller
     public function exportCsv(Request $request)
     {
         $query = $this->expenseService->getFilteredQuery($request);
-
         $expenses = $query->select('expense_date', 'description', 'category', 'amount')
                           ->orderBy('expense_date', 'desc')
                           ->get();

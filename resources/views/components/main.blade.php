@@ -66,7 +66,7 @@
                 <div class="theme-switch-wrapper">
                     <span class="icon sun-icon">☀️</span>
                     <label class="theme-switch" for="checkbox">
-                        <input type="checkbox" id="checkbox" />
+                        <input type="checkbox" id="checkbox" aria-label="Toggle Dark Mode"/>
                         <div class="slider round"></div>
                     </label>
                     <span class="icon moon-icon">🌙</span>

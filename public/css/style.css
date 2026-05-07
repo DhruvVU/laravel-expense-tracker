@@ -225,7 +225,6 @@ body.theme-initialized table {
 
 /* Dark mode button  */
 .theme-switch-wrapper {
-    background: rgba(255, 255, 255, 0.03);
     display: flex;
     align-items: center;
     gap: 12px;

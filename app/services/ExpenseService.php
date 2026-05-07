@@ -42,6 +42,11 @@ class ExpenseService
 
     public function applyLabelFilters($query, $label) {
         
+        if (preg_match('/^\d{1,2}$/', $label)) {
+            $date = DateTime::createFromFormat('n', $label);
+            return $query->whereMonth('expense_date', $date->format('m'));
+        }
+
         if (preg_match('/^[A-Za-z]{3}$/', $label)) {
             $date = DateTime::createFromFormat('M', $label);
             return $query->whereMonth('expense_date', $date->format('m'));

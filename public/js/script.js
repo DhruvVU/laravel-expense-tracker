@@ -5,43 +5,11 @@ $(document).ready(function () {
         },
     });
 
-
     // default page numberis set to 1 for loading data
     let defaultPageNo = 1;
 
     // timer for keeping a small delay when searching the database
     let searchTimer;
-
-    // Get current theme from localstorage
-    const currTheme = localStorage.getItem("theme");
-
-    // Check the theme user selected last time
-    if (currTheme === "dark") {
-        $("html").addClass("dark-mode");
-        $("#checkbox").prop("checked", true);
-    }
-
-    // Dark mode toggle
-    $("#checkbox").on("change", function () {
-        const isDark = $(this).is(":checked");
-        $("html").toggleClass("dark-mode", isDark);
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-
-        setTimeout(() => {
-            const category = $(".select-category").val();
-            const year = $(".select-year").val();
-
-            if (typeof pieChart === "function") {
-                pieChart(year);
-            }
-
-            if (typeof barChart === "function") {
-                barChart(category, year);
-            }  
-
-            window.dispatchEvent(new Event('resize'));
-        }, 100);
-    });
 
 // ============================================= Add Expense(CREATE) ===========================================
 
@@ -715,7 +683,7 @@ function pieChart(year = '') {
             if (expensesPieChart) {
                 expensesPieChart.destroy();
             }
-
+            
             expensesPieChart = new Chart(canvas, {
                 type: "doughnut",
                 data: {

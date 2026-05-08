@@ -9,10 +9,10 @@
     <title>@yield('title', 'Tracker.io')</title>
 
     {{-- Including all style files --}}
-    @include('layouts.partials.styles')
+    @include('layouts.partials._styles')
 
     {{-- Including all script files --}}
-    @include('layouts.partials.script')
+    @include('layouts.partials._scripts')
 
 </head>
 

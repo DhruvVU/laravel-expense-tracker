@@ -5,9 +5,6 @@ $(document).ready(function () {
         },
     });
 
-    setTimeout(() => {
-        $("body").addClass("theme-initialized");
-    }, 100);
 
     // default page numberis set to 1 for loading data
     let defaultPageNo = 1;
@@ -55,7 +52,7 @@ $(document).ready(function () {
 
     // This listener works for both add and edit forms
     $(document).on("click keydown", function(e) {
-        if ($(e.target).is("#close-form") || e.key === "Escape") {
+        if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
             // If add form is open
             $(".add-card").fadeOut();
             $(".dashboard-container").removeClass('blurred'); 
@@ -555,32 +552,6 @@ $(document).ready(function () {
         });
     });
 });
-
-// =============================================== Toast Function ==============================================
-
-function showToast(message, type) {
-    // Set Toast class based on type of message
-    const isDark = $("html").hasClass("dark-mode");
-
-    const Toast = Swal.mixin({
-        toast: true,
-        position: "top",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        background: isDark? "#1e1e1e" : "#fff",
-        color: isDark ? "#fff" : "#000",
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-        }
-    });
-
-    Toast.fire({
-        icon: type,
-        message: message
-    });
-}
 
 // ======================================== Main Function to load data =========================================
 

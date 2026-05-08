@@ -30,10 +30,5 @@
         </div>
         </div>
 
-        <!-- This container handles the toast element  -->
-        <div id="toast-container">
-            <!-- <div class="toast toast-success">Success Toast!</div> -->
-            <!-- <div class="toast toast-error">Error Toast!</div> -->
-        </div>
     @endsection
 </x-guest>

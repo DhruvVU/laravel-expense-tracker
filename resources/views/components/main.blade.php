@@ -8,24 +8,12 @@
 
     <title>@yield('title', 'Tracker.io')</title>
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/history.css') }}">
+    {{-- Including all style files --}}
+    @include('layouts.partials.styles')
 
-    <!-- Icons  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {{-- Including all script files --}}
+    @include('layouts.partials.script')
 
-    <!-- JQuery link  -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Main javascript file -->
-    <script src="{{ asset('js/script.js') }}"></script>
-
-    <!-- Chart.js link -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Sweet Alert JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>

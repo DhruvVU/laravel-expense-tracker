@@ -560,20 +560,26 @@ $(document).ready(function () {
 
 function showToast(message, type) {
     // Set Toast class based on type of message
-    let toastClass = type === "success" ? "toast-success" : "toast-error";
-    let toast = $(`<div class="toast ${toastClass}">${message}</div>`);
+    const isDark = $("html").hasClass("dark-mode");
 
-    $("#toast-container").append(toast);
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        background: isDark? "#1e1e1e" : "#fff",
+        color: isDark ? "#fff" : "#000",
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
 
-    // Hide toast after 3 seconds
-    setTimeout(function () {
-        toast.addClass("hide");
-
-        // Slide out animation
-        setTimeout(function () {
-            toast.remove();
-        }, 500);
-    }, 3000);
+    Toast.fire({
+        icon: type,
+        message: message
+    });
 }
 
 // ======================================== Main Function to load data =========================================

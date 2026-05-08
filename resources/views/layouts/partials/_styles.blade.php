@@ -9,3 +9,6 @@
 
 <!-- Icons  -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+{{-- Loading skeleton --}}
+<link href=" https://cdn.jsdelivr.net/npm/skeleton-elements@4.0.1/css/skeleton-elements.min.css " rel="stylesheet">

@@ -536,6 +536,9 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
             year: year
         },
         dataType: "json",
+        beforeSend: function() {
+            showTableLoader();
+        },
         success: function (response) {
             let rows = "";
 
@@ -597,7 +600,9 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                         </tr>
                     `;
                 });
-                $("#expense-list").html(rows);
+                setTimeout(function() {
+                    $("#expense-list").html(rows);
+                }, 500);
             }
 
             // Page buttons based on number of pages
@@ -968,6 +973,9 @@ function showTable(category, label, year) {
             year: year,
         },
         dataType: "json",
+        beforeSend: function() {
+            showTableLoader();
+        },
         success: function (response) {
             $("#lineChart").fadeOut();
             $("#toggle-view").text("📉 Chart View");
@@ -1010,15 +1018,30 @@ function showTable(category, label, year) {
                 `;
             }
 
-            $(".category-data").html(rows);
-
             setTimeout(function() {
-                $(".table-data").fadeIn();
-            }, 500);
+                $(".category-data").html(rows);
+                $(".table-data").show();
+            }, 500)
         },
         error: function (xhr) {
             showToast("Error displaying data! Check console", "error");
             console.log(xhr.response);
         },
     });
+}
+
+function showTableLoader() {
+    let loaderRows = '';
+    for (let i = 0; i < 5; i++) {
+        loaderRows += `
+            <tr>
+                <td><div class="skeleton-text skeleton-effect-wave">Date</div></td>
+                <td><div class="skeleton-text skeleton-effect-wave">Description goes here</div></td>
+                <td><div class="skeleton-block skeleton-effect-wave" style="width:60px; height:24px; border-radius:20px;"></div></td>
+                <td><div class="skeleton-text skeleton-effect-wave">000.00</div></td>
+            </tr>
+        `;
+    }
+    $("#expense-list").html(loaderRows);
+    $(".category-data").html(loaderRows);
 }

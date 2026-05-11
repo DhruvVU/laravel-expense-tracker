@@ -24,7 +24,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'password'
+        'password',
+        'monthly_budget'
     ];
 
     protected function casts(): array

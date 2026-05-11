@@ -77,7 +77,9 @@
 
     {{-- Hidden card will be only shown when user clicks edit button --}}
     <x-form mode="edit" title="Edit Expense"></x-form>
-
+    
+    @include('layouts.partials._footer')
+    
     <script>
         $(document).ready(function () {
             loadExpenses('All', 1, '');

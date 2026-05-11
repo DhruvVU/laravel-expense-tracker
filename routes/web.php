@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -27,10 +28,16 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', [ExpenseController::class, 'fetchYear'])->name('dashboard');
+    Route::get('/dashboard', function() {
+        return view('layouts.dashboard');
+    })->name('dashboard');
+
+    Route::get('/dashboard/budget-stats', [DashboardController::class, 'getBudget'])->name('get_budget');
+
+    Route::patch('/dashboard/set-budget', [DashboardController::class, 'setBudget'])->name('set_budget');
 
     Route::get('/history', function () {
-        return view('history');
+        return view('layouts.history');
     })->name('history');
 
     Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {

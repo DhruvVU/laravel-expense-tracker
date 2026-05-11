@@ -10,6 +10,9 @@
 {{-- DataTables library --}}
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
+{{-- Progress bar  --}}
+<script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
+
 <script>
     function themeToggle() {
         // Get current theme from localstorage
@@ -19,16 +22,18 @@
         if (currTheme === "dark") {
             $("html").addClass("dark-mode");
             $("#checkbox").prop("checked", true);
+            $('.icon').text('🌙');
         }
         
         // Dark mode toggle
-        $("#checkbox").on("change", function () {
-            const isDark = $(this).is(":checked");
+        $("#change-theme").on("click", function () {
+            const isDark = $('input', this).is(":checked");
             $("html").toggleClass("dark-mode", isDark);
             localStorage.setItem("theme", isDark ? "dark" : "light");
+            $('.icon').text(isDark ? '🌙' : '☀️');
             
             setTimeout(() => {
-                const category = $(".select-category").val();
+                const category = $(".select-category").val();   
                 const year = $(".select-year").val();
                 
                 if (typeof pieChart === "function") {

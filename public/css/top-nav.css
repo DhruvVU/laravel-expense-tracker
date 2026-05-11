@@ -1,0 +1,63 @@
+.top-nav {
+    height: 70px;
+    display: flex;
+    align-items: center; 
+    justify-content: flex-end; 
+    padding-right: 30px;
+    background-color: var(--bg-main);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    z-index: 10;    
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 25px; 
+}
+
+.select-year {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: var(--input-hover);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.select-year:hover {
+    cursor: pointer;
+    background-color: var(--input-hover);
+    border: 1px solid #3b82f6;
+}
+
+/* Dark mode button  */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.icon {
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: inline-block; 
+}
+
+.icon.fade {
+  opacity: 0;
+  transform: scale(0.5) rotate(20deg);
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.theme-switch input {
+    display: none;
+}

@@ -7,6 +7,15 @@
 {{-- History page styling --}}
 <link rel="stylesheet" href="{{ asset('css/history.css') }}">
 
+{{-- Sidebar styling --}}
+<link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+
+{{-- Top Navbar styling --}}
+<link rel="stylesheet" href="{{ asset('css/top-nav.css') }}">
+
+{{-- Form styling --}}
+<link rel="stylesheet" href="{{ asset('css/form-styling.css') }}">
+
 <!-- Icons  -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 

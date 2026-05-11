@@ -54,6 +54,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status === "success") {
                     showToast(response.message, response.status);
+                    fetchBudgetStatus();
                     loadExpenses(
                         $("#filter-category").val(), 
                         1, 
@@ -304,6 +305,43 @@ $(document).ready(function () {
                 }
             },
         });
+    });
+
+    // Edit budget
+    $(document).on('click', '#edit-budget', function() {
+        let currentBudget = $('#budget-total').text().replace('₹', '').replace(',', '');
+        Swal.fire({
+            title: 'Set Monthly Budget',
+            input: 'number',
+            inputValue: currentBudget,
+            showCancelButton: true,
+            allowEscapeKey: true,
+            confirmButtonText: 'Update Budget',
+            confirmButtonColor: '#3b82f6',
+            background: $("html").hasClass("dark-mode") ? "#1e1e1e" : "#fff",
+            color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+            inputValidator: (value) => {
+                if (!value || value < 0) {
+                    return 'Please enter a valid positive amount!';
+                }
+            },
+            preConfirm: (newBudget) => {
+                return $.ajax({
+                    url: '/dashboard/set-budget',
+                    method: 'patch',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        monthly_budget: newBudget
+                    }
+                }).catch(error => {
+                    Swal.showValidationMessage(`Request failed: ${error.responseJSON.message}`);
+                });
+            }
+        }).then((result) => {
+            Swal.fire('Saved!', 'Your monthly budget has been updated.', 'success');
+            
+            fetchBudgetStatus();
+        })  
     });
 
 // =========================================== Delete Expense(DELETE) ==========================================
@@ -1044,4 +1082,60 @@ function showTableLoader() {
     }
     $("#expense-list").html(loaderRows);
     $(".category-data").html(loaderRows);
+}
+
+let progressBar;
+
+function expenseProgressBar() {
+    progressBar = new ProgressBar.SemiCircle('#budget-gauge', {
+        strokeWidth: 6,
+        color: '#2ecc71',
+        trailColor: '#747474',
+        trailWidth: 6,
+        easing: 'easeInOut',
+        duration: 2000,
+        svgStyle: {
+            width: '100%',
+            height: '100%'
+        },
+        step: (state, bar) => {
+            const value = Math.round(bar.value() * 100);
+            $('#budget-percent').text(value + '%');
+
+            if (value >= 90) {
+                bar.path.setAttribute('stroke', '#e74c3c'); // Danger Red
+            } else if (value >= 70) {
+                bar.path.setAttribute('stroke', '#f1c40f'); // Warning Yellow
+            } else {
+                bar.path.setAttribute('stroke', '#2ecc71'); // Safe Green
+            }
+        }
+    });
+}
+
+function fetchBudgetStatus() {
+    $.ajax({
+        url: '/dashboard/budget-stats',
+        type: 'GET',
+        success: function(response) {
+            if (response.status === 'success') {
+                
+                const data = response.data.original;
+                $('#expenses-count').text(data.total_expenses);
+                $('#previous-amount').text(data.last_month);
+                $('#last-active').text(data.latest_category);
+
+                const spent = parseFloat(data.spent || 0);
+                const budget = parseFloat(data.budget || 0);    
+                const percentage = parseFloat(data.percentage || 0);
+
+                let ratio = budget > 0 ? (spent / budget) : 0;
+                progressBar.animate(ratio > 1 ? 1 : ratio);
+
+                $('#budget-spent').text('₹' + spent.toLocaleString());
+                $('#budget-total').text('₹' + budget.toLocaleString());
+                $('#budget-percent').text(Math.round(percentage) + '%');
+            }
+        }
+    });
 }

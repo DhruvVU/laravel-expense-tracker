@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class ExpenseService
 {
+    // Filtering query based on the given input
     public function getFilteredQuery(Request $request): Builder|HasMany {
         
         $query = $request->user()->expenses();
@@ -40,6 +41,7 @@ class ExpenseService
         return $query;
     }
 
+    // Regular expressions to fetch data based on date label
     public function applyLabelFilters($query, $label) {
         
         if (preg_match('/^\d{1,2}$/', $label)) {
@@ -66,4 +68,40 @@ class ExpenseService
         
         return $query->whereRaw('DAYNAME(expense_date) = ?', [$label]);
     }
+
+    // Monthly budget for user
+    public function getMonthlyBudget($user) {
+        $budget = $user->monthly_budget ?? 0;
+        
+        $spent = $user->expenses()
+                    ->whereMonth('expense_date', now()->month)
+                    ->whereYear('expense_date', now()->year)
+                    ->sum('amount');
+                    
+        $percentage = ($budget > 0) ? ( $spent / $budget ) * 100 : 0;
+        
+        $last_active = $user->expenses()
+                        ->latest('id')
+                        ->value('category') ?? 'None';
+        
+        $total_count = $user->expenses()->count();
+        $prev_month = now()->subMonth();
+        $last_month = $user->expenses()
+                        ->whereMonth('expense_date', $prev_month->month)
+                        ->whereYear('expense_date', $prev_month->year)
+                        ->sum('amount');
+
+
+        return response()->json([
+            'status' => 'Monthly budget fetched',
+            'budget' => $budget,
+            'spent' => $spent,
+            'percentage' => round($percentage, 2),
+            'remaining' => $budget - $spent,
+            'total_expenses' => $total_count,
+            'last_month' => $last_month,
+            'latest_category' => $last_active
+        ]);
+    }
+
 }

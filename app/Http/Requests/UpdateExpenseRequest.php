@@ -26,7 +26,7 @@ class UpdateExpenseRequest extends FormRequest
             'description' => 'sometimes|string|max:255',
             'amount' => 'sometimes|numeric',
             'category' => 'sometimes|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'sometimes|date|before_or_equal:today',
+            'expense_date' => 'sometimes|date|before_or_equal:today'
         ];
     }
 }

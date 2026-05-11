@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ExpenseResource;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+
 class ExpenseController extends Controller
 {
     // Using expense service to make the controller thinner
@@ -23,26 +25,11 @@ class ExpenseController extends Controller
         return (new ExpenseResource($expense))
                 ->additional([
                     'status' => 'success',
-                    'message' => 'Data added successfully'
+                    'message' => 'Expense added successfully'
                 ]);
     }
 
 // =========================================== Fetch Expense(READ) =============================================
-
-    // Fetch Years 
-    public function fetchYear(Request $request) {
-        $years = $request->user()->expenses()
-                ->selectRaw('YEAR(expense_date) as year')
-                ->distinct()
-                ->orderBy('year', 'desc')
-                ->pluck('year');
-        
-        if ($years->isEmpty()) {
-            $years = collect([date('Y')]);
-        }
-
-        return view('dashboard', compact('years'));
-    }
 
     public function fetch(Request $request)
     {
@@ -56,7 +43,7 @@ class ExpenseController extends Controller
                 $this->expenseService->applyLabelFilters($query, $request->label);
             }
 
-            $expenses = $query->orderBy('expense_date', 'desc')->limit(6)->get();
+            $expenses = $query->orderBy('expense_date', 'desc')->limit(5)->get();
             $totalAmount = $expenses->sum('amount');
 
             return ExpenseResource::collection($expenses)->additional([

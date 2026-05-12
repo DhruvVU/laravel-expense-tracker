@@ -25,7 +25,13 @@
                 <span class="stat-label category-label">Spending Distribution</span>
                 <div class="chart-wrapper">
                     <canvas id="pie-chart"></canvas>
-                    <canvas id="bar-chart" style="display: none"></canvas>
+                </div>
+            </div>
+
+            <div class="stat-card chart-card">
+                <span class="stat-label category-label">Spending Distribution for <span id="curr-category"></span> </span>
+                <div class="chart-wrapper">
+                    <canvas id="bar-chart"></canvas>
                 </div>
             </div>
         </div>
@@ -42,7 +48,7 @@
             </div>
 
             <div class="stat-card-mini">
-                <span class="stat-label">Active Category</span>
+                <span class="stat-label">Select Category</span>
                 <select class="select-category">
                     <option value="" selected>-- No categories available --</option>
                     <option value="All">All Categories</option>
@@ -128,10 +134,10 @@
         $(document).ready(function () {
             const year = $('.select-year').val();
             loadExpenses('All', 1, '', '', '', year);
+            fetchBudgetStats();
             pieChart(year);
             lineChart('All', '', year);
             expenseProgressBar();
-            fetchBudgetStatus();
         });     
     </script>
 </x-main>

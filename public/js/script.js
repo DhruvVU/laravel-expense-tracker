@@ -54,14 +54,15 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status === "success") {
                     showToast(response.message, response.status);
-                    fetchBudgetStatus();
+                    fetchBudgetStats();
                     loadExpenses(
                         $("#filter-category").val(), 
                         1, 
                         "", "", "",
                         $(".select-year").val()
                     );
-
+                    barChart(category, $(".select-year").val());
+                    
                     $(".add-card").fadeOut();
                     $(".dashboard-container").removeClass('blurred');
 
@@ -71,12 +72,7 @@ $(document).ready(function () {
 
                     $(".select-category").val(category);
 
-                    $("#pie-chart").fadeOut(200);
-                    setTimeout(function() {
-                        $('#bar-chart').show();
-                        barChart(category, $(".select-year").val());
-                        $('#bar-chart').hide().fadeIn(200);
-                    }, 50);
+                    $('#bar-chart').fadeIn(200);
                     pieChart($(".select-year").val());
                 } else {
                     showToast(response.message || "Failed to add expense", "error");
@@ -217,11 +213,7 @@ $(document).ready(function () {
         setTimeout(function() {
             if (selectedCategory === "All") {
                 pieChart(year);
-                
-                $("#bar-chart").fadeOut()
-                setTimeout(function() {
-                    $("#pie-chart").fadeIn();
-                },500);
+                $("#pie-chart").fadeIn();
 
                 $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, "", "", "", year));
                 lineChart(selectedCategory, '', year);
@@ -230,12 +222,10 @@ $(document).ready(function () {
                 return;
             }
 
+            $('#curr-category').text(selectedCategory);
             barChart(selectedCategory, year);
             lineChart(selectedCategory, '', year);
             $("#lineChart").fadeIn();
-            $("#pie-chart").fadeOut(100, function() {
-                $("#bar-chart").fadeIn();
-            });
             $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, "", "", "", year));
             $(".select-month").val("");
         }, 500);
@@ -340,7 +330,7 @@ $(document).ready(function () {
         }).then((result) => {
             Swal.fire('Saved!', 'Your monthly budget has been updated.', 'success');
             
-            fetchBudgetStatus();
+            fetchBudgetStats();
         })  
     });
 
@@ -568,7 +558,7 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
         data: {
             category: category,
             page: page_no,
-            search: search,
+            search: search, 
             start_date: start_date,
             end_date: end_date,
             year: year
@@ -1113,7 +1103,7 @@ function expenseProgressBar() {
     });
 }
 
-function fetchBudgetStatus() {
+function fetchBudgetStats() {
     $.ajax({
         url: '/dashboard/budget-stats',
         type: 'GET',
@@ -1124,6 +1114,9 @@ function fetchBudgetStatus() {
                 $('#expenses-count').text(data.total_expenses);
                 $('#previous-amount').text(data.last_month);
                 $('#last-active').text(data.latest_category);
+                
+                $('#curr-category').text(data.latest_category);
+                barChart(data.latest_category, $(".select-year").val())
 
                 const spent = parseFloat(data.spent || 0);
                 const budget = parseFloat(data.budget || 0);    

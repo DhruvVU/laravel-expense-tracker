@@ -124,7 +124,7 @@ html, body, .container, .card, table, td, th, body, html {
         padding-right: 0;
         width: 100%;
     }
-    
+
     .body-main {
         flex-direction: column; 
         height: auto !important;

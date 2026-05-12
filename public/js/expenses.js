@@ -1,0 +1,473 @@
+$(document).ready(function () {
+    // ============================================ Add Expense(CREATE) =========================================
+
+    $(document).on("click", "#show-btn", function () {
+        $(".dashboard-container").addClass("blurred");
+        $(".add-card").fadeIn();
+    });
+
+    // This listener works for both add and edit forms
+    $(document).on("click keydown", function (e) {
+        if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
+            // If add form is open
+            $(".add-card").fadeOut();
+            $(".dashboard-container").removeClass("blurred");
+
+            // If edit form is open
+            $(".edit-card").fadeOut();
+            $(".container").removeClass("blurred");
+        }
+    });
+
+    $(document).on("click", "#add-btn", function () {
+        let description = $("#description").val();
+        let amount = $("#amount").val();
+        let category = $("#category").val();
+        let exp_date = $("#exp_date").val();
+
+        $("#dashboard-category").text(category);
+
+        let expenseData = {
+            description: description,
+            amount: amount,
+            category: category,
+            expense_date: exp_date,
+        };
+
+        $.ajax({
+            url: "/expenses/add-expense",
+            type: "POST",
+            data: expenseData,
+            dataType: "json",
+            success: function (response) {
+                if (response.status === "success") {
+                    showToast(response.message, response.status);
+                    if (typeof fetchBudgetStats === 'function') fetchBudgetStats();
+                    if (typeof barChart === 'function') barChart(category, $(".select-year").val());
+                    if (typeof pieChart === 'function') pieChart($(".select-year").val());
+                    loadExpenses(
+                        $("#filter-category").val(),
+                        1,
+                        "",
+                        "",
+                        "",
+                        $(".select-year").val(),
+                    );
+                    
+
+                    $(".add-card").fadeOut();
+                    $(".dashboard-container").removeClass("blurred");
+
+                    $("#description").val("");
+                    $("#amount").val("");
+                    $("#exp_date").val(new Date().toISOString().split("T")[0]);
+
+                    $("#bar-chart").fadeIn(200);
+                } else {
+                    showToast(
+                        response.message || "Failed to add expense",
+                        "error",
+                    );
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+
+                    Object.keys(errors).forEach((key) => {
+                        showToast(errors[key][0], "error");
+                    });
+                } else {
+                    showToast("An unexpected error occured!", "error");
+                }
+            },
+        });
+    });
+
+    // ========================================== Search Expense(READ) =========================================
+
+    // ================================ Search operation filters section ================================
+
+    // Clear all filters
+    $(document).on("click", "#reset-filters", function () {
+        $("#search-input").val("");
+        $("#filter-category").val("All");
+        $("#start-date").val("");
+        $("#end-date").val("");
+
+        loadExpenses("All", 1, "", "", "");
+    });
+
+    //  Filter based on name
+    $(document).on("input", "#search-input", function () {
+        let searchVal = $(this).val();
+        clearTimeout(searchTimer);
+
+        // send request after a small 300ms delay
+        searchTimer = setTimeout(function () {
+            loadExpenses($("#filter-category").val(), defaultPageNo, searchVal);
+        }, 300);
+    });
+
+    //  Filter based on category
+    $(document).on("change", "#filter-category", function () {
+        defaultPageNo = 1;
+        loadExpenses($(this).val(), defaultPageNo, $("#search-input").val());
+        $("#selected-category").text($(this).val());
+    });
+
+    //  Filter based on page number
+    $(document).on("click", ".page-btn", function () {
+        defaultPageNo = $(this).data("page");
+        loadExpenses(
+            $("#filter-category").val(),
+            defaultPageNo,
+            $("#search-input").val(),
+            $("#start-date").val(),
+            $("#end-date").val(),
+        );
+    });
+
+    // Filter based on month and year
+    $(document).on("change", ".select-month, .select-year", function () {
+        const month = $(".select-month").val();
+        const category = $(".select-category").val() ?? "All";
+        const year = $(".select-year").val();
+
+        loadExpenses(category, 1, "", "", "", year);
+
+        if ($(".table-data").is(":visible")) {
+            showTable(category, month, year);
+        } else {
+            $(".table-data").fadeOut();
+            $("#toggle-view").text("📒 Table View");
+            lineChart(category, month, year);
+        }
+
+        if (category === "All") {
+            pieChart(year);
+        } else {
+            barChart(category, year);
+        }
+    });
+
+    //  Filter Data based on Date range provided
+    $(document).on("change", ".select-date", function () {
+        let start_date = $("#start-date").val();
+        let end_date = $("#end-date").val();
+        let current_filter = $("#filter-category").val();
+        let search_input = $("#search-input").val();
+
+        if (start_date && end_date) {
+            if (new Date(start_date) > new Date(end_date)) {
+                showToast("End date cannot be set before start date", "error");
+                return;
+            }
+        }
+
+        loadExpenses(current_filter, 1, search_input, start_date, end_date);
+    });
+    // ==================================== End of Filters section ====================================
+
+    // ========================================== Edit Expense(UPDATE) =========================================
+
+    // Show edit form
+    $(document).on("click", ".show-edit", function () {
+        $(".container").addClass("blurred");
+        $(".edit-card").fadeIn();
+
+        const id = $(this).data("id");
+        const row = $(this).closest("tr");
+        const description = row.find('[data-field="description"]').text();
+        const amount = row
+            .find('[data-field="amount"]')
+            .text()
+            .trim()
+            .replace(/[^\d.-]/g, "");
+        const category = row.find('[data-field="category"] span').text().trim();
+        const date = row.find('[data-field="expense_date"]').text();
+
+        $("#data_id").val(id);
+        $("#description").val(description);
+        $("#amount").val(amount);
+        $("#category").val(category);
+        $("#exp_date").val(date);
+    });
+
+    // Update expense data
+    $(document).on("click", "#edit-btn", function () {
+        let id = $("#data_id").val();
+        let description = $("#description").val();
+        let amount = $("#amount").val();
+        let category = $("#category").val();
+        let exp_date = $("#exp_date").val();
+
+        let updatedData = {
+            id: id,
+            description: description,
+            amount: amount,
+            category: category,
+            expense_date: exp_date,
+        };
+
+        $.ajax({
+            url: "/expenses/edit-expense/" + id,
+            type: "PUT",
+            data: updatedData,
+            dataType: "json",
+            success: function (response) {
+                loadExpenses("All", 1, "");
+                showToast("Expense successfully updated!", "success");
+                $(".container").removeClass("blurred");
+                $(".edit-card").fadeOut();
+            },
+            error: function (xhr) {
+                if (xhr.status === 403) {
+                    showToast("Unauthorized!", "error");
+                }
+
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+
+                    Object.keys(errors).forEach((key) => {
+                        showToast(errors[key][0], "error");
+                    });
+                } else {
+                    showToast("An unexpected error occured!", "error");
+                }
+            },
+        });
+    });
+
+    // ========================================= Delete Expense(DELETE) ========================================
+
+    $(document).on("click", ".delete-btn", function () {
+        let id = $(this).data("id");
+        let row = $(this).closest("tr");
+
+        $(".container").addClass("blurred");
+        const swalButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "swal-confirm",
+                cancelButton: "swal-cancel"
+            },
+            buttonsStyling: false   
+        });
+
+        swalButtons.fire({
+            title: "Are you sure?",
+            text: "Do you want to delete the expenses?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3b82f6",
+            cancelButtonColor: "#ef4444",
+            confirmButtonText: "Yes, delete it!",
+            allowEscapeKey: true,
+            background: $("html").hasClass("dark-mode") ? "#1e1e1e" : "#fff",
+            color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/expenses/delete-expense/" + id,
+                    type: "DELETE",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status === "success") {
+                            row.fadeOut(500, function () {
+                                $(this).remove();
+                                $(".container").removeClass("blurred");
+                                loadExpenses(
+                                    $("#filter-category").val(),
+                                    defaultPageNo,
+                                    $("#search-input").val(),
+                                );
+                                pieChart();
+                            });
+                            showToast(
+                                "Your Expense has been deleted",
+                                "success",
+                            );
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 403) {
+                            showToast("Unauthorized!", "error");
+                        }
+                    },
+                });
+            } else {
+                $(".container").removeClass("blurred");
+            }
+        });
+    });
+
+    // ============================================ Download Expense ============================================
+
+    $(document).on("click", "#download-csv", function (e) {
+        e.preventDefault();
+        $(".container").addClass("blurred");
+
+        const swalButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "swal-confirm",
+                cancelButton: "swal-cancel"
+            },
+            buttonsStyling: false   
+        });
+
+        const params = {
+            category: $("#filter-category").val() || 'All',
+            search: $("#search-input").val() || '',
+            start_date: $("#start-date").val() || '',
+            end_date: $("#end-date").val() || ''
+        }
+
+        const urlParams = new URLSearchParams(params).toString();
+
+        swalButtons.fire({
+            title: "Download File",
+            text: "This file will include your current filtered results.",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3b82f6",
+            cancelButtonColor: "#ef4444",
+            confirmButtonText: "Download",
+            allowEscapeKey: true,
+            background: $("html").hasClass("dark-mode") ? "#1e1e1e" : "#fff",
+            color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/expenses/export-csv?${urlParams}`;
+                $(".container").removeClass("blurred");
+                showToast("File download in progress!", "success");
+            } else {
+                $(".container").removeClass("blurred");
+            }
+        });
+    });
+});
+
+// ======================================== Main Function to load data =========================================
+
+function loadExpenses(category = "All", page_no = 1, search = "", start_date = "", end_date = "", year = "") {
+    $.ajax({
+        url: "/expenses/fetch-expense",
+        type: "GET",
+        data: {
+            category: category,
+            page: page_no,
+            search: search, 
+            start_date: start_date,
+            end_date: end_date,
+            year: year
+        },
+        dataType: "json",
+        beforeSend: function() {
+            showTableLoader();
+        },
+        success: function (response) {
+            let rows = "";
+
+            if (response.status === "success") {
+                // Total Amount calculation and Value printing
+                $("#total-amount").text((response.total));
+                $("#dashboard-amount").text(
+                    (response.total),
+                );
+
+                // Handled empty response (if no data is present)
+                if (response.data.length === 0) {
+                    $(".select-category option:first").text(
+                        "-- No data in table --",
+                    );
+                    $("#expense-list").html(`
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 60px 20px;">
+                                <div style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;">🔍</div>
+                                <h3 style="color: var(--text-main); margin-bottom: 10px;">No matching expenses</h3>
+                                <p style="color: var(--text-main); opacity: 0.7;">Try adjusting your search or filters to find what you're looking for.</p>
+                            </td>
+                        </tr>
+                    `);
+
+                    $("#page-numbers").empty();
+                    $("#total-amount").text("0.00");
+                    $("#dashboard-category").text("No expense!");
+                    return;
+                } else {
+                    $(".select-category option:first")
+                        .text("-- Select a category --")
+                        .prop('disabled', 'true');
+                }
+
+                response.data.forEach(function (item) {
+                    $(".select-category option:first").text(
+                        "-- Select a category --",
+                    );
+                    $('#expenses-count').text(response.total_expenses);
+
+                    let categoryColor = item.category
+                        .toLowerCase()
+                        .replace(/\s+/g, "-");
+
+                    rows += `
+                        <tr>
+                            <td data-field="expense_date">${item.expense_date}</td>
+                            <td data-field="description">${item.description}</td>
+                            <td data-field="category">
+                                <span class="pill pill-${categoryColor}">${item.category}</span>
+                            </td>
+                            <td data-field="amount">₹${item.amount}</td>
+                            <td><button class="show-edit" data-id="${item.id}">
+                                <i class="fa-solid fa-pen-to-square"></i>Edit</button>
+                            </td>
+                            <td><button class="delete-btn" data-id="${item.id}">
+                                <i class="fa-solid fa-trash"></i> Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                setTimeout(function() {
+                    $("#expense-list").html(rows);
+                }, 500);
+            }
+
+            // Page buttons based on number of pages
+            $("#page-numbers").empty();
+
+            // Previous Button
+            let prevButton = response.curr_page <= 1 ? "disabled" : "";
+            $("#page-numbers").append(
+                `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) - 1}" 
+                ${prevButton}>&laquo; Prev</button>`,
+            );
+
+            // Range of page numbers to be shown
+            let range = 1;
+            let total = response.pages;
+            let current = Number(response.curr_page);
+            for (let i = 1; i <= total; i++) {
+                // Deciding which page numbers to display based on range
+                if (i === 1 || i === total || (i >= current - range && i <= current + range)) {
+                    let active = i === current ? "active" : "";
+
+                    $("#page-numbers").append(
+                        `<button class="page-btn ${active}" data-page="${i}">${i}</button>`,
+                    );
+                }
+
+                // Adding dots for remaining page numbers
+                else if (i === current - range - 1 || i === current + range + 1) {
+                    $("#page-numbers").append('<span class="dots">...</span>');
+                }
+            }
+
+            // Next Button
+            let nextButton = response.curr_page >= response.pages ? "disabled" : "";
+            $("#page-numbers").append(
+                `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) + 1}" ${nextButton}>Next &raquo</button>`,
+            );
+        },
+    });
+}
+

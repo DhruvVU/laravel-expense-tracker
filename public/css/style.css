@@ -9,6 +9,7 @@
 :root {
     --bg-main: #edeff3;
     --top-navbar: #ffffff;
+    --mode-button: #f1f1f1;
     --sidebar-links: #ccd1da;
     --container-bg: #fcfdfd;
     --text-main: #333333;
@@ -25,6 +26,7 @@ html {
 html.dark-mode {
     --bg-main: #050304;
     --top-navbar: #1d2938;
+    --mode-button: #18222f;
     --sidebar-links: #3c475a;
     --container-bg: #13171f;
     --text-main: #e0e0e0;

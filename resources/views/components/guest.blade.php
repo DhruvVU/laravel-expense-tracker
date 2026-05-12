@@ -28,5 +28,6 @@
     </div>
 
     @include('components.toast')
+    @stack('page-scripts')
 </body>
 </html>

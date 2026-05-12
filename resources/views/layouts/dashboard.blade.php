@@ -42,6 +42,10 @@
             <div class="stat-card">
                 <span class="stat-label">Monthly Budget</span>
                 <button id="edit-budget"><i class="fa-solid fa-pen"></i></button>
+                
+                <div class="budget-details">
+                    <p><span id="budget-spent">₹0</span> / <span id="budget-total">₹0</span></p>
+                </div>
 
                 <div id="gauge-wrapper">
                     <div id="budget-gauge"></div>
@@ -50,10 +54,6 @@
                         <span id="budget-percent">0%</span>
                         <small>Used</small>
                     </div>
-                </div>
-
-                <div class="budget-details">
-                    <p><span id="budget-spent">₹0</span> / <span id="budget-total">₹0</span></p>
                 </div>
             </div>
 
@@ -128,6 +128,11 @@
     <x-form mode="add" title="Add Expense"></x-form>
 
     @include('layouts.partials._footer')
+
+    @push('page-scripts')
+        <script src="{{ asset('js/dashboard.js') }}"></script>
+        <script src="{{ asset('js/expenses.js') }}"></script>
+    @endpush
 
     <script>
         $(document).ready(function () {

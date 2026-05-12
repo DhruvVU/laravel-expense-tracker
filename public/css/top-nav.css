@@ -37,20 +37,31 @@
 .nav-controls {
     display: flex;
     align-items: center;
-    gap: 25px; 
+    gap: 15px;
+    height: 100%; 
+}
+
+#show-btn, 
+.select-year, 
+.theme-button {
+    height: 40px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; 
+    border-radius: 12px;
 }
 
 #show-btn {
     position: relative;
     width: auto;
-    padding: 10px;
+    padding: 0 16px;
     margin: 0;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     color: white;
     border: none;
-    border-radius: 12px;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -62,8 +73,7 @@
 
 .select-year {
     padding: 6px 12px;
-    border-radius: 6px;
-    width: 75px;
+    width: auto;
     font-size: 1.1rem;
     background-color: var(--input-hover);
     color: var(--text-main);
@@ -85,28 +95,33 @@
     justify-content: center;
 }
 
-.icon {
-    font-size: 1.3rem;
+.theme-button {
+    background-color: var(--top-navbar);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 5px;
     cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    display: inline-block; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
 }
 
-.icon.fade {
-    opacity: 0;
-    transform: scale(0.5) rotate(20deg);
+.theme-button:hover {
+    transform: translateY(-1px);
+    background-color: var(--mode-button);
+}
+
+.theme-icon {
+    font-size: 1rem;
 }
 
 .theme-switch {
     display: inline-block;
-    height: 34px;
     position: relative;
-    width: 60px;
+    width: auto;
 }
 
-.theme-switch input {
-    display: none;
-}
 
 @media (max-width: 768px) {
     .navbar {

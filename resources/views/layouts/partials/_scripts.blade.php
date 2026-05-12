@@ -17,20 +17,24 @@
     function themeToggle() {
         // Get current theme from localstorage
         const currTheme = localStorage.getItem("theme");
+        const themeIcon = $('.theme-icon');
         
         // Check the theme user selected last time
         if (currTheme === "dark") {
             $("html").addClass("dark-mode");
-            $("#checkbox").prop("checked", true);
-            $('.icon').text('🌙');
+            themeIcon.text('☀️');
+        } else {
+            themeIcon.text('🌙')
         }
         
         // Dark mode toggle
-        $("#change-theme").on("click", function () {
-            const isDark = $('input', this).is(":checked");
-            $("html").toggleClass("dark-mode", isDark);
+        $("#change-theme").on("click", function (e) {
+            e.preventDefault();
+
+            const isDark = $('html').toggleClass('dark-mode').hasClass('dark-mode');
             localStorage.setItem("theme", isDark ? "dark" : "light");
-            $('.icon').text(isDark ? '🌙' : '☀️');
+
+            themeIcon.text(isDark ? '☀️' : '🌙');
             
             setTimeout(() => {
                 const category = $(".select-category").val();   
@@ -41,7 +45,7 @@
                 }
                 
                 if (typeof barChart === "function") {
-                    barChart(category, year);
+                    barChart($('#last-active').text(), year);
                 }
                 
                 window.dispatchEvent(new Event('resize'));

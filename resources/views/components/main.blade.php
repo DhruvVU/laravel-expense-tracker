@@ -22,7 +22,7 @@
         
         <div class="main-wrapper">
             {{-- Top navbar --}}
-            <header class="top-nav">
+            <header>
                 @include('layouts.partials._top_nav')
             </header>
     

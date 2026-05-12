@@ -84,7 +84,6 @@ class ExpenseService
                         ->latest('id')
                         ->value('category') ?? 'None';
         
-        $total_count = $user->expenses()->count();
         $prev_month = now()->subMonth();
         $last_month = $user->expenses()
                         ->whereMonth('expense_date', $prev_month->month)
@@ -98,7 +97,6 @@ class ExpenseService
             'spent' => $spent,
             'percentage' => round($percentage, 2),
             'remaining' => $budget - $spent,
-            'total_expenses' => $total_count,
             'last_month' => $last_month,
             'latest_category' => $last_active
         ]);

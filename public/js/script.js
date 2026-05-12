@@ -70,8 +70,6 @@ $(document).ready(function () {
                     $("#amount").val("");
                     $("#exp_date").val(new Date().toISOString().split("T")[0]);
 
-                    $(".select-category").val(category);
-
                     $('#bar-chart').fadeIn(200);
                     pieChart($(".select-year").val());
                 } else {
@@ -606,6 +604,7 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                     $(".select-category option:first").text(
                         "-- Select a category --",
                     );
+                    $('#expenses-count').text(response.total_expenses);
 
                     let categoryColor = item.category
                         .toLowerCase()
@@ -1111,10 +1110,10 @@ function fetchBudgetStats() {
             if (response.status === 'success') {
                 
                 const data = response.data.original;
-                $('#expenses-count').text(data.total_expenses);
+
                 $('#previous-amount').text(data.last_month);
                 $('#last-active').text(data.latest_category);
-                
+
                 $('#curr-category').text(data.latest_category);
                 barChart(data.latest_category, $(".select-year").val())
 

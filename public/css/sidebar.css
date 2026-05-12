@@ -1,11 +1,12 @@
 /* ================================= Styles for Sidebar Section ================================  */
 .sidebar {
-    width: 280px;
-    background: var(--bg-main);
+    width: 250px;
+    background: var(--top-navbar);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    padding: 50px 25px;
+    padding: 15px 25px;
+    padding-bottom: 15px;
     height: 100%;
 }
 
@@ -47,24 +48,6 @@
     -webkit-text-fill-color: transparent; /* Makes the logo text pop with a gradient */
 }
 
-/* User Info Styling */
-.user-info {
-    margin-bottom: 30px;
-}
-
-.welcome-text {
-    font-size: 0.85rem;
-    opacity: 0.7;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.user-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
 .sidebar-links a {
     text-decoration: none;
     color: var(--text-main);
@@ -75,13 +58,12 @@
 }
 
 .sidebar-links a:hover {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    background: rgba(98, 109, 112, 0.2);
 }
 
 .sidebar-links a.active {
-    background: #3b82f6;
-    color: white;
+    background: var(--sidebar-links);
+    color: var(--text-main);
 }
 
 .sidebar-footer {
@@ -110,15 +92,13 @@
     background-color: #dc2626;
 }
 
-@media (max-width: 768px) {
-    .user-info, 
+@media (max-width: 768px) { 
     .sidebar-links,
     .sidebar-footer {
         display: none !important; 
         width: 100%;
     }
 
-    .sidebar.active .user-info,
     .sidebar.active .sidebar-links,
     .sidebar.active .sidebar-footer {
         display: flex !important; 

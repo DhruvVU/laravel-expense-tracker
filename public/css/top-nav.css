@@ -1,13 +1,37 @@
-.top-nav {
-    height: 70px;
+.navbar {
+    height: 60px;
+    width: 100%;
     display: flex;
-    align-items: center; 
-    justify-content: flex-end; 
-    padding-right: 30px;
-    background-color: var(--bg-main);
+    align-items: center;
+    padding: 15px;
+    justify-content: space-between;
+    background-color: var(--top-navbar);
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
+    position: relative;
     z-index: 10;    
+}
+
+/* User Info Styling */
+.user-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.welcome-text {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
 }
 
 .nav-controls {
@@ -16,9 +40,31 @@
     gap: 25px; 
 }
 
+#show-btn {
+    position: relative;
+    width: auto;
+    padding: 10px;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#show-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
 .select-year {
     padding: 6px 12px;
     border-radius: 6px;
+    width: 75px;
+    font-size: 1.1rem;
     background-color: var(--input-hover);
     color: var(--text-main);
     border: 1px solid var(--border-color);
@@ -47,8 +93,8 @@
 }
 
 .icon.fade {
-  opacity: 0;
-  transform: scale(0.5) rotate(20deg);
+    opacity: 0;
+    transform: scale(0.5) rotate(20deg);
 }
 
 .theme-switch {
@@ -60,4 +106,24 @@
 
 .theme-switch input {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        margin-top: 50px;
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-controls {
+        gap: 10px;
+    }
+
+    .theme-switch {
+        width: 30px;
+    }
 }

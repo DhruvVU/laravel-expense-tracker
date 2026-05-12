@@ -16,11 +16,6 @@
 
     </div>
 
-    <div class="user-info">
-        <p class="welcome-text">Welcome,</p>
-        <p class="user-name">{{ auth()->user()->username ?? 'User' }}</p>
-    </div>
-
     <nav class="sidebar-links" style="display: flex; flex-direction: column; gap: 15px; flex-grow: 1;">
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">🏠
             Dashboard</a>

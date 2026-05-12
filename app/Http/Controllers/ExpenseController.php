@@ -34,6 +34,7 @@ class ExpenseController extends Controller
     public function fetch(Request $request)
     {
         $query = $this->expenseService->getFilteredQuery($request);
+        $year = $request->year ?? date('Y');
 
         // Filter for table data
         if ($request->boolean('table_data')) {
@@ -80,13 +81,15 @@ class ExpenseController extends Controller
         $totalAmount = $query->sum('amount');
         // Pagination 
         $expenses = $query->orderBy('expense_date', 'desc')->paginate(5);
+        $total_expenses = $query->whereYear('expense_date', $year)->count();
 
         return ExpenseResource::collection($expenses)->additional([
             'status' => 'success',
             'message' => 'Data fetch successful',
             'total' => $totalAmount,
             'pages' => $expenses->lastPage(),
-            'curr_page' => $expenses->currentPage()
+            'curr_page' => $expenses->currentPage(),
+            'total_expenses' => $total_expenses
         ]);
     }
     

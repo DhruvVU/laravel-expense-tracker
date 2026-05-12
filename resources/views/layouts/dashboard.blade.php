@@ -3,40 +3,6 @@
 
     <div class="dashboard-container">
         <div class="first-row">
-            <div class="stat-card">
-                <span class="stat-label">Monthly Budget</span>
-                <button id="edit-budget"><i class="fa-solid fa-pen"></i></button>
-
-                <div id="gauge-wrapper">
-                    <div id="budget-gauge"></div>
-
-                    <div class="gauge-text">
-                        <span id="budget-percent">0%</span>
-                        <small>Used</small>
-                    </div>
-                </div>
-
-                <div class="budget-details">
-                    <p><span id="budget-spent">₹0</span> / <span id="budget-total">₹0</span></p>
-                </div>
-            </div>
-
-            <div class="stat-card chart-card">
-                <span class="stat-label category-label">Spending Distribution</span>
-                <div class="chart-wrapper">
-                    <canvas id="pie-chart"></canvas>
-                </div>
-            </div>
-
-            <div class="stat-card chart-card">
-                <span class="stat-label category-label">Spending Distribution for <span id="curr-category"></span> </span>
-                <div class="chart-wrapper">
-                    <canvas id="bar-chart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="second-row">
             <div class="stat-card-mini">
                 <span class="stat-label">Total Spent</span>
                 <h2 class="spending-amount" id="dashboard-amount">₹0.00</h2>
@@ -70,6 +36,41 @@
                 <h2 id="last-active" style="margin-top: 10px">None</h2>
             </div>
 
+        </div>
+
+        <div class="second-row">
+            <div class="stat-card">
+                <span class="stat-label">Monthly Budget</span>
+                <button id="edit-budget"><i class="fa-solid fa-pen"></i></button>
+
+                <div id="gauge-wrapper">
+                    <div id="budget-gauge"></div>
+
+                    <div class="gauge-text">
+                        <span id="budget-percent">0%</span>
+                        <small>Used</small>
+                    </div>
+                </div>
+
+                <div class="budget-details">
+                    <p><span id="budget-spent">₹0</span> / <span id="budget-total">₹0</span></p>
+                </div>
+            </div>
+
+            <div class="stat-card chart-card">
+                <span class="stat-label category-label">Spending Distribution</span>
+                <div class="chart-wrapper">
+                    <canvas id="pie-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="stat-card chart-card">
+                <span class="stat-label category-label">Spending Distribution for <span id="curr-category"></span>
+                </span>
+                <div class="chart-wrapper">
+                    <canvas id="bar-chart"></canvas>
+                </div>
+            </div>
         </div>
 
         <div class="third-row">
@@ -119,8 +120,6 @@
                     </table>
                 </div>
 
-                {{-- button to show add expense form --}}
-                <button id="show-btn"><span style="font-size: 1.1rem; font-weight: 700;">+</span> Add Expense</button>
             </div>
         </div>
     </div>
@@ -128,7 +127,7 @@
     {{-- Hidden form to add expense --}}
     <x-form mode="add" title="Add Expense"></x-form>
 
-    @include('layouts.partials._footer');
+    @include('layouts.partials._footer')
 
     <script>
         $(document).ready(function () {

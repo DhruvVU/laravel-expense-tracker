@@ -7,8 +7,10 @@
 
 /* Variables for switching to dark theme   */
 :root {
-    --bg-main: #ffffff;
-    --container-bg: #f0f2f5;
+    --bg-main: #edeff3;
+    --top-navbar: #ffffff;
+    --sidebar-links: #ccd1da;
+    --container-bg: #fcfdfd;
     --text-main: #333333;
     --border-color: rgba(0, 0, 0, 0.1);
     --input-hover: #ffffff;
@@ -21,8 +23,10 @@ html {
 }
 
 html.dark-mode {
-    --bg-main: #181818;
-    --container-bg: #121212;
+    --bg-main: #050304;
+    --top-navbar: #1d2938;
+    --sidebar-links: #3c475a;
+    --container-bg: #13171f;
     --text-main: #e0e0e0;
     --border-color: rgba(255, 255, 255, 0.1);
     --input-hover: #282828;
@@ -114,21 +118,26 @@ html, body, .container, .card, table, td, th, body, html {
 @media (max-width: 768px) {
     body {
         height: auto;
+        overflow-y: auto;
     }
 
     .content-area {
         height: auto !important;
         overflow-y: visible !important;
-        min-height: 100vh; 
+        min-height: unset;
         padding-left: 0;
         padding-right: 0;
         width: 100%;
+    }
+
+    .main-wrapper {
+        height: auto;
+        overflow: visible;
     }
 
     .body-main {
         flex-direction: column; 
         height: auto !important;
         overflow: visible !important;
-        min-height: 100vh;
     }
 }

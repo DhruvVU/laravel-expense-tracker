@@ -49,7 +49,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box; 
-    border-radius: 12px;
+    border-radius: var(--button-border-radius);
 }
 
 #show-btn {
@@ -59,16 +59,21 @@
     margin: 0;
     font-size: 1rem;
     font-weight: 500;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    border: none;
+    background: var(--button-gradient);
+    color: #3b82f6;
+    border: 1px solid var(--button-border-blue);
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
 
 #show-btn:hover {
+    background-color: #3b82f6;
+    color: white;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    box-shadow: var(--button-shadow-blue);
 }
 
 .select-year {

@@ -1,6 +1,6 @@
 <x-main>
     @section('title', 'History - Tracker.io')
-    
+
     <div class="container">
 
         <div class="show-container">
@@ -41,6 +41,9 @@
             <div class="total-display">
                 <strong>Total Amount spent on <span id="selected-category">All</span> : &#8377<span
                         id="total-amount">0.00</span></strong>
+
+                <!-- Part for handling download button -->
+                <button id="download-csv">Export to csv</button>
             </div>
 
             <div class="table-container">
@@ -63,26 +66,20 @@
                 </table>
             </div>
 
-            <div class="buttons-container">
-                <!-- Part for handling page numbers -->
-                <div id="page-numbers"></div>
-
-                <!-- Part for handling download button -->
-                <div class="btn-group-csv">
-                    <button id="download-csv">Export to csv</button>
-                </div>
-            </div>
+            <!-- Part for handling page numbers -->
+            <div id="page-numbers"></div>
         </div>
     </div>
 
-    {{-- Hidden card will be only shown when user clicks edit button --}}
+    {{-- Hidden cards will be only shown when user clicks edit/add button --}}
+    <x-form mode="add" title="Add Expense"></x-form>
     <x-form mode="edit" title="Edit Expense"></x-form>
-    
+
     @include('layouts.partials._footer')
-    @push('page-scripts') 
+    @push('page-scripts')
         <script src="{{ asset('js/expenses.js') }}"></script>
     @endpush
-    
+
     <script>
         $(document).ready(function () {
             loadExpenses('All', 1, '');

@@ -5,13 +5,6 @@ $(document).ready(function () {
         },
     });
 
-    // default page numberis set to 1 for loading data
-    let defaultPageNo = 1;
-
-    // timer for keeping a small delay when searching the database
-    let searchTimer;
-
-
     // ====================== Chart Data based on User selection ======================
 
     $(document).on("change", ".select-category", function () {
@@ -20,67 +13,81 @@ $(document).ready(function () {
         $(".table-data").fadeOut();
         $("#toggle-view").text("📒 Table View");
 
-        setTimeout(function() {
+        setTimeout(function () {
             if (selectedCategory === "All") {
                 pieChart(year);
                 $("#pie-chart").fadeIn();
 
-                $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, "", "", "", year));
-                lineChart(selectedCategory, '', year);
+                $("#dashboard-amount").text(
+                    loadExpenses(selectedCategory, 1, "", "", "", year),
+                );
+                lineChart(selectedCategory, "", year);
                 $("#lineChart").fadeIn();
                 $(".select-month").val("");
                 return;
             }
 
-            $('#curr-category').text(selectedCategory);
+            $("#curr-category").text(selectedCategory);
             barChart(selectedCategory, year);
-            lineChart(selectedCategory, '', year);
+            lineChart(selectedCategory, "", year);
             $("#lineChart").fadeIn();
-            $("#dashboard-amount").text(loadExpenses(selectedCategory, 1, "", "", "", year));
+            $("#dashboard-amount").text(
+                loadExpenses(selectedCategory, 1, "", "", "", year),
+            );
             $(".select-month").val("");
         }, 500);
     });
 
-
     // Edit budget
-    $(document).on('click', '#edit-budget', function() {
-        let currentBudget = $('#budget-total').text().replace('₹', '').replace(',', '');
+    $(document).on("click", "#edit-budget", function () {
+        let currentBudget = $("#budget-total")
+            .text()
+            .replace("₹", "")
+            .replace(",", "");
         Swal.fire({
-            title: 'Set Monthly Budget',
-            input: 'number',
+            title: "Set Monthly Budget",
+            input: "number",
             inputValue: currentBudget,
             showCancelButton: true,
             allowEscapeKey: true,
-            confirmButtonText: 'Update Budget',
-            confirmButtonColor: '#3b82f6',
-            background: $("html").hasClass("dark-mode") ? "#1e1e1e" : "#fff",
+            confirmButtonText: "Update Budget",
+            confirmButtonColor: "#3b82f6",
+            background: $("html").hasClass("dark-mode") ? "#13171f" : "#fff",
             color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
             inputValidator: (value) => {
                 if (!value || value < 0) {
-                    return 'Please enter a valid positive amount!';
+                    return "Please enter a valid positive amount!";
                 }
             },
             preConfirm: (newBudget) => {
                 return $.ajax({
-                    url: '/dashboard/set-budget',
-                    method: 'patch',
+                    url: "/dashboard/set-budget",
+                    method: "patch",
                     data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        monthly_budget: newBudget
-                    }
-                }).catch(error => {
-                    Swal.showValidationMessage(`Request failed: ${error.responseJSON.message}`);
+                        _token: $('meta[name="csrf-token"]').attr("content"),
+                        monthly_budget: newBudget,
+                    },
+                }).catch((error) => {
+                    Swal.showValidationMessage(
+                        `Request failed: ${error.responseJSON.message}`,
+                    );
                 });
-            }
+            },
         }).then((result) => {
-            Swal.fire('Saved!', 'Your monthly budget has been updated.', 'success');
-            
+            Swal.fire({
+                title: "Your monthly budget has been saved!",
+                icon: "success",
+                background: $("html").hasClass("dark-mode")
+                    ? "#13171f"
+                    : "#fff",
+                color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+            });
+
             fetchBudgetStats();
-        })  
+        });
     });
 
-
-// ============================================== Responsive Menu ==============================================
+    // ============================================ Responsive Menu ============================================
 
     $("#mobile-toggle").click(function (e) {
         e.preventDefault();
@@ -93,7 +100,6 @@ $(document).ready(function () {
             $(".sidebar").removeClass("active");
         }
     });
-
 });
 
 // function to show table
@@ -102,13 +108,13 @@ function showTable(category, label, year) {
         url: "expenses/fetch-expense",
         type: "GET",
         data: {
-            table_data : 1,
+            table_data: 1,
             category: category,
             label: label,
             year: year,
         },
         dataType: "json",
-        beforeSend: function() {
+        beforeSend: function () {
             showTableLoader();
         },
         success: function (response) {
@@ -147,16 +153,16 @@ function showTable(category, label, year) {
                 rows = `
                     <tr>
                         <td colspan="6" style="text-align: center; padding: 60px 20px;">
-                            No expenses found for this day!
+                            No expenses found!
                         </td>
                     </tr>
                 `;
             }
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $(".category-data").html(rows);
                 $(".table-data").show();
-            }, 500)
+            }, 500);
         },
         error: function (xhr) {
             showToast("Error displaying data! Check console", "error");
@@ -166,7 +172,7 @@ function showTable(category, label, year) {
 }
 
 function showTableLoader() {
-    let loaderRows = '';
+    let loaderRows = "";
     for (let i = 0; i < 5; i++) {
         loaderRows += `
             <tr>

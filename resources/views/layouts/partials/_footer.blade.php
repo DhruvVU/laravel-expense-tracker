@@ -10,7 +10,7 @@
         margin-top: 30px;
         margin-bottom: 50px;
         font-size: 1rem;
-        font-weight: 600;
+        font-weight: 100;
         opacity: 0.6;
     }
 

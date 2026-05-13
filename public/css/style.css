@@ -5,7 +5,7 @@
     padding: 0;
 }
 
-/* Variables for switching to dark theme   */
+/* Variables for consistent styling across all elements */
 :root {
     --bg-main: #edeff3;
     --top-navbar: #ffffff;
@@ -15,25 +15,36 @@
     --text-main: #333333;
     --border-color: rgba(0, 0, 0, 0.1);
     --input-hover: #ffffff;
-    --table-header: #ececee;
-    --table-hover: rgb(247, 247, 247);
+    --table-body: #f4f4f4;
+    --table-header: #dcdcdc;
+    --table-hover: #ededed;
+    --button-gradient: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.1),
+        rgba(37, 99, 235, 0.1)
+    );
+    --button-border-blue: #3b82f6; 
+    --button-shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.3);
+    --button-border-radius: 6px;
 }
 
 html {
     background-color: var(--bg-main);
 }
 
+/* Dark mode theme variables */
 html.dark-mode {
     --bg-main: #050304;
-    --top-navbar: #1d2938;
+    --top-navbar: #141e2a;
     --mode-button: #18222f;
     --sidebar-links: #3c475a;
     --container-bg: #13171f;
     --text-main: #e0e0e0;
     --border-color: rgba(255, 255, 255, 0.1);
     --input-hover: #282828;
-    --table-header: #2f2f2f;
-    --table-hover: #252525;
+    --table-body: #14171c;
+    --table-header: #21252e;
+    --table-hover: #232b3b;
 }
 
 body {  
@@ -45,11 +56,6 @@ body {
     display: flex;
     padding: 0;
     margin: 0;
-}
-
-/* Smooth transition to dark mode */
-html, body, .container, .card, table, td, th, body, html {
-    transition: none !important;
 }
 
 /* ===================================== Layout Styling ====================================== */

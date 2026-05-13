@@ -1,5 +1,10 @@
 $(document).ready(function () {
     // ============================================ Add Expense(CREATE) =========================================
+    // default page numberis set to 1 for loading data
+    let defaultPageNo = 1;
+
+    // timer for keeping a small delay when searching the database
+    let searchTimer;
 
     $(document).on("click", "#show-btn", function () {
         $(".dashboard-container").addClass("blurred");
@@ -19,21 +24,20 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on("click", "#add-btn", function () {
-        let description = $("#description").val();
-        let amount = $("#amount").val();
-        let category = $("#category").val();
-        let exp_date = $("#exp_date").val();
+    $(document).on("click", "#add-btn", function (e) {
+        e.preventDefault();
+        const form = $(this).closest("form");
+        const mode = form.data("mode");
+        const category = $('#category-add').val()
 
-        $("#dashboard-category").text(category);
-
+        
         let expenseData = {
-            description: description,
-            amount: amount,
+            description: form.find("#description-add").val(),
+            amount: form.find("#amount-add").val(),
             category: category,
-            expense_date: exp_date,
+            expense_date: form.find("#exp_date-add").val(),
         };
-
+        
         $.ajax({
             url: "/expenses/add-expense",
             type: "POST",
@@ -42,9 +46,14 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status === "success") {
                     showToast(response.message, response.status);
-                    if (typeof fetchBudgetStats === 'function') fetchBudgetStats();
-                    if (typeof barChart === 'function') barChart(category, $(".select-year").val());
-                    if (typeof pieChart === 'function') pieChart($(".select-year").val());
+
+                    $("#dashboard-category").text(category);
+                    if (typeof fetchBudgetStats === "function")
+                        fetchBudgetStats();
+                    if (typeof barChart === "function")
+                        barChart(category, $(".select-year").val());
+                    if (typeof pieChart === "function")
+                        pieChart($(".select-year").val());
                     loadExpenses(
                         $("#filter-category").val(),
                         1,
@@ -53,14 +62,13 @@ $(document).ready(function () {
                         "",
                         $(".select-year").val(),
                     );
-                    
 
                     $(".add-card").fadeOut();
                     $(".dashboard-container").removeClass("blurred");
 
-                    $("#description").val("");
-                    $("#amount").val("");
-                    $("#exp_date").val(new Date().toISOString().split("T")[0]);
+                    $("#description-add").val("");
+                    $("#amount-add").val("");
+                    $("#exp_date-add").val(new Date().toISOString().split("T")[0]);
 
                     $("#bar-chart").fadeIn(200);
                 } else {
@@ -187,27 +195,26 @@ $(document).ready(function () {
         const category = row.find('[data-field="category"] span').text().trim();
         const date = row.find('[data-field="expense_date"]').text();
 
-        $("#data_id").val(id);
-        $("#description").val(description);
-        $("#amount").val(amount);
-        $("#category").val(category);
-        $("#exp_date").val(date);
+        $("#data_id-edit").val(id);
+        $("#description-edit").val(description);
+        $("#amount-edit").val(amount);
+        $("#category-edit").val(category);
+        $("#exp_date-edit").val(date);
     });
 
     // Update expense data
-    $(document).on("click", "#edit-btn", function () {
-        let id = $("#data_id").val();
-        let description = $("#description").val();
-        let amount = $("#amount").val();
-        let category = $("#category").val();
-        let exp_date = $("#exp_date").val();
+    $(document).on("click", "#edit-btn", function (e) {
+        e.preventDefault();
+        const form = $(this).closest("form");
+        const mode = form.data("mode");
+        const id = $('#data_id-edit').val();
 
         let updatedData = {
             id: id,
-            description: description,
-            amount: amount,
-            category: category,
-            expense_date: exp_date,
+            description: form.find("#description-edit").val(),
+            amount: form.find("#amount-edit").val(),
+            category: form.find("#category-edit").val(),
+            expense_date: form.find("#exp_date-edit").val(),
         };
 
         $.ajax({
@@ -249,56 +256,60 @@ $(document).ready(function () {
         const swalButtons = Swal.mixin({
             customClass: {
                 confirmButton: "swal-confirm",
-                cancelButton: "swal-cancel"
+                cancelButton: "swal-cancel",
             },
-            buttonsStyling: false   
+            buttonsStyling: false,
         });
 
-        swalButtons.fire({
-            title: "Are you sure?",
-            text: "Do you want to delete the expenses?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3b82f6",
-            cancelButtonColor: "#ef4444",
-            confirmButtonText: "Yes, delete it!",
-            allowEscapeKey: true,
-            background: $("html").hasClass("dark-mode") ? "#1e1e1e" : "#fff",
-            color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "/expenses/delete-expense/" + id,
-                    type: "DELETE",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.status === "success") {
-                            row.fadeOut(500, function () {
-                                $(this).remove();
-                                $(".container").removeClass("blurred");
-                                loadExpenses(
-                                    $("#filter-category").val(),
-                                    defaultPageNo,
-                                    $("#search-input").val(),
+        swalButtons
+            .fire({
+                title: "Are you sure?",
+                text: "Do you want to delete the expenses?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3b82f6",
+                cancelButtonColor: "#ef4444",
+                confirmButtonText: "Yes, delete it!",
+                allowEscapeKey: true,
+                background: $("html").hasClass("dark-mode")
+                    ? "#1e1e1e"
+                    : "#fff",
+                color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/expenses/delete-expense/" + id,
+                        type: "DELETE",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.status === "success") {
+                                row.fadeOut(500, function () {
+                                    $(this).remove();
+                                    $(".container").removeClass("blurred");
+                                    loadExpenses(
+                                        $("#filter-category").val(),
+                                        defaultPageNo,
+                                        $("#search-input").val(),
+                                    );
+                                    pieChart();
+                                });
+                                showToast(
+                                    "Your Expense has been deleted",
+                                    "success",
                                 );
-                                pieChart();
-                            });
-                            showToast(
-                                "Your Expense has been deleted",
-                                "success",
-                            );
-                        }
-                    },
-                    error: function (xhr) {
-                        if (xhr.status === 403) {
-                            showToast("Unauthorized!", "error");
-                        }
-                    },
-                });
-            } else {
-                $(".container").removeClass("blurred");
-            }
-        });
+                            }
+                        },
+                        error: function (xhr) {
+                            if (xhr.status === 403) {
+                                showToast("Unauthorized!", "error");
+                            }
+                        },
+                    });
+                } else {
+                    $(".container").removeClass("blurred");
+                }
+            });
     });
 
     // ============================================ Download Expense ============================================
@@ -310,59 +321,70 @@ $(document).ready(function () {
         const swalButtons = Swal.mixin({
             customClass: {
                 confirmButton: "swal-confirm",
-                cancelButton: "swal-cancel"
+                cancelButton: "swal-cancel",
             },
-            buttonsStyling: false   
+            buttonsStyling: false,
         });
 
         const params = {
-            category: $("#filter-category").val() || 'All',
-            search: $("#search-input").val() || '',
-            start_date: $("#start-date").val() || '',
-            end_date: $("#end-date").val() || ''
-        }
+            category: $("#filter-category").val() || "All",
+            search: $("#search-input").val() || "",
+            start_date: $("#start-date").val() || "",
+            end_date: $("#end-date").val() || "",
+        };
 
         const urlParams = new URLSearchParams(params).toString();
 
-        swalButtons.fire({
-            title: "Download File",
-            text: "This file will include your current filtered results.",
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonColor: "#3b82f6",
-            cancelButtonColor: "#ef4444",
-            confirmButtonText: "Download",
-            allowEscapeKey: true,
-            background: $("html").hasClass("dark-mode") ? "#1e1e1e" : "#fff",
-            color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = `/expenses/export-csv?${urlParams}`;
-                $(".container").removeClass("blurred");
-                showToast("File download in progress!", "success");
-            } else {
-                $(".container").removeClass("blurred");
-            }
-        });
+        swalButtons
+            .fire({
+                title: "Download File",
+                text: "This file will include your current filtered results.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#3b82f6",
+                cancelButtonColor: "#ef4444",
+                confirmButtonText: "Download",
+                allowEscapeKey: true,
+                background: $("html").hasClass("dark-mode")
+                    ? "#1e1e1e"
+                    : "#fff",
+                color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/expenses/export-csv?${urlParams}`;
+                    $(".container").removeClass("blurred");
+                    showToast("File download in progress!", "success");
+                } else {
+                    $(".container").removeClass("blurred");
+                }
+            });
     });
 });
 
 // ======================================== Main Function to load data =========================================
 
-function loadExpenses(category = "All", page_no = 1, search = "", start_date = "", end_date = "", year = "") {
+function loadExpenses(
+    category = "All",
+    page_no = 1,
+    search = "",
+    start_date = "",
+    end_date = "",
+    year = "",
+) {
     $.ajax({
         url: "/expenses/fetch-expense",
         type: "GET",
         data: {
             category: category,
             page: page_no,
-            search: search, 
+            search: search,
             start_date: start_date,
             end_date: end_date,
-            year: year
+            year: year,
         },
         dataType: "json",
-        beforeSend: function() {
+        beforeSend: function () {
             showTableLoader();
         },
         success: function (response) {
@@ -370,10 +392,8 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
 
             if (response.status === "success") {
                 // Total Amount calculation and Value printing
-                $("#total-amount").text((response.total));
-                $("#dashboard-amount").text(
-                    (response.total),
-                );
+                $("#total-amount").text(response.total);
+                $("#dashboard-amount").text(response.total);
 
                 // Handled empty response (if no data is present)
                 if (response.data.length === 0) {
@@ -397,14 +417,14 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                 } else {
                     $(".select-category option:first")
                         .text("-- Select a category --")
-                        .prop('disabled', 'true');
+                        .prop("disabled", "true");
                 }
 
                 response.data.forEach(function (item) {
                     $(".select-category option:first").text(
                         "-- Select a category --",
                     );
-                    $('#expenses-count').text(response.total_expenses);
+                    $("#expenses-count").text(response.total_expenses);
 
                     let categoryColor = item.category
                         .toLowerCase()
@@ -427,7 +447,7 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                         </tr>
                     `;
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#expense-list").html(rows);
                 }, 500);
             }
@@ -448,7 +468,11 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
             let current = Number(response.curr_page);
             for (let i = 1; i <= total; i++) {
                 // Deciding which page numbers to display based on range
-                if (i === 1 || i === total || (i >= current - range && i <= current + range)) {
+                if (
+                    i === 1 ||
+                    i === total ||
+                    (i >= current - range && i <= current + range)
+                ) {
                     let active = i === current ? "active" : "";
 
                     $("#page-numbers").append(
@@ -457,17 +481,20 @@ function loadExpenses(category = "All", page_no = 1, search = "", start_date = "
                 }
 
                 // Adding dots for remaining page numbers
-                else if (i === current - range - 1 || i === current + range + 1) {
+                else if (
+                    i === current - range - 1 ||
+                    i === current + range + 1
+                ) {
                     $("#page-numbers").append('<span class="dots">...</span>');
                 }
             }
 
             // Next Button
-            let nextButton = response.curr_page >= response.pages ? "disabled" : "";
+            let nextButton =
+                response.curr_page >= response.pages ? "disabled" : "";
             $("#page-numbers").append(
                 `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) + 1}" ${nextButton}>Next &raquo</button>`,
             );
         },
     });
 }
-

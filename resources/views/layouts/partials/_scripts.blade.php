@@ -17,24 +17,25 @@
     function themeToggle() {
         // Get current theme from localstorage
         const currTheme = localStorage.getItem("theme");
-        const themeIcon = $('.theme-icon');
+        const setIcon = $('i');
         
         // Check the theme user selected last time
         if (currTheme === "dark") {
             $("html").addClass("dark-mode");
-            themeIcon.text('☀️');
+            setIcon.addClass('fa-sun');
         } else {
-            themeIcon.text('🌙')
+            setIcon.addClass('fa-moon')
         }
         
         // Dark mode toggle
         $("#change-theme").on("click", function (e) {
             e.preventDefault();
+            setIcon.removeClass();
 
             const isDark = $('html').toggleClass('dark-mode').hasClass('dark-mode');
             localStorage.setItem("theme", isDark ? "dark" : "light");
 
-            themeIcon.text(isDark ? '☀️' : '🌙');
+            setIcon.toggleClass(isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon');
             
             setTimeout(() => {
                 const category = $(".select-category").val();   

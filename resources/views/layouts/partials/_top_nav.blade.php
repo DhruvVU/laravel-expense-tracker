@@ -23,7 +23,9 @@
         {{-- Dark/Light mode switch --}}
         <div class="theme-switch-wrapper">
             <label class="theme-switch" for="checkbox">
-                <button id="change-theme" class="theme-button"><span class="theme-icon"></span></button>
+                <button id="change-theme" class="theme-button">
+                    <span class="theme-icon"><i class="fa-solid"></i></span>
+                </button>
             </label>
         </div>
     </div>

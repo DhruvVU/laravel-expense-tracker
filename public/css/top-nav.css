@@ -98,7 +98,7 @@
 .theme-button {
     background-color: var(--top-navbar);
     color: var(--text-main);
-    border: 1px solid var(--border-color);
+    border: none;
     padding: 5px;
     cursor: pointer;
     display: flex;
@@ -109,7 +109,6 @@
 
 .theme-button:hover {
     transform: translateY(-1px);
-    background-color: var(--mode-button);
 }
 
 .theme-icon {

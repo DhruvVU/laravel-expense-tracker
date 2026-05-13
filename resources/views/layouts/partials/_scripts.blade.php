@@ -17,7 +17,7 @@
     function themeToggle() {
         // Get current theme from localstorage
         const currTheme = localStorage.getItem("theme");
-        const setIcon = $('i');
+        const setIcon = $('span i');
         
         // Check the theme user selected last time
         if (currTheme === "dark") {

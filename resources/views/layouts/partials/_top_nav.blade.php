@@ -2,7 +2,7 @@
     {{-- User details --}}
     <div class="user-info">
         <p class="welcome-text">Welcome,</p>
-        <p class="user-name">{{ auth()->user()->username ?? 'User' }}</p>
+        <p class="user-name">{{ auth()->user()->name ?? 'User' }}</p>
     </div>
 
 

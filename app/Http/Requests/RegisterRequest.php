@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateExpenseRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,9 @@ class UpdateExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'sometimes|string|max:255',
-            'amount' => 'sometimes|numeric|min:0.01|max:9999999|decimal:0,2',
-            'category' => 'sometimes|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'sometimes|date|date_format:Y-m-d|before_or_equal:today'
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
         ];
     }
 }

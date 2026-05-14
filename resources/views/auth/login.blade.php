@@ -7,8 +7,8 @@
 
             <form id="login-form">
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="login-username" placeholder="Enter your username">
+                    <label>Email</label>
+                    <input type="text" id="login-email" placeholder="Enter your email">
                 </div>
 
                 <div class="form-group">

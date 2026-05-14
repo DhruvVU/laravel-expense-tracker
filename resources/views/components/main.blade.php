@@ -32,7 +32,8 @@
             </main>
         </div>
 
-        {{-- Toast component --}}
     </div>
+    <div id="modal-overlay"></div>
+    {{-- Toast component --}}
     <x-toast></x-toast>
 </body>

@@ -29,7 +29,7 @@ body {
     min-height: 100vh;
     padding: 20px;
     background-color: var(--bg-main);
-    min-width: 30%;
+    min-width: 40%;
 }
 
 .card h2{
@@ -79,8 +79,8 @@ body {
     margin-bottom: 5px;
 }
 
-#reg-username, #reg-password, #reg-confirm, 
-#login-username, #login-password {
+#reg-name, #reg-email, #reg-password, #reg-confirm, 
+#login-email, #login-password {
     width: 100%;             
     box-sizing: border-box;  
     padding: 14px;           
@@ -98,7 +98,7 @@ body {
     background-color: var(--input-hover);
 }
 
-#login-username:focus, #login-password:focus {
+#login-email:focus, #login-password:focus {
     outline: none;
     border-color: #3b82f6;
     background: rgba(255, 255, 255, 0.08);

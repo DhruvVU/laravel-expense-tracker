@@ -9,7 +9,7 @@
             </div>
 
             <div class="stat-card-mini">
-                <span class="stat-label">Previous Month</span>
+                <span class="stat-label">Previous Month <span id="prev-month"></span></span>
                 <h2 class="spending-amount" id="previous-amount">0</h2>
             </div>
 
@@ -40,13 +40,14 @@
 
         <div class="second-row">
             <div class="stat-card">
-                <span class="stat-label">Monthly Budget</span>
-                <button id="edit-budget"><i class="fa-solid fa-pen"></i></button>
+                <span class="stat-label">Monthly Budget <span id="curr-month"></span></span>
                 
                 <div class="budget-details">
                     <p><span id="budget-spent">₹0</span> / <span id="budget-total">₹0</span></p>
+                    <button id="edit-budget"><i class="fa-solid fa-pen"></i></button>
                 </div>
 
+                {{-- Progress bar to show monthly budget --}}
                 <div id="gauge-wrapper">
                     <div id="budget-gauge"></div>
 
@@ -57,6 +58,7 @@
                 </div>
             </div>
 
+            {{-- Pie Chart to show data distribution across different categories --}}
             <div class="stat-card chart-card">
                 <span class="stat-label category-label">Spending Distribution</span>
                 <div class="chart-wrapper">
@@ -64,6 +66,7 @@
                 </div>
             </div>
 
+            {{-- Bar Chart to show category wise data distribution across days of the week --}}
             <div class="stat-card chart-card">
                 <span class="stat-label category-label">Spending Distribution for <span id="curr-category"></span>
                 </span>
@@ -97,7 +100,7 @@
                     <button id="toggle-view">📒 Table View</button>
                 </div>
 
-                {{-- chart display for user expenses --}}
+                {{--Line chart display for user expenses --}}
                 <div class="line-chart">
                     <canvas id="lineChart"></canvas>
                 </div>
@@ -124,7 +127,7 @@
         </div>
     </div>
 
-    {{-- Hidden form to add expense --}}
+    {{-- Hidden form to add expense which will be displayed when button is clicked --}}
     <x-form mode="add" title="Add Expense"></x-form>
 
     @include('layouts.partials._footer')

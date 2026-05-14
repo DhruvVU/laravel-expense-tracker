@@ -5,6 +5,15 @@ $(document).ready(function () {
         },
     });
 
+    const date = new Date();
+    // Set the previous month label to previous month based on year
+    date.setMonth(date.getMonth() - 1);
+    const prev_month = date.toLocaleString('default', {month: 'short'});
+    $('#prev-month').text(' (' + prev_month + ')');
+
+    // Set the monthly budget label to the current month
+    const month = date.toLocaleString('default', {month: 'long'});
+    $('#curr-month').text('(' + month + ')');
     // ====================== Chart Data based on User selection ======================
 
     $(document).on("change", ".select-category", function () {
@@ -74,16 +83,18 @@ $(document).ready(function () {
                 });
             },
         }).then((result) => {
-            Swal.fire({
-                title: "Your monthly budget has been saved!",
-                icon: "success",
-                background: $("html").hasClass("dark-mode")
-                    ? "#13171f"
-                    : "#fff",
-                color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
-            });
-
-            fetchBudgetStats();
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Your monthly budget has been saved!",
+                    icon: "success",
+                    background: $("html").hasClass("dark-mode")
+                        ? "#13171f"
+                        : "#fff",
+                    color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
+                });
+    
+                fetchBudgetStats();
+            }
         });
     });
 

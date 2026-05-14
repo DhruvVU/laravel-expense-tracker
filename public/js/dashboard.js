@@ -1,3 +1,34 @@
+$(document).on('change', '.select-year', function() {
+    const date = new Date();
+    const year = $('.select-year').val();
+
+    const set_date = (year == date.getFullYear()) ? new Date() : new Date(year);
+    set_date.setMonth(set_date.getMonth() - 1);
+    const prev_month = set_date.toLocaleString('default', {month: 'short'});
+    $('#prev-month').text(' (' + prev_month + ')');
+
+    $.ajax({
+        url: "/dashboard/budget-stats",
+        type: "GET",
+        data: { year: year, month: prev_month},
+        success: function (response) {
+            if (response.status === "success") {
+                const data = response.data.original;
+
+                $('#dashboard-amount').text(data.total_spent);
+                $("#previous-amount").text(data.last_month);
+                $('#expenses-count').text(data.total_expenses);
+                $("#last-active").text(data.latest_category);
+
+                $("#curr-category").text(data.latest_category);
+                barChart(data.latest_category, year);
+                lineChart('', '', year);
+                pieChart(year);
+            }
+        },
+    });
+});
+
 $(document).on("click", "#toggle-view", function () {
     const month = $(".select-month").val();
     const category = $(".select-category").val() ?? "All";

@@ -7,8 +7,13 @@
 
             <form id="register-form">
                 <div class="form-group">
-                    <label>Enter Username</label>
-                    <input type="text" id="reg-username" placeholder="Enter username">
+                    <label>Enter Name</label>
+                    <input type="text" id="reg-name" placeholder="Enter name">
+                </div>
+
+                <div class="form-group">
+                    <label>Enter Email</label>
+                    <input type="email" id="reg-email" placeholder="Enter email">
                 </div>
 
                 <div class="form-group">

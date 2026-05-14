@@ -8,6 +8,7 @@ $(document).ready(function () {
 
     $(document).on("click", "#show-btn", function () {
         $(".dashboard-container").addClass("blurred");
+        $('#modal-overlay').addClass('active');
         $(".add-card").fadeIn();
     });
 
@@ -16,11 +17,11 @@ $(document).ready(function () {
         if ($(e.target).is("#cancel-btn") || e.key === "Escape") {
             // If add form is open
             $(".add-card").fadeOut();
-            $(".dashboard-container").removeClass("blurred");
+            $("#modal-overlay").removeClass("active");
 
             // If edit form is open
             $(".edit-card").fadeOut();
-            $(".container").removeClass("blurred");
+            $("#modal-overlay").removeClass("active");
         }
     });
 
@@ -28,16 +29,15 @@ $(document).ready(function () {
         e.preventDefault();
         const form = $(this).closest("form");
         const mode = form.data("mode");
-        const category = $('#category-add').val()
+        const category = $("#category-add").val();
 
-        
         let expenseData = {
             description: form.find("#description-add").val(),
             amount: form.find("#amount-add").val(),
             category: category,
             expense_date: form.find("#exp_date-add").val(),
         };
-        
+
         $.ajax({
             url: "/expenses/add-expense",
             type: "POST",
@@ -45,6 +45,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === "success") {
+                    $('#modal-overlay').removeClass('active');
                     showToast(response.message, response.status);
 
                     $("#dashboard-category").text(category);
@@ -64,11 +65,12 @@ $(document).ready(function () {
                     );
 
                     $(".add-card").fadeOut();
-                    $(".dashboard-container").removeClass("blurred");
 
                     $("#description-add").val("");
                     $("#amount-add").val("");
-                    $("#exp_date-add").val(new Date().toISOString().split("T")[0]);
+                    $("#exp_date-add").val(
+                        new Date().toISOString().split("T")[0],
+                    );
 
                     $("#bar-chart").fadeIn(200);
                 } else {
@@ -136,8 +138,8 @@ $(document).ready(function () {
         );
     });
 
-    // Filter based on month and year
-    $(document).on("change", ".select-month, .select-year", function () {
+    // Filter based on month
+    $(document).on("change", ".select-month", function () {
         const month = $(".select-month").val();
         const category = $(".select-category").val() ?? "All";
         const year = $(".select-year").val();
@@ -181,7 +183,7 @@ $(document).ready(function () {
 
     // Show edit form
     $(document).on("click", ".show-edit", function () {
-        $(".container").addClass("blurred");
+        $("#modal-overlay").addClass("active");
         $(".edit-card").fadeIn();
 
         const id = $(this).data("id");
@@ -207,7 +209,7 @@ $(document).ready(function () {
         e.preventDefault();
         const form = $(this).closest("form");
         const mode = form.data("mode");
-        const id = $('#data_id-edit').val();
+        const id = $("#data_id-edit").val();
 
         let updatedData = {
             id: id,
@@ -223,10 +225,11 @@ $(document).ready(function () {
             data: updatedData,
             dataType: "json",
             success: function (response) {
+                $(".edit-card").fadeOut();
+                $("#modal-overlay").removeClass("active");
+                
                 loadExpenses("All", 1, "");
                 showToast("Expense successfully updated!", "success");
-                $(".container").removeClass("blurred");
-                $(".edit-card").fadeOut();
             },
             error: function (xhr) {
                 if (xhr.status === 403) {
@@ -388,27 +391,20 @@ function loadExpenses(
             showTableLoader();
         },
         success: function (response) {
-            let rows = "";
-
             if (response.status === "success") {
                 // Total Amount calculation and Value printing
                 $("#total-amount").text(response.total);
                 $("#dashboard-amount").text(response.total);
+
+                // Call functions for table data and page numbers
+                tableData(response);
+                renderPages(response);
 
                 // Handled empty response (if no data is present)
                 if (response.data.length === 0) {
                     $(".select-category option:first").text(
                         "-- No data in table --",
                     );
-                    $("#expense-list").html(`
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 60px 20px;">
-                                <div style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;">🔍</div>
-                                <h3 style="color: var(--text-main); margin-bottom: 10px;">No matching expenses</h3>
-                                <p style="color: var(--text-main); opacity: 0.7;">Try adjusting your search or filters to find what you're looking for.</p>
-                            </td>
-                        </tr>
-                    `);
 
                     $("#page-numbers").empty();
                     $("#total-amount").text("0.00");
@@ -420,17 +416,41 @@ function loadExpenses(
                         .prop("disabled", "true");
                 }
 
+                $("#expenses-count").text(response.total_expenses);
                 response.data.forEach(function (item) {
                     $(".select-category option:first").text(
                         "-- Select a category --",
                     );
-                    $("#expenses-count").text(response.total_expenses);
+                });
+            }
+        },
+    });
+}
 
-                    let categoryColor = item.category
-                        .toLowerCase()
-                        .replace(/\s+/g, "-");
+// Separate function to populate and display table
+function tableData(response) {
+    let rows = "";
+    if (response.status === "success") {
+        // Handled empty response (if no data is present)
+        if (response.data.length === 0) {
+            $("#expense-list").html(`
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 60px 20px;">
+                                <div style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;">🔍</div>
+                                <h3 style="color: var(--text-main); margin-bottom: 10px;">No matching expenses</h3>
+                                <p style="color: var(--text-main); opacity: 0.7;">Try adjusting your search or filters to find what you're looking for.</p>
+                            </td>
+                        </tr>
+                    `);
+            return;
+        }
 
-                    rows += `
+        response.data.forEach(function (item) {
+            let categoryColor = item.category
+                .toLowerCase()
+                .replace(/\s+/g, "-");
+
+            rows += `
                         <tr>
                             <td data-field="expense_date">${item.expense_date}</td>
                             <td data-field="description">${item.description}</td>
@@ -446,55 +466,50 @@ function loadExpenses(
                             </td>
                         </tr>
                     `;
-                });
-                setTimeout(function () {
-                    $("#expense-list").html(rows);
-                }, 500);
-            }
+        });
+        setTimeout(function () {
+            $("#expense-list").html(rows);
+        }, 500);
+    }
+}
 
-            // Page buttons based on number of pages
-            $("#page-numbers").empty();
+function renderPages(response) {
+    $("#page-numbers").empty();
 
-            // Previous Button
-            let prevButton = response.curr_page <= 1 ? "disabled" : "";
-            $("#page-numbers").append(
-                `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) - 1}" 
+    // Previous Button
+    let prevButton = response.curr_page <= 1 ? "disabled" : "";
+    $("#page-numbers").append(
+        `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) - 1}" 
                 ${prevButton}>&laquo; Prev</button>`,
-            );
+    );
 
-            // Range of page numbers to be shown
-            let range = 1;
-            let total = response.pages;
-            let current = Number(response.curr_page);
-            for (let i = 1; i <= total; i++) {
-                // Deciding which page numbers to display based on range
-                if (
-                    i === 1 ||
-                    i === total ||
-                    (i >= current - range && i <= current + range)
-                ) {
-                    let active = i === current ? "active" : "";
+    // Range of page numbers to be shown
+    let range = 1;
+    let total = response.pages;
+    let current = Number(response.curr_page);
+    for (let i = 1; i <= total; i++) {
+        // Deciding which page numbers to display based on range
+        if (
+            i === 1 ||
+            i === total ||
+            (i >= current - range && i <= current + range)
+        ) {
+            let active = i === current ? "active" : "";
 
-                    $("#page-numbers").append(
-                        `<button class="page-btn ${active}" data-page="${i}">${i}</button>`,
-                    );
-                }
-
-                // Adding dots for remaining page numbers
-                else if (
-                    i === current - range - 1 ||
-                    i === current + range + 1
-                ) {
-                    $("#page-numbers").append('<span class="dots">...</span>');
-                }
-            }
-
-            // Next Button
-            let nextButton =
-                response.curr_page >= response.pages ? "disabled" : "";
             $("#page-numbers").append(
-                `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) + 1}" ${nextButton}>Next &raquo</button>`,
+                `<button class="page-btn ${active}" data-page="${i}">${i}</button>`,
             );
-        },
-    });
+        }
+
+        // Adding dots for remaining page numbers
+        else if (i === current - range - 1 || i === current + range + 1) {
+            $("#page-numbers").append('<span class="dots">...</span>');
+        }
+    }
+
+    // Next Button
+    let nextButton = response.curr_page >= response.pages ? "disabled" : "";
+    $("#page-numbers").append(
+        `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) + 1}" ${nextButton}>Next &raquo</button>`,
+    );
 }

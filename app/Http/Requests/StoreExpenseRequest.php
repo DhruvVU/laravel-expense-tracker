@@ -24,9 +24,9 @@ class StoreExpenseRequest extends FormRequest
     {
         return [
             'description' => 'required|string|max:255',
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|min:0|decimal:0,2',
             'category' => 'required|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'required|date|before_or_equal:today'
+            'expense_date' => 'required|date|date_format:Y-m-d|before_or_equal:today'
         ];
     }
 }

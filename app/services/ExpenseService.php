@@ -5,7 +5,9 @@ namespace App\Services;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ExpenseService
 {
@@ -70,30 +72,39 @@ class ExpenseService
     }
 
     // Monthly budget for user
-    public function getMonthlyBudget($user) {
+    public function getExpenseStats($user, Request $request): JsonResponse {
         $budget = $user->monthly_budget ?? 0;
-        
+        $year = $request->year ?? now()->year;
+
+        $total_spent = $user->expenses()
+                            ->whereYear('expense_date', $year)
+                            ->sum('amount');
+
+        $count = $user->expenses()->whereYear('expense_date', $year)->count();
+
         $spent = $user->expenses()
                     ->whereMonth('expense_date', now()->month)
-                    ->whereYear('expense_date', now()->year)
+                    ->whereYear('expense_date', $year)
                     ->sum('amount');
                     
         $percentage = ($budget > 0) ? ( $spent / $budget ) * 100 : 0;
         
         $last_active = $user->expenses()
                         ->latest('id')
+                        ->whereYear('expense_date', $year)
                         ->value('category') ?? 'None';
         
-        $prev_month = now()->subMonth();
+        $prev_month = ($year == now()->year) ? now()->subMonth() : Carbon::parse($request->month)->month;
         $last_month = $user->expenses()
-                        ->whereMonth('expense_date', $prev_month->month)
-                        ->whereYear('expense_date', $prev_month->year)
+                        ->whereMonth('expense_date', $prev_month)
+                        ->whereYear('expense_date', $year)
                         ->sum('amount');
-
 
         return response()->json([
             'status' => 'Monthly budget fetched',
             'budget' => $budget,
+            'total_spent' => $total_spent,
+            'total_expenses' => $count,
             'spent' => $spent,
             'percentage' => round($percentage, 2),
             'remaining' => $budget - $spent,

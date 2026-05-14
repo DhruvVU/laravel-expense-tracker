@@ -8,12 +8,6 @@
     align-items: stretch;
 }
 
-.blurred {
-    filter: blur(2px);
-    pointer-events: none;
-    transition: filter 0.3s ease;
-}
-
 .second-row {
     display: flex;
     flex-direction: row;
@@ -100,27 +94,56 @@
 
 /* Progress Bar styling */
 #edit-budget {
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    border: none;
+    top: 18px;
+    right: 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
     color: var(--text-main);
-    opacity: 0.4;
+    opacity: 0.6;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
 }
 
 #edit-budget:hover {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.08);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 20px rgba(59,130,246,0.25);
+}
+
+.budget-details {
+    border-top: 1px solid var(--border-color);
+    margin-top: 5px;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.budget-details p {
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -1px;
+}
+
+#budget-spent {
+    color: #3b82f6;
 }
 
 #gauge-wrapper {
     position: relative;
     width: 100%;
-    max-width: 300px; 
-    height: 140px; 
-    margin: 40px auto 10px; 
+    max-width: 320px; 
+    height: 180px; 
+    margin: 25px auto 5px; 
     justify-content: center;
     align-items: flex-end;
 }
@@ -128,24 +151,28 @@
 #budget-gauge {
     width: 100%;
     height: 100%;
+    z-index: 2;
 }
 
 .gauge-text {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     display: flex;
     flex-direction: column;
     font-family: 'Inter', sans-serif;
+    z-index: 5;
 }
 
 #budget-percent {
-    font-size: 32px;
+    font-size: 3rem;
     font-weight: 900;
+    line-height: 1;
     color: var(--text-main);
-    letter-spacing: -1px;
+    letter-spacing: -2px;
+    text-shadow: var(--text-shadow-budget);
 }
 
 #budget-total {
@@ -155,42 +182,26 @@
 }
 
 .gauge-text small {
+    margin-top: 6px;
     color: var(--text-main);
     font-size: 11px;
-    font-weight: 600;
-    opacity: 0.5;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-top: -5px;
-}
-
-.budget-details {
-    margin-top: auto;
-    padding-top: 15px;
-}
-
-.budget-details p {
-    font-size: 1.5rem;
-    margin: 10px 0 20px 0;
-    font-weight: 600;
-    color: var(--text-main);
-    opacity: 0.9;
-}
-
-#budget-spent {
-    color: #3b82f6; 
+    letter-spacing: 3px;
 }
 
 /* Chart Styling */
 .chart-wrapper {
+    border-top: 1px solid var(--border-color);
     position: relative;
     height: 300px;  
     width: 100%;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 #pie-chart,
 #bar-chart {
+    margin-top: 15px;
     cursor: pointer;
 }
 

@@ -80,7 +80,7 @@
     padding: 6px 12px;
     width: auto;
     font-size: 1.1rem;
-    background-color: var(--input-hover);
+    background-color: var(--top-navbar);
     color: var(--text-main);
     border: 1px solid var(--border-color);
     cursor: pointer;
@@ -88,7 +88,6 @@
 
 .select-year:hover {
     cursor: pointer;
-    background-color: var(--input-hover);
     border: 1px solid #3b82f6;
 }
 

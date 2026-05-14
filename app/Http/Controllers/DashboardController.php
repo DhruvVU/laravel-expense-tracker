@@ -16,9 +16,10 @@ class DashboardController extends Controller
         $this->expenseService = $expenseService;
     }
 
-    public function getBudget()
+    public function getBudget(Request $request)
     {
-        $monthly_stats = $this->expenseService->getMonthlyBudget(auth()->user());
+        $user = auth()->user();
+        $monthly_stats = $this->expenseService->getExpenseStats(auth()->user(), $request);
         return response()->json([
             'status' => 'success',
             'data' => $monthly_stats

@@ -9,10 +9,10 @@
 :root {
     --bg-main: #edeff3;
     --bg-secondary: #f4f4f4;
+    --container-bg: #fcfdfd;
     --top-navbar: #ffffff;
     --mode-button: #f1f1f1;
     --sidebar-links: #ccd1da;
-    --container-bg: #fcfdfd;
     --text-main: #333333;
     --text-secondary: rgba(118, 118, 118, 0.6);
     --border-color: rgba(0, 0, 0, 0.1);
@@ -41,10 +41,10 @@ html {
 html.dark-mode {
     --bg-main: #050304;
     --bg-secondary: #14171c;
+    --container-bg: #13171f;
     --top-navbar: #141e2a;
     --mode-button: #18222f;
     --sidebar-links: #3c475a;
-    --container-bg: #13171f;
     --text-main: #e0e0e0;
     --text-secondary: rgba(240, 240, 240, 0.6);
     --border-color: rgba(255, 255, 255, 0.1);

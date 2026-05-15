@@ -52,6 +52,12 @@
     border-radius: 16px;
 }
 
+.label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
 .user-profile-statistics td {
     border-bottom: none;
 }
@@ -79,19 +85,28 @@ h2 {
 }
 
 .input-group-profile {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.input-group-profile tr td {
+    border-bottom: none;
+    padding: 8px;
+}
+
+.input-label {
+    width: 27%;
+    font-size: 0.9rem;
 }
 
 .edit-group {
     display: flex;
     flex-direction: row;
-    text-align: center;
+    align-items: center;
 }
 
 .edit-button {
-    margin:15px 0 0 -30px;
+    margin-left: -35px;
     z-index: 10;
 }
 
@@ -100,20 +115,9 @@ h2 {
     text-shadow: var(--text-shadow-edit);
 }
 
-.input-group-profile label, .label {
-    font-weight: 600;
-    margin-top: 15px;
-    color: var(--text-main);
-}
-
-/* User activity table label styling overriden */
-.label {
-    color: var(--text-secondary);
-    font-size: 1rem;
-}
-
 .input-group-profile input {
     width: 100%;
+    margin: 10px 0;
     padding: 16px 18px;
     border-radius: 14px;
     border: 1px solid var(--input-border);
@@ -169,18 +173,19 @@ h2 {
     gap: 14px;
     border: none;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    margin-top: 8px;
 }
 
 .warning {
     color: var(--text-secondary);
+    text-align: center;
     margin: 0;
 }
 
 .btn-danger {
     display: flex;
-    width: auto;
+    width: 50%;
     max-width: 200px;
     padding: 14px 22px;
     border: none;
@@ -209,5 +214,15 @@ h2 {
 
     .profile-card, .user-stats {
         width: 100%;
+    }
+
+    .input-group-profile tr td {
+        display: flex;
+        width: 100%;
+        padding: 5px;
+    }
+
+    .btn-danger {
+        width: 51%;
     }
 }

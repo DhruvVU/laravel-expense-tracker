@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
     // User profile section
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::delete('/profile/clear-expenses', [ProfileController::class, 'clearExpenses'])->name('profile.clear-expense');
+    Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {
 

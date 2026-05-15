@@ -6,14 +6,14 @@ $(document).ready(function () {
     });
 
     const date = new Date();
+    // Set the monthly budget label to the current month
+    const month = date.toLocaleString("default", { month: "long" });
+    $("#curr-month").text("(" + month + ")");
+
     // Set the previous month label to previous month based on year
     date.setMonth(date.getMonth() - 1);
     const prev_month = date.toLocaleString("default", { month: "short" });
     $("#prev-month").text(" (" + prev_month + ")");
-
-    // Set the monthly budget label to the current month
-    const month = date.toLocaleString("default", { month: "long" });
-    $("#curr-month").text("(" + month + ")");
     
     // Routing between profile and dashboard page and changing the icon accordingly
     $(".nav-profile-link").on("click", function (e) {

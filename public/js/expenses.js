@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     $(document).on("click", "#show-btn", function () {
         $(".dashboard-container").addClass("blurred");
-        $('#modal-overlay').addClass('active');
+        $("#modal-overlay").addClass("active");
         $(".add-card").fadeIn();
     });
 
@@ -45,7 +45,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === "success") {
-                    $('#modal-overlay').removeClass('active');
+                    $("#modal-overlay").removeClass("active");
                     showToast(response.message, response.status);
 
                     $("#dashboard-category").text(category);
@@ -227,7 +227,7 @@ $(document).ready(function () {
             success: function (response) {
                 $(".edit-card").fadeOut();
                 $("#modal-overlay").removeClass("active");
-                
+
                 loadExpenses("All", 1, "");
                 showToast("Expense successfully updated!", "success");
             },
@@ -255,7 +255,6 @@ $(document).ready(function () {
         let id = $(this).data("id");
         let row = $(this).closest("tr");
 
-        $(".container").addClass("blurred");
         const swalButtons = Swal.mixin({
             customClass: {
                 confirmButton: "swal-confirm",
@@ -275,8 +274,8 @@ $(document).ready(function () {
                 confirmButtonText: "Yes, delete it!",
                 allowEscapeKey: true,
                 background: $("html").hasClass("dark-mode")
-                    ? "#1e1e1e"
-                    : "#fff",
+                    ? "#13171f"
+                    : "#fcfdfd",
                 color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
             })
             .then((result) => {
@@ -289,7 +288,6 @@ $(document).ready(function () {
                             if (response.status === "success") {
                                 row.fadeOut(500, function () {
                                     $(this).remove();
-                                    $(".container").removeClass("blurred");
                                     loadExpenses(
                                         $("#filter-category").val(),
                                         defaultPageNo,
@@ -309,8 +307,6 @@ $(document).ready(function () {
                             }
                         },
                     });
-                } else {
-                    $(".container").removeClass("blurred");
                 }
             });
     });
@@ -319,8 +315,6 @@ $(document).ready(function () {
 
     $(document).on("click", "#download-csv", function (e) {
         e.preventDefault();
-        $(".container").addClass("blurred");
-
         const swalButtons = Swal.mixin({
             customClass: {
                 confirmButton: "swal-confirm",
@@ -349,17 +343,14 @@ $(document).ready(function () {
                 confirmButtonText: "Download",
                 allowEscapeKey: true,
                 background: $("html").hasClass("dark-mode")
-                    ? "#1e1e1e"
-                    : "#fff",
+                    ? "#13171f"
+                    : "#fcfdfd",
                 color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
             })
             .then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = `/expenses/export-csv?${urlParams}`;
-                    $(".container").removeClass("blurred");
                     showToast("File download in progress!", "success");
-                } else {
-                    $(".container").removeClass("blurred");
                 }
             });
     });

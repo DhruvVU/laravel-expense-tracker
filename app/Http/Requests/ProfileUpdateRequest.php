@@ -25,12 +25,14 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|required|string|max:100',
-            'password' => 'sometimes|required|min:8|confirmed',
-            'monthly_budget' => 'sometimes|required|numeric|min:0',  
             'email' => [
-                'sometimes|required|email|max:255',
+                'sometimes',
+                'required',
+                'email',
+                'max:255',
                 Rule::unique('users')->ignore($this->user()->id)    
-            ]
+            ],
+            'monthly_budget' => 'sometimes|required|numeric|min:0' 
         ];
     }
 }

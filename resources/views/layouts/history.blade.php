@@ -75,7 +75,6 @@
     <x-form mode="add" title="Add Expense"></x-form>
     <x-form mode="edit" title="Edit Expense"></x-form>
 
-    @include('layouts.partials._footer')
     @push('page-scripts')
         <script src="{{ asset('js/expenses.js') }}"></script>
     @endpush

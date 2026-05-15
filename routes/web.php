@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,17 +29,24 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
 
+    // Dashboard route
     Route::get('/dashboard', function() {
         return view('layouts.dashboard');
     })->name('dashboard');
 
-    Route::get('/dashboard/budget-stats', [DashboardController::class, 'getBudget'])->name('get_budget');
 
+    // Dashboard data fetching 
+    Route::get('/dashboard/budget-stats', [DashboardController::class, 'getBudget'])->name('get_budget');
     Route::patch('/dashboard/set-budget', [DashboardController::class, 'setBudget'])->name('set_budget');
 
+    // History page route 
     Route::get('/history', function () {
         return view('layouts.history');
     })->name('history');
+
+    // User profile section
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {
 

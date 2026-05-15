@@ -91,6 +91,13 @@
     border: 1px solid #3b82f6;
 }
 
+.settings-section {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
 /* Dark mode button  */
 .theme-switch-wrapper {
     display: flex;
@@ -125,6 +132,17 @@
     width: auto;
 }
 
+.profile-section {
+    padding: 8px;
+    background-color: var(--top-navbar);
+    color: var(--text-main);
+    border: none;
+    border-radius: var(--button-border-radius);
+}
+
+.profile-section:hover {
+    transform: translateY(-2px);
+}
 
 @media (max-width: 768px) {
     .navbar {

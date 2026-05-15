@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ExpenseService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -16,7 +17,7 @@ class DashboardController extends Controller
         $this->expenseService = $expenseService;
     }
 
-    public function getBudget(Request $request)
+    public function getBudget(Request $request): JsonResponse
     {
         $user = auth()->user();
         $monthly_stats = $this->expenseService->getExpenseStats(auth()->user(), $request);
@@ -26,7 +27,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function setBudget(Request $request)
+    public function setBudget(Request $request): JsonResponse
     {
         $request->validate([
             'monthly_budget' => 'required|numeric|min:0'

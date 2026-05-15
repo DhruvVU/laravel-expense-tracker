@@ -151,7 +151,7 @@
 .history-table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--table-body);
+    background: var(--bg-secondary);
 }
 
 #expense-list tr:hover {

@@ -7,7 +7,7 @@
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
-            background: isDark ? "#1e1e1e" : "#fff",
+            background: isDark ? "#13171f" : "#fcfdfd",
             color: isDark ? "#fff" : "#000",
             didOpen: (toast) => {
                 toast.onmouseenter = Swal.stopTimer;

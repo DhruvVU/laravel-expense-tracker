@@ -29,10 +29,12 @@
             {{-- Main content --}}
             <main id="main-content" class="content-area">
                 {{ $slot }}
+                @include('layouts.partials._footer')
             </main>
         </div>
 
     </div>
+
     <div id="modal-overlay"></div>
     {{-- Toast component --}}
     <x-toast></x-toast>

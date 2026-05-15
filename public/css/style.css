@@ -8,14 +8,17 @@
 /* Variables for consistent styling across all elements */
 :root {
     --bg-main: #edeff3;
+    --bg-secondary: #f4f4f4;
     --top-navbar: #ffffff;
     --mode-button: #f1f1f1;
     --sidebar-links: #ccd1da;
     --container-bg: #fcfdfd;
     --text-main: #333333;
+    --text-secondary: rgba(118, 118, 118, 0.6);
     --border-color: rgba(0, 0, 0, 0.1);
     --input-hover: #ffffff;
-    --table-body: #f4f4f4;
+    --input-bg: rgba(255, 255, 255, 0.728);
+    --input-border: rgba(255, 255, 255, 0.744);
     --table-header: #dcdcdc;
     --table-hover: #ededed;
     --button-gradient: linear-gradient(
@@ -27,6 +30,7 @@
     --button-shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.3);
     --button-border-radius: 6px;
     --text-shadow-budget: 0 0 12px rgba(33, 33, 33, 0.30), 0 0 30px rgba(13, 4, 4, 0.15);
+    --text-shadow-edit: 0 0 10px rgba(56, 56, 56, 0.5);
 }
 
 html {
@@ -36,17 +40,21 @@ html {
 /* Dark mode theme variables */
 html.dark-mode {
     --bg-main: #050304;
+    --bg-secondary: #14171c;
     --top-navbar: #141e2a;
     --mode-button: #18222f;
     --sidebar-links: #3c475a;
     --container-bg: #13171f;
     --text-main: #e0e0e0;
+    --text-secondary: rgba(240, 240, 240, 0.6);
     --border-color: rgba(255, 255, 255, 0.1);
     --input-hover: #282828;
-    --table-body: #14171c;
+    --input-bg: rgba(255,255,255,0.03);
+    --input-border: rgba(255,255,255,0.06);
     --table-header: #21252e;
     --table-hover: #232b3b;
     --text-shadow-budget: 0 0 12px rgba(255,255,255,0.15), 0 0 30px rgba(59,130,246,0.15);
+    --text-shadow-edit: 0 0 10px rgba(205, 205, 205, 0.5);
 }
 
 body {  

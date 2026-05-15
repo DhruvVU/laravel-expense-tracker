@@ -7,8 +7,10 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use Gate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExpenseController extends Controller
 {
@@ -19,7 +21,7 @@ class ExpenseController extends Controller
     }
 // ============================================ Add Expense(CREATE) ============================================
 
-    public function store(StoreExpenseRequest $request)
+    public function store(StoreExpenseRequest $request): ExpenseResource
     {
         $expense = $request->user()->expenses()->create($request->validated());
         return (new ExpenseResource($expense))
@@ -38,13 +40,14 @@ class ExpenseController extends Controller
 
         // Filter for table data
         if ($request->boolean('table_data')) {
+            $tableQuery = clone $query;
             
             // Fetch the data for a specific day
             if ($request->filled('label')) {
-                $this->expenseService->applyLabelFilters($query, $request->label);
+                $this->expenseService->applyLabelFilters($tableQuery, $request->label);
             }
 
-            $expenses = $query->orderBy('expense_date', 'desc')->limit(5)->get();
+            $expenses = $tableQuery->orderBy('expense_date', 'desc')->limit(5)->get();
             $totalAmount = $expenses->sum('amount');
 
             return ExpenseResource::collection($expenses)->additional([
@@ -57,20 +60,21 @@ class ExpenseController extends Controller
         // Filter for line chart 
         if ($request->boolean('for_chart')) {
             $year = $request->year ?? date('Y');
+            $chartQuery = clone $query;
 
             if ($request->has('month') && $request->month > 0) {
-                $query->whereMonth('expense_date', $request->month)
+                $chartQuery->whereMonth('expense_date', $request->month)
                       ->whereYear('expense_date', $year)
                       ->selectRaw("DATE_FORMAT(expense_date, '%d %b') as label, SUM(amount) as total")
                       ->groupBy('label')
                       ->orderByRaw('MIN(expense_date) ASC');
             } else {
-                $query->selectRaw("DATE_FORMAT(expense_date, '%b') as label, SUM(amount) as total")
+                $chartQuery->selectRaw("DATE_FORMAT(expense_date, '%b') as label, SUM(amount) as total")
                       ->groupBy('label')
                       ->orderByRaw('MIN(expense_date) ASC');
             }
 
-            $expenses = $query->get();
+            $expenses = $chartQuery->get();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Line Chart data fetched',
@@ -81,7 +85,7 @@ class ExpenseController extends Controller
         $totalAmount = $query->sum('amount');
         // Pagination 
         $expenses = $query->orderBy('expense_date', 'desc')->paginate(5);
-        $total_expenses = $query->whereYear('expense_date', $year)->count();
+        $total_expenses = $query->count();
 
         return ExpenseResource::collection($expenses)->additional([
             'status' => 'success',
@@ -94,7 +98,7 @@ class ExpenseController extends Controller
     }
     
     // ============================= Fetch Chart Data =============================
-    public function getChartData(Request $request)
+    public function getChartData(Request $request): JsonResponse
     {
         $query = $request->user()->expenses();
         $category = $request->category;
@@ -136,7 +140,7 @@ class ExpenseController extends Controller
 
 // ============================================ Edit Expense(UPDATE) ===========================================
 
-    public function edit(UpdateExpenseRequest $request, Expense $expense)
+    public function edit(UpdateExpenseRequest $request, Expense $expense): JsonResponse
     {
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('update', $expense);
@@ -150,7 +154,7 @@ class ExpenseController extends Controller
 
 // ============================================ Delete Expense(DELETE) =========================================
 
-    public function delete(Expense $expense)
+    public function delete(Expense $expense): JsonResponse
     {
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('delete', $expense);
@@ -164,7 +168,7 @@ class ExpenseController extends Controller
 
 // ============================================ Download CSV File ==============================================
 
-    public function exportCsv(Request $request)
+    public function exportCsv(Request $request): StreamedResponse
     {
         $query = $this->expenseService->getFilteredQuery($request);
         $expenses = $query->select('expense_date', 'description', 'category', 'amount')

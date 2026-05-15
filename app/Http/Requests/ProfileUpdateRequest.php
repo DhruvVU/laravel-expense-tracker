@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateExpenseRequest extends FormRequest
+class ProfileUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +24,13 @@ class UpdateExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'sometimes|required|string|max:255',
-            'amount' => 'sometimes|required|numeric|min:0.01|max:9999999|decimal:0,2',
-            'category' => 'sometimes|required|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'sometimes|required|date|date_format:Y-m-d|before_or_equal:today'
+            'name' => 'sometimes|required|string|max:100',
+            'password' => 'sometimes|required|min:8|confirmed',
+            'monthly_budget' => 'sometimes|required|numeric|min:0',  
+            'email' => [
+                'sometimes|required|email|max:255',
+                Rule::unique('users')->ignore($this->user()->id)    
+            ]
         ];
     }
 }

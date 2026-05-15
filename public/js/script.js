@@ -8,14 +8,28 @@ $(document).ready(function () {
     const date = new Date();
     // Set the previous month label to previous month based on year
     date.setMonth(date.getMonth() - 1);
-    const prev_month = date.toLocaleString('default', {month: 'short'});
-    $('#prev-month').text(' (' + prev_month + ')');
+    const prev_month = date.toLocaleString("default", { month: "short" });
+    $("#prev-month").text(" (" + prev_month + ")");
 
     // Set the monthly budget label to the current month
-    const month = date.toLocaleString('default', {month: 'long'});
-    $('#curr-month').text('(' + month + ')');
+    const month = date.toLocaleString("default", { month: "long" });
+    $("#curr-month").text("(" + month + ")");
+    
+    // Routing between profile and dashboard page and changing the icon accordingly
+    $(".nav-profile-link").on("click", function (e) {
+        let icon = $(this).find("i");
+        
+        // Check if the icon is already the house
+        if (icon.hasClass("fa-house")) {
+            e.preventDefault(); 
+            window.location.href = "/dashboard";
+        } else {
+            // If it's still the user icon, let the link proceed to profile
+            icon.removeClass("fa-user").addClass("fa-house");
+        }
+    });
+    
     // ====================== Chart Data based on User selection ======================
-
     $(document).on("change", ".select-category", function () {
         let selectedCategory = $(this).val();
         const year = $(".select-year").val();
@@ -92,7 +106,7 @@ $(document).ready(function () {
                         : "#fff",
                     color: $("html").hasClass("dark-mode") ? "#fff" : "#000",
                 });
-    
+
                 fetchBudgetStats();
             }
         });

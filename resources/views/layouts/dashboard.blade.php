@@ -130,7 +130,6 @@
     {{-- Hidden form to add expense which will be displayed when button is clicked --}}
     <x-form mode="add" title="Add Expense"></x-form>
 
-    @include('layouts.partials._footer')
 
     @push('page-scripts')
         <script src="{{ asset('js/dashboard.js') }}"></script>

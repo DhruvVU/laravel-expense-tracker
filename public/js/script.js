@@ -1,3 +1,7 @@
+// =========================================================================================================
+// **********All the general required functions and some basic actions for the website is present here***********
+// ==============================================================================================================
+
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {
@@ -22,12 +26,18 @@ $(document).ready(function () {
         // Check if the icon is already the house
         if (icon.hasClass("fa-house")) {
             e.preventDefault(); 
-            window.location.href = "/dashboard";
+            window.location.href = "/dashboard";    
         } else {
             // If it's still the user icon, let the link proceed to profile
             icon.removeClass("fa-user").addClass("fa-house");
         }
     });
+
+    // Hide some unwanted buttons on profile page
+    if ($('.nav-profile-link i').hasClass('fa-solid fa-house')) {
+        $('#show-btn').hide();
+        $('.select-year').hide();
+    }
     
     // ====================== Chart Data based on User selection ======================
     $(document).on("change", ".select-category", function () {

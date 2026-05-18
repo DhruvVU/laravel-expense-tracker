@@ -57,8 +57,8 @@ html.dark-mode {
     --table-hover: #232b3b;
     --text-shadow-budget: 0 0 12px rgba(255,255,255,0.15), 0 0 30px rgba(59,130,246,0.15);
     --text-shadow-edit: 0 0 10px rgba(205, 205, 205, 0.5);
-    --nav-buttons: #292b30;
-    --nav-buttons-hover: #484848;
+    --nav-buttons: #232d45;
+    --nav-buttons-hover: #394156;
 }
 
 body {  

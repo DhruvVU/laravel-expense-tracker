@@ -5,7 +5,6 @@
         <p class="user-name">{{ auth()->user()->name ?? 'User' }}</p>
     </div>
 
-
     <div class="nav-controls">
         {{-- button to show add expense form --}}
         <button id="show-btn">

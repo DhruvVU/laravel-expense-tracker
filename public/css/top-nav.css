@@ -106,20 +106,20 @@
     justify-content: center;
 }
 
-.theme-button {
-    background-color: var(--top-navbar);
+.theme-button, .profile-icon {
+    background-color: var(--nav-buttons);
     color: var(--text-main);
+    border-radius: 50%;
+    height: auto;
     border: none;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: auto;
 }
 
-.theme-button:hover {
-    transform: translateY(-1px);
+.theme-button:hover,
+.profile-icon:hover {
+    background-color: var(--nav-buttons-hover);
 }
 
 .theme-icon {
@@ -137,11 +137,6 @@
     background-color: var(--top-navbar);
     color: var(--text-main);
     border: none;
-    border-radius: var(--button-border-radius);
-}
-
-.profile-section:hover {
-    transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {

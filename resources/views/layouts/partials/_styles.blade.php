@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ asset('css/history.css') }}">
 
 {{-- Sidebar styling --}}
-<link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">   
+<link rel="stylesheet" href="{{ asset('css/side-nav.css') }}">   
 
 {{-- Top Navbar styling --}}
 <link rel="stylesheet" href="{{ asset('css/top-nav.css') }}">

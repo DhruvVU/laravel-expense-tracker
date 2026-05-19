@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 15px;
     width: 100%;
-    margin: 0 auto;
+    margin: 50px auto;
     padding: 10px;
     align-items: stretch;
 }
@@ -30,6 +30,7 @@
     display: flex;
     flex-direction: row;
     gap: 20px;
+    scroll-margin-top: 60px;
 }
 
 /* Ensure cards are consistent */
@@ -63,7 +64,8 @@
 }
 
 .stat-card-mini:hover {
-    border: 1px solid #3b82f6;
+    color: #a169e6;
+    font-weight: 700;
 }
 
 .select-category {
@@ -92,11 +94,11 @@
     margin-top: 10px;   
 }
 
-/* Progress Bar styling */
+/* Progress Bar and edit button styling*/
 #edit-budget {
     top: 18px;
     right: 18px;
-    background: rgba(255,255,255,0.04);
+    background: var(--edit-pencil-background);
     border: 1px solid rgba(255,255,255,0.06);
     width: 34px;
     height: 34px;
@@ -111,7 +113,7 @@
 #edit-budget:hover {
     opacity: 1;
     transform: scale(1.08);
-    background: rgba(255,255,255,0.08);
+    background: rgba(109, 43, 167, 0.299);
     box-shadow: 0 0 20px rgba(59,130,246,0.25);
 }
 
@@ -221,7 +223,6 @@
 
 .select-month:hover {
     cursor: pointer;
-    background-color: var(--input-hover);
     border: 1px solid #3b82f6;
 }
 
@@ -327,6 +328,7 @@
         flex-direction: column;
         padding: 15px;
         gap: 15px;
+        margin: 0 auto;
     }
 
     .first-row {

@@ -40,6 +40,7 @@ $(document).ready(function () {
     }
     
     // ====================== Chart Data based on User selection ======================
+    
     $(document).on("change", ".select-category", function () {
         let selectedCategory = $(this).val();
         const year = $(".select-year").val();
@@ -137,7 +138,8 @@ $(document).ready(function () {
     });
 });
 
-// function to show table
+// ======================== Function to show table data on dashboard page ========================
+
 function showTable(category, label, year) {
     $.ajax({
         url: "expenses/fetch-expense",

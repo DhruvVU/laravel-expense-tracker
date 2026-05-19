@@ -2,13 +2,15 @@
 // ************************* Functions related to Expense data(CRUD Operations) *********************************
 // ==============================================================================================================
 
-$(document).ready(function () {
-    // ============================================ Add Expense(CREATE) =========================================
-    // default page numberis set to 1 for loading data
-    let defaultPageNo = 1;
+// default page numberis set to 1 for loading data
+let defaultPageNo = 1;
 
-    // timer for keeping a small delay when searching the database
-    let searchTimer;
+// timer for keeping a small delay when searching the database
+let searchTimer;
+
+$(document).ready(function () {
+    
+    // ============================================ Add Expense(CREATE) =========================================
 
     $(document).on("click", "#show-btn", function () {
         $(".dashboard-container").addClass("blurred");
@@ -100,7 +102,7 @@ $(document).ready(function () {
 
     // ========================================== Search Expense(READ) =========================================
 
-    // ================================ Search operation filters section ================================
+    // ======================== Search operation filters section ============================
 
     // Clear all filters
     $(document).on("click", "#reset-filters", function () {
@@ -181,7 +183,7 @@ $(document).ready(function () {
 
         loadExpenses(current_filter, 1, search_input, start_date, end_date);
     });
-    // ==================================== End of Filters section ====================================
+    // ================== End of Filters section =========================
 
     // ========================================== Edit Expense(UPDATE) =========================================
 

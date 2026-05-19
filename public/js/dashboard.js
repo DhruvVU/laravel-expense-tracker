@@ -2,6 +2,7 @@
 // ********************************* All the dashboard page related functions are here **************************
 // ==============================================================================================================
 
+// Year selector for dashboard stats
 $(document).on('change', '.select-year', function() {
     const date = new Date();
     const year = $('.select-year').val();
@@ -23,16 +24,28 @@ $(document).on('change', '.select-year', function() {
                 $("#previous-amount").text(data.last_month);
                 $('#expenses-count').text(data.total_expenses);
                 $("#last-active").text(data.latest_category);
+                
+                // Either of line chart or table will be displayed depending on which 
+                // view is currently visible to the user.
+                if ($('#lineChart').is(':visible')) {
+                    $('.table-data').fadeOut();
+                    lineChart('', '', year);
+                } 
 
+                if ($('.table-data').is(':visible')) {
+                    $('#lineChart').fadeOut();
+                    showTable('', '', year);
+                } 
+ 
                 $("#curr-category").text(data.latest_category);
                 barChart(data.latest_category, year);
-                lineChart('', '', year);
                 pieChart(year);
             }
         },
     });
 });
 
+// Toggle between chart and table views
 $(document).on("click", "#toggle-view", function () {
     const month = $(".select-month").val();
     const category = $(".select-category").val() ?? "All";
@@ -118,7 +131,13 @@ function pieChart(year = "") {
                     onClick: (events, elements) => {
                         const curr = elements[0].index;
                         const category = expensesPieChart.data.labels[curr];
+
+                        // Scroll down towards the table
                         showTable(category, "", $(".select-year").val());
+                        const tableData = document.querySelector('.third-row');
+                        tableData.scrollIntoView({
+                            behavior: 'smooth'
+                        });
                     },
                     responsive: true,
                     maintainAspectRatio: false,
@@ -234,8 +253,12 @@ function barChart(category, year) {
                             const curr = elements[0].index;
                             const label = categoryBarChart.data.labels[curr];
 
-                            // Show data for current bar
-                            showTable(category, label, $(".select-year").val());
+                            // Show data for current bar and scroll down toawrds it
+                            showTable(category, label, $(".select-year").val());    
+                            const tableData = document.querySelector('.third-row');
+                            tableData.scrollIntoView({
+                                behavior: 'smooth'
+                            });
                         }
                     },
                     responsive: true,
@@ -379,27 +402,37 @@ let progressBar;
 
 function expenseProgressBar() {
     progressBar = new ProgressBar.SemiCircle("#budget-gauge", {
-        strokeWidth: 6,
-        color: "#2ecc71",
-        trailColor: "#747474",
-        trailWidth: 6,
+        strokeWidth: 8,
+        trailWidth: 8,
+        color: "#00ff99",
+        trailColor: 'rgba(202, 196, 196, 0.2)',
         easing: "easeInOut",
         duration: 2000,
         svgStyle: {
             width: "100%",
             height: "100%",
         },
+        from: { color: '#00e676' },
+        to:   { color: '#00ffcc' },
         step: (state, bar) => {
+            bar.path.setAttribute('stroke-linecap', 'round');
             const value = Math.round(bar.value() * 100);
             $("#budget-percent").text(value + "%");
-
+            let glowColor;
             if (value >= 90) {
-                bar.path.setAttribute("stroke", "#e74c3c"); // Danger Red
+                bar.path.setAttribute("stroke", "#ff4d6d");
+                glowColor = "rgba(255,77,109,0.3)";
+
             } else if (value >= 70) {
-                bar.path.setAttribute("stroke", "#f1c40f"); // Warning Yellow
+                bar.path.setAttribute("stroke", "#ffd166");
+                glowColor = "rgba(255,209,102,0.3)";
+
             } else {
-                bar.path.setAttribute("stroke", "#2ecc71"); // Safe Green
+                // USE interpolated color here
+                bar.path.setAttribute("stroke", state.color);
+                glowColor = "rgba(0,255,153,0.3)";
             }
+            bar.path.style.filter = `drop-shadow(0 0 4px ${glowColor})`;
         },
     });
 }

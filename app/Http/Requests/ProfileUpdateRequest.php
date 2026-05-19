@@ -29,7 +29,7 @@ class ProfileUpdateRequest extends FormRequest
                 'sometimes',
                 'required',
                 'email',
-                'max:255',
+                'max:100',
                 Rule::unique('users')->ignore($this->user()->id)    
             ],
             'monthly_budget' => 'sometimes|required|numeric|min:0' 

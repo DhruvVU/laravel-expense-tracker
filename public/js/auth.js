@@ -3,6 +3,7 @@
 // =============================================================================================================
  
 $(document).ready(function() {
+    
     // ============================================ User Registration ===========================================
     
     $(document).on("submit", "#register-form", function (e) {
@@ -40,7 +41,7 @@ $(document).ready(function() {
                         showToast(errors[key][0], 'error');
                     })
                 } else {
-                    showToast("Server error! Please try again later..", "error");
+                    showToast("Server error! Please try again later...", "error");
                 }
             },
         });

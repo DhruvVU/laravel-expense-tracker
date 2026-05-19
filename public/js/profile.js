@@ -3,7 +3,9 @@
 // ==============================================================================================================
 
 $(document).ready(function () {
+    
     // ====================== User Clicks on the Edit icon ========================
+    
     $(document).on("click", ".edit-button", function (e) {
         // Fade in the update button
         $(".btn-update").fadeIn().removeAttr("disabled");
@@ -16,6 +18,7 @@ $(document).ready(function () {
     });
 
     // ======================== User clicks the update button ===========================
+    
     $(document).on("submit", "#profile-update", function (e) {
         e.preventDefault();
 
@@ -65,6 +68,7 @@ $(document).ready(function () {
     });
 
     // ============================ User clicks on password change button ===================================
+    
     $(document).on("submit", "#change-password", function (e) {
         e.preventDefault();
         let curr_pass = $('input[name="curr_password"]').val();
@@ -101,6 +105,8 @@ $(document).ready(function () {
             },
         });
     });
+
+    // ================================ Danger zone buttons ==============================
 
     $(document).on("click", ".btn-danger", function () {
         let action = $(this).attr("id");

@@ -16,7 +16,7 @@
 
     </div>
 
-    <nav class="sidebar-links" style="display: flex; flex-direction: column; gap: 15px; flex-grow: 1;">
+    <nav class="sidebar-links">
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">🏠
             Dashboard</a>
         <a href="{{ route('history')  }}" class="nav-link {{ request()->routeIs('history') ? 'active' : '' }}">📜

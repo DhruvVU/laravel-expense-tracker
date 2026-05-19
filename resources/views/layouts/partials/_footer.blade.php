@@ -7,8 +7,7 @@
         display: flex;
         align-items: center;
         padding: 15px;
-        margin-top: 30px;
-        margin-bottom: 50px;
+        margin-top: 50px;
         font-size: 1rem;
         font-weight: 100;
         opacity: 0.6;

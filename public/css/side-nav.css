@@ -5,7 +5,7 @@
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    padding: 15px 25px;
+    padding: 5px;
     padding-bottom: 15px;
     height: 100%;
 }
@@ -14,8 +14,9 @@
 .brand-section {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
-    margin-bottom: 40px; 
+    margin: 15px 0 40px 0;
 }
 
 .mobile-toggle {
@@ -48,6 +49,13 @@
     -webkit-text-fill-color: transparent; /* Makes the logo text pop with a gradient */
 }
 
+.sidebar-links {
+    display: flex; 
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+}
+
 .sidebar-links a {
     text-decoration: none;
     color: var(--text-main);
@@ -58,7 +66,7 @@
 }
 
 .sidebar-links a:hover {
-    background: rgba(98, 109, 112, 0.2);
+    background: rgba(76, 63, 93, 0.2);
 }
 
 .sidebar-links a.active {

@@ -384,6 +384,12 @@ html.dark-mode .pill-entertainment {
         box-shadow: none;
     }
 
+    .total-display {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
     .table-container {
         width: 100%;
         overflow-x: auto;

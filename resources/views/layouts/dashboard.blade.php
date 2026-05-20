@@ -97,7 +97,7 @@
                 </select>
 
                 <div class="back-button">
-                    <button id="toggle-view">📒 Table View</button>
+                    <button id="toggle-view">📒 View Table</button>
                 </div>
 
                 {{--Line chart display for user expenses --}}

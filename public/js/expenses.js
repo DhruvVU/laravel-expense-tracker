@@ -8,6 +8,9 @@ let defaultPageNo = 1;
 // timer for keeping a small delay when searching the database
 let searchTimer;
 
+// default value of year to use in function calls
+const year = $('.select-year').val() || new Date().getFullYear();
+
 $(document).ready(function () {
     
     // ============================================ Add Expense(CREATE) =========================================
@@ -54,23 +57,36 @@ $(document).ready(function () {
                     $("#modal-overlay").removeClass("active");
                     showToast(response.message, response.status);
 
+                    // Update dashboard stats and charts(if visible)
                     $("#dashboard-category").text(category);
                     if (typeof fetchBudgetStats === "function")
                         fetchBudgetStats();
                     if (typeof barChart === "function")
-                        barChart(category, $(".select-year").val());
+                        barChart(category, year);
                     if (typeof pieChart === "function")
-                        pieChart($(".select-year").val());
+                        pieChart(year);
                     loadExpenses(
                         $("#filter-category").val(),
                         1,
                         "",
                         "",
                         "",
-                        $(".select-year").val(),
+                        year,
                     );
 
                     $(".add-card").fadeOut();
+                    
+                    // Check which view is visible 
+                    if ($('#lineChart').is(':visible')) {
+                        $('.table-data').fadeOut();
+                        lineChart('', '', year);
+                    } 
+
+                    if ($('.table-data').is(':visible')) {
+                        $('#lineChart').fadeOut();
+                        showTable('', '', year);
+                    } 
+
 
                     $("#description-add").val("");
                     $("#amount-add").val("");
@@ -148,15 +164,14 @@ $(document).ready(function () {
     $(document).on("change", ".select-month", function () {
         const month = $(".select-month").val();
         const category = $(".select-category").val() ?? "All";
-        const year = $(".select-year").val();
-
+        
         loadExpenses(category, 1, "", "", "", year);
 
         if ($(".table-data").is(":visible")) {
             showTable(category, month, year);
         } else {
             $(".table-data").fadeOut();
-            $("#toggle-view").text("📒 Table View");
+            $("#toggle-view").text("📒 View Table");
             lineChart(category, month, year);
         }
 
@@ -181,7 +196,7 @@ $(document).ready(function () {
             }
         }
 
-        loadExpenses(current_filter, 1, search_input, start_date, end_date);
+        loadExpenses(current_filter, 1, search_input, start_date, end_date, year);
     });
     // ================== End of Filters section =========================
 

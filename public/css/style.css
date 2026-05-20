@@ -21,11 +21,7 @@
     --input-border: rgba(255, 255, 255, 0.744);
     --table-header: #dcdcdc;
     --table-hover: #ededed;
-    --button-gradient: linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.1),
-        rgba(37, 99, 235, 0.1)
-    );
+    --button-gradient: linear-gradient( 135deg, rgba(59, 130, 246, 0.1),rgba(37, 99, 235, 0.1));
     --button-border-blue: #3b82f6; 
     --button-shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.3);
     --button-border-radius: 6px;
@@ -33,7 +29,7 @@
     --text-shadow-edit: 0 0 10px rgba(56, 56, 56, 0.5);
     --nav-buttons: #f0ebeb;
     --nav-buttons-hover: #dddddd;
-    --edit-pencil-background: rgb(233, 220, 255);
+    --edit-pencil-background: rgb(209, 205, 217);
 }
 
 html {
@@ -43,8 +39,8 @@ html {
 /* Dark mode theme variables */
 html.dark-mode {
     --bg-main: #000000;
-    --bg-secondary: #120624;
-    --container-bg: #0d0415;
+    --bg-secondary: #15141c;
+    --container-bg: #131215;
     --top-navbar: #0f0f0f;
     --mode-button: #18222f;
     --sidebar-links: #1a047b;
@@ -55,12 +51,12 @@ html.dark-mode {
     --input-bg: rgba(255,255,255,0.03);
     --input-border: rgba(255,255,255,0.06);
     --table-header: #21252e;
-    --table-hover: #221236;
+    --table-hover: #222129;
     --text-shadow-budget: 0 0 12px rgba(255,255,255,0.15), 0 0 30px rgba(59,130,246,0.15);
     --text-shadow-edit: 0 0 10px rgba(205, 205, 205, 0.5);
     --nav-buttons: #232d45;
     --nav-buttons-hover: #394156;
-    --edit-pencil-background: rgba(51, 18, 106, 0.642);
+    --edit-pencil-background: rgba(41, 35, 51, 0.642);
 }
 
 body {  

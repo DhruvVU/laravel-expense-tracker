@@ -45,7 +45,7 @@ $(document).ready(function () {
         let selectedCategory = $(this).val();
         const year = $(".select-year").val();
         $(".table-data").fadeOut();
-        $("#toggle-view").text("📒 Table View");
+        $("#toggle-view").text("📒 View Table");
 
         setTimeout(function () {
             if (selectedCategory === "All") {
@@ -156,7 +156,7 @@ function showTable(category, label, year) {
         },
         success: function (response) {
             $("#lineChart").fadeOut();
-            $("#toggle-view").text("📉 Chart View");
+            $("#toggle-view").text("📉 View Chart");
             let rows = "";
 
             if (response.data && response.data.length > 0) {

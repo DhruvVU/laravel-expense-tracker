@@ -51,13 +51,19 @@ $(document).on("click", "#toggle-view", function () {
     const category = $(".select-category").val() ?? "All";
     const year = $(".select-year").val();
 
+    // Scroll to third row container when clicked on toggle button
+    const scroll = document.querySelector('.third-row');
+    scroll.scrollIntoView({
+        behavior: 'smooth'
+    });
+
     if ($(".table-data").is(":visible")) {
         $(".table-data").fadeOut();
 
         setTimeout(function () {
             lineChart(category, month, year);
             $("#lineChart").fadeIn();
-            $("#toggle-view").text("📒 Table View");
+            $("#toggle-view").text("📒 View Table");
         }, 500);
     } else {
         $("#lineChart").fadeOut();
@@ -65,7 +71,7 @@ $(document).on("click", "#toggle-view", function () {
         setTimeout(function () {
             showTable(category, month, year);
             $(".table-data").fadeIn();
-            $("#toggle-view").text("📉 Chart View");
+            $("#toggle-view").text("📉 View Chart");
         }, 500);
     }
 });

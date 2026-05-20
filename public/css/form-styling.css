@@ -1,4 +1,4 @@
-/* Add form styling */
+/* Form styling */
 .add-card, .edit-card {
     position: fixed;
     top: 50%;
@@ -23,6 +23,7 @@
     font-weight: 700;
 }
 
+ /* Input boxes styling */
 .input-group {
     display: flex;
     align-items: center;
@@ -63,6 +64,7 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
+/* Form buttons styling */
 .form-btn-container {
     display: flex;
     align-items: center;
@@ -111,6 +113,7 @@
     box-shadow: 0 8px 20px rgba(235, 37, 37, 0.4);
 }
 
+/* Media queries for responsive styling */
 @media (max-width: 768px) {
     .add-card, .edit-card {
         width: 85%;

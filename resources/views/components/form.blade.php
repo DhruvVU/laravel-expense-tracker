@@ -20,11 +20,9 @@
         <div class="input-group">
             <label>Category</label>
             <select id="category-{{ $mode }}">
-                <option value="Food">Food</option>
-                <option value="Transport">Transport</option>
-                <option value="Bills">Bills</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Other">Other</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>                
+                @endforeach
             </select>
         </div>
     

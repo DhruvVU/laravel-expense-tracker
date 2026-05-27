@@ -43,7 +43,7 @@ $(document).ready(function () {
         let expenseData = {
             description: form.find("#description-add").val(),
             amount: form.find("#amount-add").val(),
-            category: category,
+            category_id: category,
             expense_date: form.find("#exp_date-add").val(),
         };
 
@@ -137,7 +137,7 @@ $(document).ready(function () {
 
         // send request after a small 300ms delay
         searchTimer = setTimeout(function () {
-            loadExpenses($("#filter-category").val(), defaultPageNo, searchVal);
+            loadExpenses($("#filter-category").val(), 1, searchVal);
         }, 300);
     });
 
@@ -203,7 +203,7 @@ $(document).ready(function () {
     // ========================================== Edit Expense(UPDATE) =========================================
 
     // Show edit form
-    $(document).on("click", ".show-edit", function () {
+    $(document).on("click", "#edit-expense", function () {
         $("#modal-overlay").addClass("active");
         $(".edit-card").fadeIn();
 
@@ -221,8 +221,12 @@ $(document).ready(function () {
         $("#data_id-edit").val(id);
         $("#description-edit").val(description);
         $("#amount-edit").val(amount);
-        $("#category-edit").val(category);
         $("#exp_date-edit").val(date);
+
+        // Set category name corresponding to its id
+        $('#category-edit option').filter(function() {
+            return $(this).text().trim() === category;
+        }).prop('selected', true);
     });
 
     // Update expense data
@@ -236,7 +240,7 @@ $(document).ready(function () {
             id: id,
             description: form.find("#description-edit").val(),
             amount: form.find("#amount-edit").val(),
-            category: form.find("#category-edit").val(),
+            category_id: form.find("#category-edit").val(),
             expense_date: form.find("#exp_date-edit").val(),
         };
 
@@ -272,7 +276,7 @@ $(document).ready(function () {
 
     // ========================================= Delete Expense(DELETE) ========================================
 
-    $(document).on("click", ".delete-btn", function () {
+    $(document).on("click", "#delete-expense", function () {
         let id = $(this).data("id");
         let row = $(this).closest("tr");
 
@@ -458,22 +462,19 @@ function tableData(response) {
         }
 
         response.data.forEach(function (item) {
-            let categoryColor = item.category
-                .toLowerCase()
-                .replace(/\s+/g, "-");
-
+            const categoryColor = item.category_color;
             rows += `
                         <tr>
                             <td data-field="expense_date">${item.expense_date}</td>
                             <td data-field="description">${item.description}</td>
                             <td data-field="category">
-                                <span class="pill pill-${categoryColor}">${item.category}</span>
+                                <span class="pill" style="background-color:${categoryColor}">${item.category}</span>
                             </td>
                             <td data-field="amount">₹${item.amount}</td>
-                            <td><button class="show-edit" data-id="${item.id}">
+                            <td style="text-align:center"><button class="show-edit" id="edit-expense" data-id="${item.id}">
                                 <i class="fa-solid fa-pen-to-square"></i>Edit</button>
                             </td>
-                            <td><button class="delete-btn" data-id="${item.id}">
+                            <td style="text-align:center"><button class="delete-btn" id="delete-expense" data-id="${item.id}">
                                 <i class="fa-solid fa-trash"></i> Delete</button>
                             </td>
                         </tr>

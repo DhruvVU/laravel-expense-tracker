@@ -18,11 +18,9 @@
                 <select class="select-category">
                     <option value="" selected>-- No categories available --</option>
                     <option value="All">All Categories</option>
-                    <option value="Food">Food</option>
-                    <option value="Transport">Transport</option>
-                    <option value="Bills">Bills</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Other">Other</option>
+                    @foreach ($categories as $category) 
+                        <option value="{{ $category->name }}">{{ $category->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -35,7 +33,6 @@
                 <span class="stat-label">Last Active Category</span>
                 <h2 id="last-active" style="margin-top: 10px">None</h2>
             </div>
-
         </div>
 
         <div class="second-row">
@@ -131,9 +128,8 @@
     <x-form mode="add" title="Add Expense"></x-form>
 
 
-    @push('page-scripts')
+    @push('scripts')
         <script src="{{ asset('js/dashboard.js') }}"></script>
-        <script src="{{ asset('js/expenses.js') }}"></script>
     @endpush
 
     <script>

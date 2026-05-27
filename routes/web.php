@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
@@ -29,13 +30,12 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
 
-    // Dashboard route
+    // Dashboard page route
     Route::get('/dashboard', function() {
         return view('layouts.dashboard');
     })->name('dashboard');
 
-
-    // Dashboard data fetching 
+    // Dashboard controller routes  
     Route::get('/dashboard/budget-stats', [DashboardController::class, 'getBudget'])->name('get_budget');
     Route::patch('/dashboard/set-budget', [DashboardController::class, 'setBudget'])->name('set_budget');
 
@@ -44,13 +44,20 @@ Route::middleware('auth')->group(function () {
         return view('layouts.history');
     })->name('history');
 
-    // User profile section
+    // User profile controller routes
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile/clear-expenses', [ProfileController::class, 'clearExpenses'])->name('profile.clear-expense');
     Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Category controller routes
+    Route::get('/categories', [CategoryController::class , 'index'])->name('categories.index');
+    Route::post('/category/add', [CategoryController::class, 'store'])->name('categories.add');
+    Route::put('/category/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
+
+    // Expense data related routes
     Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {
 
         Route::get('/fetch-expense', 'fetch')->name('fetch');

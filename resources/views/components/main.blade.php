@@ -13,7 +13,7 @@
         {{-- Including all script files --}}
         @include('layouts.partials._scripts')
         
-        @stack('page-scripts')
+        @stack('scripts')
 </head>
 
 <body>

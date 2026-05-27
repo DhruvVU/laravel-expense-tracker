@@ -9,7 +9,6 @@ use App\Models\Expense;
 use Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExpenseController extends Controller
@@ -19,6 +18,7 @@ class ExpenseController extends Controller
     public function __construct(\App\Services\ExpenseService $expenseService) {
         $this->expenseService = $expenseService;
     }
+
 // ============================================ Add Expense(CREATE) ============================================
 
     public function store(StoreExpenseRequest $request): ExpenseResource
@@ -100,18 +100,22 @@ class ExpenseController extends Controller
     // ============================= Fetch Chart Data =============================
     public function getChartData(Request $request): JsonResponse
     {
-        $query = $request->user()->expenses();
-        $category = $request->category;
+        $query = Expense::where('expenses.user_id', auth()->id());
+        $categoryName = $request->category;
         
         if ($request->filled('year')) {
             $query->whereYear('expense_date', $request->year);
         }
 
-        if (!$category || $category === 'All') {
-            $data = $query->selectRaw('category, SUM(amount) as total')
-                          ->groupBy('category')
-                          ->get();
-
+        // ==========================================
+        // Pie Chart Data Fetching (All Categories)
+        // ==========================================
+        if (!$categoryName || $categoryName === 'All') {
+            $data = (clone $query)->join('categories', 'expenses.category_id', '=', 'categories.id')
+                        ->selectRaw('categories.name as category, categories.color as color, SUM(expenses.amount) as total')
+                        ->groupBy('categories.name', 'categories.color')
+                        ->get();
+                   
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data fetch for pie chart successful',
@@ -119,10 +123,18 @@ class ExpenseController extends Controller
             ]);
         }
 
-        $stats = $query->where('category', $category)
-            ->selectRaw('DAYOFWEEK(expense_date) as day, SUM(amount) as total')
-            ->groupBy('day')
-            ->pluck('total', 'day')->toArray();
+        // ==========================================
+        // Bar Chart Data Fetching (Selected Category)
+        // ==========================================
+        $category_record = auth()->user()->categories()->where('name', $categoryName)->first();
+        $color = $category_record ? $category_record->color : '#3b82f6';
+
+        $stats = $query->whereHas('category', function ($q) use ($categoryName) {
+                            $q->where('name', $categoryName);
+                        }) 
+                        ->selectRaw('DAYOFWEEK(expense_date) as day, SUM(amount) as total')
+                        ->groupBy('day')
+                        ->pluck('total', 'day')->toArray();
 
         $data = [];
         $daysMap = [2, 3, 4, 5, 6, 7, 1];
@@ -134,7 +146,8 @@ class ExpenseController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Data fetch for bar chart successful',
-            'data' => $data
+            'data' => $data,
+            'color' => $color
         ]);
     }
 
@@ -171,7 +184,9 @@ class ExpenseController extends Controller
     public function exportCsv(Request $request): StreamedResponse
     {
         $query = $this->expenseService->getFilteredQuery($request);
-        $expenses = $query->select('expense_date', 'description', 'category', 'amount')
+
+        $expenses = $query->with('category')
+                          ->select('expense_date', 'description', 'amount', 'category_id')
                           ->orderBy('expense_date', 'desc')
                           ->get();
 
@@ -193,7 +208,7 @@ class ExpenseController extends Controller
                 fputcsv($file, [
                     $expense->expense_date,
                     $expense->description,
-                    $expense->category,
+                    $expense->category ? $expense->category->name : 'Other',
                     $expense->amount
                 ]);
             }

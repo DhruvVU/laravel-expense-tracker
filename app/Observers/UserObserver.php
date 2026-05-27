@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Observers;
+
+use App\Models\User;
+
+class UserObserver
+{
+    /**
+     * Handle the User "created" event.
+     */
+    public function created(User $user): void
+    {
+        $defaultCategories = [
+            ['name' => 'Food', 'color' => '#ffcd39'],
+            ['name' => 'Transport', 'color' => '#d35400'],
+            ['name' => 'Bills', 'color' => '#0c5460'],
+            ['name' => 'Entertainment', 'color' => '#6a1b9a'],
+            ['name' => 'Other', 'color' => '#383d41']
+        ];
+
+        foreach ($defaultCategories as $category) {
+            $user->categories()->create($category);
+        }
+    }
+
+    /**
+     * Handle the User "updated" event.
+     */
+    public function updated(User $user): void
+    {
+        //
+    }
+
+    /**
+     * Handle the User "deleted" event.
+     */
+    public function deleted(User $user): void
+    {
+        //
+    }
+
+    /**
+     * Handle the User "restored" event.
+     */
+    public function restored(User $user): void
+    {
+        //
+    }
+
+    /**
+     * Handle the User "force deleted" event.
+     */
+    public function forceDeleted(User $user): void
+    {
+        //
+    }
+}

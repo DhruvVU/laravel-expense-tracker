@@ -15,11 +15,12 @@ class ExpenseResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->id, 
             'description' => $this->description,
             'amount' => (float) $this->amount,
-            'category' => $this->category,   
-            'expense_date' => $this->expense_date->format('Y-m-d')
+            'expense_date' => $this->expense_date->format('Y-m-d'),
+            'category' => $this->category ? $this->category->name: 'Other',
+            'category_color' => $this->category ? $this->category->color: '#383d41'
         ];
     }
 }

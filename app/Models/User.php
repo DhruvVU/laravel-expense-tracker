@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[Fillable('name', 'email', 'password', 'monthly_budget')]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -22,13 +23,8 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'monthly_budget'
-    ];
-
+    
+    // Transform the values before uploading into database
     protected function casts(): array
     {
         return [
@@ -37,7 +33,13 @@ class User extends Authenticatable
         ];
     }
 
+    // Get expenses for the user
     public function expenses(): HasMany {
         return $this->hasMany(Expense::class);
+    }
+
+    // Get custom categories for the user
+    public function categories(): HasMany {
+        return $this->hasMany(Category::class);
     }
 }

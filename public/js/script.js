@@ -161,16 +161,12 @@ function showTable(category, label, year) {
 
             if (response.data && response.data.length > 0) {
                 response.data.forEach(function (item) {
-                    let categoryColor = item.category
-                        .toLowerCase()
-                        .replace(/\s+/g, "-");
-
                     rows += `
                         <tr>
                             <td data-field="expense_date">${item.expense_date}</td>
                             <td data-field="description">${item.description}</td>
                             <td data-field="category">
-                                <span class="pill pill-${categoryColor}">${item.category}</span>
+                                <span class="pill" style="background-color:${item.category_color}">${item.category}</span>
                             </td>
                             <td data-field="amount">₹${item.amount}</td>
                         </tr>

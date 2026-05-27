@@ -99,9 +99,9 @@
             </div>
         </div>
 
+        {{-- Password change form --}}
         <div class="password-container">
             <h2>Change Password</h2>
-            {{-- Password change form --}}
             <form id="change-password">
                 @csrf
                 <div class="password-form">
@@ -135,7 +135,7 @@
         </div>
 
     </div>
-    @push('page-scripts')
+    @push('scripts')
         <script src="{{ asset('js/profile.js') }}"></script>
     @endpush
 </x-main>

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateExpenseRequest extends FormRequest
 {
@@ -22,11 +23,19 @@ class UpdateExpenseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = auth()->id();
         return [
             'description' => 'sometimes|required|string|max:255',
             'amount' => 'sometimes|required|numeric|min:0.01|max:9999999|decimal:0,2',
-            'category' => 'sometimes|required|in:Food,Transport,Bills,Entertainment,Other',
-            'expense_date' => 'sometimes|required|date|date_format:Y-m-d|before_or_equal:today'
+            'expense_date' => 'sometimes|required|date|date_format:Y-m-d|before_or_equal:today',
+            'category_id' => [
+                'sometimes',
+                'required',
+                'integer',
+                Rule::exists('categories', 'id')->where(function($query) use ($userId){
+                    return $query->where('user_id', $userId);
+                })
+            ]
         ];
     }
 }

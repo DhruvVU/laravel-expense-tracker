@@ -81,21 +81,6 @@ let expensesPieChart;
 
 // Pie chart for viewing entire dataset
 function pieChart(year = "") {
-    const colorMap = {
-        Food: "#ffcc22",
-        Transport: "#fb7100",
-        Bills: "#abffa0",
-        Entertainment: "#661572",
-        Other: "#c1d5fd",
-    };
-
-    if ($("html").hasClass("dark-mode")) {
-        colorMap["Food"] = "#ffc106";
-        colorMap["Transport"] = "#4d2600";
-        colorMap["Entertainment"] = "#4a148c";
-        colorMap["Other"] = "#e7efff";
-    }
-
     $.ajax({
         url: "/expenses/chart-data",
         type: "GET",
@@ -111,9 +96,7 @@ function pieChart(year = "") {
 
             const labels = response.data.map((item) => item.category);
             const totals = response.data.map((item) => item.total);
-            const bgColors = labels.map(
-                (cat) => colorMap[cat] || colorMap["Other"],
-            );
+            const bgColors = response.data.map((item) => item.color);
 
             if (expensesPieChart) {
                 expensesPieChart.destroy();
@@ -197,21 +180,6 @@ function barChart(category, year) {
         categoryBarChart = null;
     }
 
-    const colorMap = {
-        Food: "#ffcc22",
-        Transport: "#fb7100",
-        Bills: "#9fff8b",
-        Entertainment: "#661572",
-        Other: "#c1d5fd",
-    };
-
-    if ($("html").hasClass("dark-mode")) {
-        colorMap["Food"] = "#ffc106";
-        colorMap["Transport"] = "#4d2600";
-        colorMap["Entertainment"] = "#4a148c";
-        colorMap["Other"] = "#e7efff";
-    }
-
     $.ajax({
         url: "/expenses/chart-category",
         type: "GET",
@@ -231,7 +199,7 @@ function barChart(category, year) {
                 "Sunday",
             ];
             const expenseData = response.data;
-            const activeColor = colorMap[category] || colorMap["Other"];
+            const activeColor = response.color;
 
             if (categoryBarChart !== null) {
                 categoryBarChart.destroy();

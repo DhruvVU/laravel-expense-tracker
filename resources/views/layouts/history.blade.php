@@ -15,11 +15,9 @@
                     <label>Category:</label>
                     <select id="filter-category">
                         <option value="All">All Categories</option>
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Bills">Bills</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Other">Other</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->name }}">{{ $category->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -74,11 +72,7 @@
     {{-- Hidden cards will be only shown when user clicks edit/add button --}}
     <x-form mode="add" title="Add Expense"></x-form>
     <x-form mode="edit" title="Edit Expense"></x-form>
-
-    @push('page-scripts')
-        <script src="{{ asset('js/expenses.js') }}"></script>
-    @endpush
-
+    
     <script>
         $(document).ready(function () {
             loadExpenses('All', 1, '');

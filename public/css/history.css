@@ -1,9 +1,7 @@
 .container {
-    width: 98%;
     background: var(--container-bg);
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
     position: relative;
@@ -210,44 +208,11 @@ td {
 .pill {
     padding: 4px 12px;
     border-radius: 50px;
+    color: white;
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
     display: inline-block;
-}
-
-.pill-food {
-    background-color: #fff3cd;
-    color: #856404;
-}
-.pill-transport {
-    background-color: #ffe5d0;
-    color: #d35400;
-}
-.pill-bills {
-    background-color: #d1ecf1;
-    color: #0c5460;
-}
-.pill-entertainment {
-    background-color: #f3e5f5;
-    color: #6a1b9a;
-}
-.pill-other {
-    background-color: #e2e3e5;
-    color: #383d41;
-}
-
-html.dark-mode .pill-food {
-    background-color: #453505;
-    color: #ffcd39;
-}
-html.dark-mode .pill-transport {
-    background-color: #4d2600;
-    color: #fd7e14;
-}
-html.dark-mode .pill-entertainment {
-    background-color: #4a148c;
-    color: #e1bee7;
 }
 
 /* Button to delete an entry */

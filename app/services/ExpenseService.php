@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Expense;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,7 +15,7 @@ class ExpenseService
     // Filtering query based on the given input
     public function getFilteredQuery(Request $request): Builder|HasMany {
         
-        $query = $request->user()->expenses();
+        $query = Expense::with('category')->where('user_id', auth()->id());
 
         // Filter based on year
         if ($request->filled('year')) {
@@ -23,7 +24,9 @@ class ExpenseService
 
         // Filter based on category
         if ($request->filled('category') && $request->category !== 'All') {
-            $query->where('category', $request->category);
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('name', $request->category);
+            });
         }
 
         // Filter by Search values
@@ -89,10 +92,12 @@ class ExpenseService
                     
         $percentage = ($budget > 0) ? ( $spent / $budget ) * 100 : 0;
         
-        $last_active = $user->expenses()
+        $latest = $user->expenses()
+                        ->with('category')
                         ->latest('id')
                         ->whereYear('expense_date', $year)
-                        ->value('category') ?? 'None';
+                        ->first();
+        $last_active = $latest->category ? $latest->category->name : 'None';
         
         $prev_month = ($year == now()->year) ? now()->subMonth() : Carbon::parse($request->month)->month;
         $last_month = $user->expenses()

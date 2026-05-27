@@ -24,12 +24,16 @@ class StoreExpenseRequest extends FormRequest
     public function rules(): array
     {
         $userId = auth()->id();
+
+        // Check if the user is coming in via 'POST' or 'PUT/PATCH', this will help in setting different validation rules for create and update requests
+        $current_rule = $this->isMethod('post') ? 'required' : 'sometimes|required';
+        
         return [
-            'description' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0|decimal:0,2',
-            'expense_date' => 'required|date|date_format:Y-m-d|before_or_equal:today',
+            'description' => [$current_rule, 'string', 'max:255'],
+            'amount' => [$current_rule, 'numeric', 'min:0.01', 'decimal:0,2'],
+            'expense_date' => [$current_rule, 'date', 'date_format:Y-m-d', 'before_or_equal:today'],
             'category_id' => [
-                'required',
+                $current_rule,
                 'integer',
                 Rule::exists('categories', 'id')->where(function($query) use ($userId) {
                     return $query->where('user_id', $userId);

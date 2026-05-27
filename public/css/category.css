@@ -119,6 +119,10 @@
 }
 
 /* Category display area styling */
+.categories-show {
+    border-radius: 8px;
+}
+
 .custom-data {
     background-color: var(--container-bg);
     width: 100%;

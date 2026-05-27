@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreExpenseRequest;
-use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use Gate;
@@ -153,7 +152,7 @@ class ExpenseController extends Controller
 
 // ============================================ Edit Expense(UPDATE) ===========================================
 
-    public function edit(UpdateExpenseRequest $request, Expense $expense): JsonResponse
+    public function edit(StoreExpenseRequest $request, Expense $expense): JsonResponse
     {
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('update', $expense);

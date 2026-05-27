@@ -257,4 +257,5 @@ function showTableLoader() {
     }
     $("#expense-list").html(loaderRows);
     $(".category-data").html(loaderRows);
+    $('#categories-table-body').html(loaderRows);
 }

@@ -24,6 +24,7 @@ $(document).ready(function() {
             dataType: 'json',
             beforeSend: function() {
                 $('#save-category-button').prop('disabled', true).text('Saving...');
+                showTableLoader();
             },
             success: function(response) {
                 if (response.status === 'success') {
@@ -97,11 +98,6 @@ $(document).ready(function() {
         const catName = $(`#category-name-${mode}`).val().trim();
         const catColor = $(`#category-color-${mode}`).val();
         const catSelector = $(`#category-${mode}`);
-
-        if (!catName) {
-            showToast('Category name is required!', 'error');
-            return;
-        }
 
         $.ajax({
             url: '/category/add',

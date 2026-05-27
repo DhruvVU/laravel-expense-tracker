@@ -32,14 +32,12 @@
     text-align: left;
 }
 
-.input-group input:hover,
-.input-group select:hover {
+.input-group input:hover {
     background-color: var(--input-hover);
     border: 1px solid #3b82f6;
 }
 
-.input-group input,
-.input-group select {
+.input-group input {
     flex: 1;
     padding: 15px;
     font-size: 1.1rem;
@@ -72,7 +70,7 @@
     gap: 10px;
 }
 
-#add-btn, #edit-btn {
+#add-btn, #edit-btn, .cancel-btn {
     width: 50%;
     padding: 18px;
     font-size: 1.2rem;
@@ -92,25 +90,180 @@
     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 
-#cancel-btn {
-    width: 50%;
-    padding: 18px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #f64b3b, #eb2525);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+.cancel-btn {
+    background: linear-gradient(135deg, #f64b3b, #eb2525) !important;
 }
 
-#cancel-btn:hover {
+.cancel-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(235, 37, 37, 0.4);
+}
+
+/* Category form styling */
+.category-creator {
+    background-color: var(--container-bg);
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px 0 20px 0;
+}
+
+.inline-header span{
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.color-row input[type="color"] {
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    max-width: 35px;
+    cursor: pointer;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-buttons .cancel-btn {
+    margin: 0 !important;
+    padding: 14px 28px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: 14px !important;
+}
+
+/* =====================================================================================================
+    ********************************** Select2 custom styling **********************************
+====================================================================================================== */
+/* Main Selection Bar Reset */
+.select2-container--default .select2-selection--single {
+    background-color: var(--container-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important; 
+    height: 50px !important;       
+    display: flex;
+    align-items: center;
+    transition: border-color 0.2s ease;
+}
+
+/* Match the hover styling of our other inputs */
+.select2-selection--single:hover {
+    background-color: var(--input-hover) !important;
+    border: 1px solid #3b82f6 !important;
+}
+
+/* Focused input border glow ring */
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: #3b82f6 !important;
+}
+
+/* Rendered Value and Placeholder Alignment */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text-main) !important;
+    padding-left: 18px !important;   
+    font-size: 1rem;
+    line-height: normal;
+}
+
+/* Placeholder specific color tone */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: var(--text-main) !important;
+    opacity: 0.5; 
+}
+
+/* Clear button 'x' layout tuning if allowClear is active */
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    color: var(--text-main) !important;
+    opacity: 0.6;
+    margin-right: 10px;
+}
+
+/* Dropdown Downwards Arrow Icon Wrapper centering */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    top: 0 !important;
+    right: 14px !important;
+    display: flex;
+    align-items: center;
+}
+
+.select2-selection__rendered {
+    padding: 10px !important;
+}
+
+/* ==========================================================================
+   Floating Results Dropdown Container Box
+   ========================================================================== */
+.select2-dropdown {
+    background-color: var(--bg-secondary) !important; 
+    border: 1px solid var(--border-color) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+/* Inline list search input box formatting */
+.select2-search--dropdown {
+    padding: 12px !important;
+    background-color: var(--bg-secondary) !important;
+}
+
+.select2-search--dropdown .select2-search__field {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    font-size: 0.95rem;
+}
+
+/* Dropdown individual option layout rows */
+.select2-results__options {
+    background-color: var(--bg-secondary) !important;
+    max-height: 200px !important;
+}
+
+.select2-results__option {
+    padding: 12px 18px !important;
+    color: var(--text-main) !important;
+    font-size: 0.95rem;
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Hover / Keyboard navigation highlighting state */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important; 
+    color: #ffffff !important;
+}
+
+/* Currently selected active choice state row */
+.select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: var(--container-bg) !important;
+    font-weight: 600;
+}
+
+/* System loading/No Results message cells */
+.select2-results__message {
+    color: var(--text-main) !important;
+    font-family: inherit !important;
+    transform: none !important;
+    opacity: 0.6;
+    padding: 16px !important;
+    text-align: center;
 }
 
 /* Media queries for responsive styling */

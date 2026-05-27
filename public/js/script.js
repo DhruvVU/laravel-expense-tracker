@@ -136,6 +136,45 @@ $(document).ready(function () {
             $(".sidebar").removeClass("active");
         }
     });
+
+    // ================================= Dynamic Category selector using Select2 ================================
+    $('.custom-category').select2({
+        placeholder: 'Choose a category...',
+        allowClear: true
+    });
+
+    $(document).on('keyup', '.select2-search__field', function() {
+
+        // Check which type of form is open (add/edit)
+        const formMode = $('#category-add').data('select2') ?? $('#category-add').data('select2').isOpen();
+        const mode = formMode ? 'add' : 'edit';
+
+        const searchTerm = $(this).val().trim();
+        const searchResults = $('.select2-results__options');
+
+        // Check if Select2 is currently displaying its default "No results found" row
+        const noResultsFound = searchResults.find('.select2-results__message').length > 0;
+        $('.inline-append').remove();
+
+        if (noResultsFound && searchTerm.length > 0) {
+            searchResults.append(`
+                <li class="select2-results__option inline-append"
+                    style="color: #3b82f6; font-weight: 600; cursor: pointer; border-top: 1px solid var(--border-color); padding: 12px 16px;"
+                ><i class="fa-solid fa-plus-circle"></i> Add ${searchTerm} as a new category?
+                </li>
+            `);
+
+            $('.inline-append').on('click', function() {
+                // Save the category name in our hidden field
+                $(`#category-name-${mode}`).val(searchTerm);
+
+                // Slide down the color picker for the category smoothly
+                $(`#category-wrapper-${mode}`).slideDown(200);
+
+                $(`#category-${mode}`).select2('close');
+            });
+        }
+    });
 });
 
 // ======================== Function to show table data on dashboard page ========================

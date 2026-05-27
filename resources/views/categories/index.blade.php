@@ -100,8 +100,4 @@
         </div>
     </div>
     <x-form mode="add" title="Add Expense"></x-form>
-
-    @push('scripts')
-        <script src="{{ asset('js/category.js') }}"></script>
-    @endpush
 </x-main>

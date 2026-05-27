@@ -1,4 +1,9 @@
 $(document).ready(function() {
+
+    // =======================================================================================================
+    // ******************** Add a new category ********************
+    // =======================================================================================================
+
     $('#categoryForm').on('submit', function(e) {
         e.preventDefault();
 
@@ -71,6 +76,70 @@ $(document).ready(function() {
             }
         });
     });
+
+    // ================================= Add category using the expense form ==========================
+    
+    // Close the form is user clicks on that button
+    $(document).on('click', '#close-category-btn', function(e) {
+        e.preventDefault();
+        const mode = $(this).data('mode');
+
+        $(`#category-wrapper-${mode}`).slideUp(200);
+        $(`#category-name-${mode}`).val('');
+    });
+
+    // Saving a new category 
+    $(document).on('click', '.confirm-category-btn', function(e) {
+        e.preventDefault();
+        const btn = $(this);
+        const mode = btn.data('mode');
+
+        const catName = $(`#category-name-${mode}`).val().trim();
+        const catColor = $(`#category-color-${mode}`).val();
+        const catSelector = $(`#category-${mode}`);
+
+        if (!catName) {
+            showToast('Category name is required!', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: '/category/add',
+            type: 'POST',
+            data: {
+                name: catName,
+                color: catColor
+            },
+            beforeSend: function() {
+                btn.prop('disabled', true).text('Saving...');
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    showToast(response.message, 'success');
+                    const catData = response.data || response.category || response;
+                    const newOption = new Option(catData.name, catData.id, true, true);
+                    
+                    catSelector.append(newOption).trigger('change');
+                    $(`#category-wrapper-${mode}`).slideUp(200);
+                    $(`#category-name-${mode}`).val('');
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    showToast(xhr.responseJSON.errors.name ? xhr.responseJSON.errors.name[0] : 'Failed to add Category', 'error');
+                } else {
+                    showToast('Something went wrong. Please try again', 'error');
+                }
+            },
+            complete: function() {
+                btn.prop('disabled', false).text('Confirm');
+            }
+        })
+    });
+
+    // =======================================================================================================
+    // ******************** Edit category ********************
+    // =======================================================================================================
 
     $(document).on('click', '#edit-category', function(e) {
         e.preventDefault();
@@ -166,6 +235,10 @@ $(document).ready(function() {
         row.removeClass('editing-row');
         btn.remove();
     });
+
+    // =======================================================================================================
+    // ******************** Delete category ********************
+    // =======================================================================================================
 
     $(document).on('click', '#delete-category', function(e) {
         e.preventDefault();

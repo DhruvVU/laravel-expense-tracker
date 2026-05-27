@@ -13,6 +13,9 @@
 {{-- Progress bar  --}}
 <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
 
+{{-- Select2 selector --}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     function themeToggle() {
         // Get current theme from localstorage
@@ -67,3 +70,6 @@
 
 {{-- Javscript file for expenes related operations --}}
 <script src="{{ asset('js/expenses.js') }}"></script>
+
+{{-- Javascript file for category handling --}}
+<script src="{{ asset('js/category.js') }}"></script>

@@ -325,8 +325,8 @@
 @media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
-        padding: 15px;
-        gap: 15px;
+        padding: 5px;
+        gap: 10px;
         margin: 0 auto;
     }
 
@@ -336,6 +336,7 @@
 
     .second-row {
         flex-direction: column;
+        gap: 10px;
     }
 
     .third-row {

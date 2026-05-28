@@ -8,29 +8,14 @@
     align-items: stretch;
 }
 
-.second-row {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    align-items: stretch;
-}
-
-.second-row .stat-card {
-    flex: 1 1 0;
-    min-width: 0;
-}
+/* ==========================================================================================================
+First Row styling Section 
+========================================================================================================== */
 
 .first-row {
     display: flex;
     flex-direction: row;
     gap: 10px;
-}
-
-.third-row {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    scroll-margin-top: 70px;
 }
 
 /* Ensure cards are consistent */
@@ -39,17 +24,6 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     opacity: 0.6;
-}
-
-.stat-card {
-    background: var(--container-bg);
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid var(--border-color);
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-    width: 100%;
 }
 
 .stat-card-mini {
@@ -61,6 +35,14 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: transform 0.3s;
     width: 100%;
+    flex: 1 1 0%;
+    min-width: 150px;
+    height: 130px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .stat-card-mini:hover {
@@ -72,9 +54,10 @@
     color: var(--text-main);
     border-radius: 12px;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     border: 0.5px solid var(--border-color);
     padding: 10px;
+    width: inherit;
 }
 
 .select-category:hover {
@@ -87,10 +70,35 @@
     margin-top: 10px;
 }
 
-.select-category {
-    color: var(--text-main); 
-    font-size: 1.2rem;
-    margin-top: 10px;   
+#last-active {
+    font-size: 1.5rem;
+}
+
+/* ==========================================================================================================
+Second Row styling Section 
+========================================================================================================== */
+
+.second-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.second-row .stat-card {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.stat-card {
+    background: var(--container-bg);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    width: 100%;
 }
 
 /* Progress Bar and edit button styling*/
@@ -189,6 +197,17 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 3px;
+}
+
+/* ==========================================================================================================
+Third row styling section 
+========================================================================================================== */
+
+.third-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    scroll-margin-top: 70px;
 }
 
 /* Chart Styling */
@@ -332,6 +351,11 @@
 
     .first-row {
         flex-wrap: wrap;
+    }
+
+    .stat-card-mini {
+        min-width: 100%;
+        flex: 1;
     }
 
     .second-row {

@@ -16,8 +16,7 @@
             <div class="stat-card-mini">
                 <span class="stat-label">Select Category</span>
                 <select class="select-category">
-                    <option value="" selected>-- No categories available --</option>
-                    <option value="All">All Categories</option>
+                    <option value="All" selected>All Categories</option>
                     @foreach ($categories as $category) 
                         <option value="{{ $category->name }}">{{ $category->name }}</option>
                     @endforeach
@@ -119,7 +118,6 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
@@ -132,7 +130,7 @@
     <script>
         $(document).ready(function () {
             const year = $('.select-year').val();
-            fetchBudgetStats(year);
+            fetchBudgetStats('All', year);
             pieChart(year);
             lineChart('All', '', year);
             expenseProgressBar();

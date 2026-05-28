@@ -4,9 +4,10 @@
 
 // Year selector for dashboard stats
 
+const year = $('.select-year').val();
+
 $(document).on('change', '.select-year', function() {
     const date = new Date();
-    const year = $('.select-year').val();
 
     const set_date = (year == date.getFullYear()) ? new Date() : new Date(year);
     set_date.setMonth(set_date.getMonth() - 1);

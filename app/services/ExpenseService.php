@@ -12,7 +12,9 @@ use Illuminate\Support\Carbon;
 
 class ExpenseService
 {
-    // Filtering query based on the given input
+    // ======================================================================================================
+    // *********************** Filtering query based on user input *********************
+    // ======================================================================================================
     public function getFilteredQuery(Request $request): Builder|HasMany {
         
         $query = Expense::with('category')->where('user_id', auth()->id());
@@ -41,7 +43,9 @@ class ExpenseService
         return $query;
     }
 
-    // Regular expressions to fetch data based on date label
+    // ========================================================================================================
+    // ****************** Regular expressions to fetch data based on date label ********************
+    // ========================================================================================================
     public function applyLabelFilters($query, $label) {
         
         if (preg_match('/^\d{1,2}$/', $label)) {
@@ -69,34 +73,35 @@ class ExpenseService
         return $query->whereRaw('DAYNAME(expense_date) = ?', [$label]);
     }
 
-    // Monthly budget for user
-    public function getExpenseStats($user, Request $request): JsonResponse {
+    // ======================================================================================================
+    // ********************* Fetch Dashboard stats for user **************************
+    // ======================================================================================================
+    public function getExpenseStats($user,Builder $query, Request $request): JsonResponse {
         $budget = $user->monthly_budget ?? 0;
         $year = $request->year ?? now()->year;
-        $category = $request->category ?? 'All';
 
-        $total_spent = $user->expenses()
+        $total_spent = (clone $query)
                             ->whereYear('expense_date', $year)
                             ->sum('amount');
 
-        $count = $user->expenses()->whereYear('expense_date', $year)->count();
+        $count = (clone $query)->whereYear('expense_date', $year)->count();
 
-        $spent = $user->expenses()
+        $spent = (clone $query)
                     ->whereMonth('expense_date', now()->month)
                     ->whereYear('expense_date', $year)
                     ->sum('amount');
                     
         $percentage = ($budget > 0) ? ( $spent / $budget ) * 100 : 0;
         
-        $latest = $user->expenses()
+        $latest = (clone $query)
                         ->with('category')
                         ->latest('id')
                         ->whereYear('expense_date', $year)
                         ->first();
-        $last_active = $latest->category ? $latest->category->name : 'None';
+        $last_active = $latest?->category ? $latest->category->name : 'None';
         
         $prev_month = ($year == now()->year) ? now()->subMonth() : Carbon::parse($request->month)->month;
-        $last_month = $user->expenses()
+        $last_month = (clone $query)
                         ->whereMonth('expense_date', $prev_month)
                         ->whereYear('expense_date', $year)
                         ->sum('amount');

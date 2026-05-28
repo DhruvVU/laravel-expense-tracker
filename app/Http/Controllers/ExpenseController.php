@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreExpenseRequest;
+use App\Http\Requests\ExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
 class ExpenseController extends Controller
 {
     // Using expense service to make the controller thinner
@@ -20,7 +19,7 @@ class ExpenseController extends Controller
 
 // ============================================ Add Expense(CREATE) ============================================
 
-    public function store(StoreExpenseRequest $request): ExpenseResource
+    public function store(ExpenseRequest $request): ExpenseResource
     {
         $expense = $request->user()->expenses()->create($request->validated());
         return (new ExpenseResource($expense))
@@ -152,7 +151,7 @@ class ExpenseController extends Controller
 
 // ============================================ Edit Expense(UPDATE) ===========================================
 
-    public function edit(StoreExpenseRequest $request, Expense $expense): JsonResponse
+    public function edit(ExpenseRequest $request, Expense $expense): JsonResponse
     {
         // Using policy to check if logged in user is authorized for performing the operation
         Gate::authorize('update', $expense);

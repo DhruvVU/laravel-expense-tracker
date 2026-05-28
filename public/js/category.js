@@ -125,6 +125,7 @@ $(document).ready(function() {
     const categoryTable = $('#category-data').DataTable({
         processing: true,
         serverside: true,
+        scrollX: true,
         ajax: '/category/fetch',
 
         columns: [
@@ -132,6 +133,7 @@ $(document).ready(function() {
             {data: 'color_badge', name: 'color', orderable: false, searchable: false},
             {data: 'expenses_count', name: 'expenses_count', searchable: false},
             {data: 'created_at', name: 'created_at'},
+            {data: 'updated_at', name: 'updated_at'},
             {data: 'edit_action', name: 'edit_action', orderable: false, searchable: false},
             {data: 'delete_action', name: 'delete_action', orderable: false, searchable: false}
         ],
@@ -144,9 +146,13 @@ $(document).ready(function() {
                 previous: '<i class="fa-solid fa-chevron-left"></i>'
             }
         },
-
+        
+        layout: {
+            topStart: 'search',
+            topEnd: 'pageLength'
+        },
         order: [[0, 'asc']],
-        pageLength: 5
+        pageLength : 10
     });
 
     // =======================================================================================================

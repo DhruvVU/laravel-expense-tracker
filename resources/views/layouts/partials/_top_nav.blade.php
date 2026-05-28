@@ -6,10 +6,6 @@
     </div>
 
     <div class="nav-controls">
-        {{-- button to show add expense form --}}
-        <button id="show-btn">
-            <span style="font-size: 1.1rem; font-weight: 700;"><i class="fa-solid fa-plus"></i></span> Add Expense
-        </button>
 
         {{-- Year selection --}}
         <select class="select-year custom-select">

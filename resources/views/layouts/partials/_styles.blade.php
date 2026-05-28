@@ -1,6 +1,9 @@
 {{-- Main Styling for Expense Tracker --}}
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+{{-- Tables custom styling --}}
+<link rel="stylesheet" href="{{ asset('css/table-styling.css') }}">
+
 {{-- Dashboard styling --}}
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 

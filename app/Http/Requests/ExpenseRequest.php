@@ -26,7 +26,7 @@ class ExpenseRequest extends FormRequest
         $userId = auth()->id();
 
         // Check if the user is coming in via 'POST' or 'PUT/PATCH', this will help in setting different validation rules for create and update requests
-        $current_rule = $this->isMethod('post') ? 'required' : 'sometimes|required';
+        $current_rule = $this->isMethod('post') ? 'required' : ['sometimes', 'required'];
         
         return [
             'description' => [$current_rule, 'string', 'max:255'],

@@ -36,6 +36,9 @@ class CategoryController extends Controller
             ->addColumn('created_at', function($category) {
                 return $category->created_at->format('Y-m-d');
             })
+            ->addColumn('updated_at', function($category) {
+                return $category->updated_at->format('Y-m-d');
+            })
             ->addColumn('edit_action', function($category) {
                 return '
                     <button class="show-edit" id="edit-category" data-id="' . $category->id . '">

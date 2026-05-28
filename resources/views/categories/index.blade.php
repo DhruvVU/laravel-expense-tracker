@@ -48,7 +48,8 @@
                         <th style="padding: 12px; text-align: left;">NAME</th>
                         <th style="padding: 12px; text-align: left;">COLOR</th>
                         <th style="padding: 12px; text-align: left;">EXPENSES</th>
-                        <th style="padding: 12px; text-align: left;">CREATED AT</th>
+                        <th style="padding: 12px; text-align: left;">CREATED</th>                        
+                        <th style="padding: 12px; text-align: left;">UPDATED</th>                        
                         <th colspan="2" style="padding: 12px; text-align: center;">ACTION</th>
                     </tr>
                 </thead>
@@ -58,5 +59,4 @@
             </table>
         </div>
     </div>
-    <x-form mode="add" title="Add Expense"></x-form>
 </x-main>

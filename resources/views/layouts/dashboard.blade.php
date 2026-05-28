@@ -124,9 +124,6 @@
         </div>
     </div>
 
-    {{-- Hidden form to add expense which will be displayed when button is clicked --}}
-    <x-form mode="add" title="Add Expense"></x-form>
-
 
     @push('scripts')
         <script src="{{ asset('js/dashboard.js') }}"></script>
@@ -135,8 +132,7 @@
     <script>
         $(document).ready(function () {
             const year = $('.select-year').val();
-            loadExpenses('All', 1, '', '', '', year);
-            fetchBudgetStats();
+            fetchBudgetStats(year);
             pieChart(year);
             lineChart('All', '', year);
             expenseProgressBar();

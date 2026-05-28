@@ -71,8 +71,5 @@
 <!-- Main javascript file -->
 <script src="{{ asset('js/script.js') }}"></script>
 
-{{-- Javscript file for expenes related operations --}}
-<script src="{{ asset('js/expenses.js') }}"></script>
-
 {{-- Javascript file for category handling --}}
 <script src="{{ asset('js/category.js') }}"></script>

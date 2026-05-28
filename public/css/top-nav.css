@@ -40,8 +40,7 @@
     gap: 15px;
     height: 100%; 
 }
-
-#show-btn, 
+ 
 .select-year, 
 .theme-button {
     height: 40px; 
@@ -50,30 +49,6 @@
     justify-content: center;
     box-sizing: border-box; 
     border-radius: var(--button-border-radius);
-}
-
-#show-btn {
-    position: relative;
-    width: auto;
-    padding: 0 16px;
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 500;
-    background: var(--button-gradient);
-    color: #3b82f6;
-    border: 1px solid var(--button-border-blue);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-#show-btn:hover {
-    background-color: #3b82f6;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: var(--button-shadow-blue);
 }
 
 .select-year {

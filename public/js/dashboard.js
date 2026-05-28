@@ -3,6 +3,7 @@
 // ==============================================================================================================
 
 // Year selector for dashboard stats
+
 $(document).on('change', '.select-year', function() {
     const date = new Date();
     const year = $('.select-year').val();
@@ -45,7 +46,75 @@ $(document).on('change', '.select-year', function() {
     });
 });
 
-// Toggle between chart and table views
+// =============================================================================================================
+// ************************************ Monthly filter ****************************************
+// =============================================================================================================
+
+$(document).on("change", ".select-month", function () {
+    const month = $(".select-month").val();
+    const category = $(".select-category").val() ?? "All";
+        
+    fetchBudgetStats(category, year);
+
+    if ($(".table-data").is(":visible")) {
+        showTable(category, month, year);
+    } else {
+        $(".table-data").fadeOut();
+        $("#toggle-view").text("📒 View Table");
+        lineChart(category, month, year);
+    }
+
+    if (category === "All") {
+        pieChart(year);
+    } else {
+        barChart(category, year);
+    }
+});
+
+// ============================================================================================================
+// ***************************** Main function to fetch the statistics ************************************
+// ============================================================================================================
+
+function fetchBudgetStats(category, year) {
+    $.ajax({
+        url: "/dashboard/budget-stats",
+        type: "GET",
+        data: { 
+            category: category,
+            year: year
+        },
+        success: function (response) {
+            if (response.status === "success") {
+                const data = response.data.original;
+
+                // Update the stat cards 
+                $('#dashboard-amount').text(data.total_spent);
+                $('#expenses-count').text(data.total_expenses);
+                $("#previous-amount").text(data.last_month);
+                $("#last-active").text(data.latest_category);
+
+                $("#curr-category").text(data.latest_category);
+                barChart(data.latest_category, $(".select-year").val());
+
+                const spent = parseFloat(data.spent || 0);
+                const budget = parseFloat(data.budget || 0);
+                const percentage = parseFloat(data.percentage || 0);
+
+                let ratio = budget > 0 ? spent / budget : 0;
+                progressBar.animate(ratio > 1 ? 1 : ratio);
+
+                $("#budget-spent").text("₹" + spent.toLocaleString());
+                $("#budget-total").text("₹" + budget.toLocaleString());
+                $("#budget-percent").text(Math.round(percentage) + "%");
+            }
+        },
+    });
+}
+
+// ===========================================================================================================
+// ************************* Toggle between chart and table views *************************
+// ===========================================================================================================
+
 $(document).on("click", "#toggle-view", function () {
     const month = $(".select-month").val();
     const category = $(".select-category").val() ?? "All";
@@ -76,10 +145,13 @@ $(document).on("click", "#toggle-view", function () {
     }
 });
 
-// Variable for holding chart instance
-let expensesPieChart;
+// =============================================================================================================
+// ************************ Chart functions for rendering charts ****************************
+// =============================================================================================================
 
-// Pie chart for viewing entire dataset
+// ======================= Pie chart for viewing entire dataset =======================
+
+let expensesPieChart;
 function pieChart(year = "") {
     $.ajax({
         url: "/expenses/chart-data",
@@ -171,9 +243,10 @@ function showEmptyChartState(canvas) {
     });
 }
 
-let categoryBarChart = null;
 
-// Bar Chart for categorical data
+// ======================= Bar Chart for categorical data =======================
+
+let categoryBarChart = null;
 function barChart(category, year) {
     if (categoryBarChart instanceof Chart) {
         categoryBarChart.destroy();
@@ -271,8 +344,9 @@ function barChart(category, year) {
     });
 }
 
+// ======================= Line Chart for displaying overall data =======================
+
 let expenseLineChart;
-// Line Chart for displaying overall data
 function lineChart(category = "All", month = "", year = "") {
     const activeColor = "#4e73df";
 
@@ -372,8 +446,9 @@ function lineChart(category = "All", month = "", year = "") {
     });
 }
 
-let progressBar;
+// ======================= Progress Bar for monthly budget =======================
 
+let progressBar;
 function expenseProgressBar() {
     progressBar = new ProgressBar.SemiCircle("#budget-gauge", {
         strokeWidth: 8,
@@ -407,35 +482,6 @@ function expenseProgressBar() {
                 glowColor = "rgba(0,255,153,0.3)";
             }
             bar.path.style.filter = `drop-shadow(0 0 4px ${glowColor})`;
-        },
-    });
-}
-
-function fetchBudgetStats() {
-    $.ajax({
-        url: "/dashboard/budget-stats",
-        type: "GET",
-        success: function (response) {
-            if (response.status === "success") {
-                const data = response.data.original;
-
-                $("#previous-amount").text(data.last_month);
-                $("#last-active").text(data.latest_category);
-
-                $("#curr-category").text(data.latest_category);
-                barChart(data.latest_category, $(".select-year").val());
-
-                const spent = parseFloat(data.spent || 0);
-                const budget = parseFloat(data.budget || 0);
-                const percentage = parseFloat(data.percentage || 0);
-
-                let ratio = budget > 0 ? spent / budget : 0;
-                progressBar.animate(ratio > 1 ? 1 : ratio);
-
-                $("#budget-spent").text("₹" + spent.toLocaleString());
-                $("#budget-total").text("₹" + budget.toLocaleString());
-                $("#budget-percent").text(Math.round(percentage) + "%");
-            }
         },
     });
 }

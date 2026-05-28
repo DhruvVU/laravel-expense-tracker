@@ -32,12 +32,6 @@ $(document).ready(function () {
             icon.removeClass("fa-user").addClass("fa-house");
         }
     });
-
-    // Hide some unwanted buttons on profile page
-    if ($('.nav-profile-link i').hasClass('fa-solid fa-house')) {
-        $('#show-btn').hide();
-        $('.select-year').hide();
-    }
     
     // ====================== Chart Data based on User selection ======================
     
@@ -53,7 +47,7 @@ $(document).ready(function () {
                 $("#pie-chart").fadeIn();
 
                 $("#dashboard-amount").text(
-                    loadExpenses(selectedCategory, 1, "", "", "", year),
+                    fetchBudgetStats(selectedCategory, year),
                 );
                 lineChart(selectedCategory, "", year);
                 $("#lineChart").fadeIn();
@@ -66,7 +60,7 @@ $(document).ready(function () {
             lineChart(selectedCategory, "", year);
             $("#lineChart").fadeIn();
             $("#dashboard-amount").text(
-                loadExpenses(selectedCategory, 1, "", "", "", year),
+                fetchBudgetStats(selectedCategory, year),
             );
             $(".select-month").val("");
         }, 500);
@@ -214,8 +208,8 @@ function showTable(category, label, year) {
                 rows += ` 
                     <tr>
                         <td colspan="6" style="text-align:center; font-weight: 600">
-                            To view full data, visit the history page 
-                                <a href="/history" style="color: #6aa0f7; text-decoration: none">
+                            To view full data, click here 
+                                <a href="/expenses" style="color: #6aa0f7; text-decoration: none">
                                     ➡️History
                                 </a>
                         </td>

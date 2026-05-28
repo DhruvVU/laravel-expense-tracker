@@ -2,9 +2,6 @@
 // ************************* Functions related to Expense data(CRUD Operations) *********************************
 // ==============================================================================================================
 
-// default page numberis set to 1 for loading data
-let defaultPageNo = 1;
-
 // timer for keeping a small delay when searching the database
 let searchTimer;
 
@@ -65,14 +62,9 @@ $(document).ready(function () {
                         barChart(category, year);
                     if (typeof pieChart === "function")
                         pieChart(year);
-                    loadExpenses(
-                        $("#filter-category").val(),
-                        1,
-                        "",
-                        "",
-                        "",
-                        year,
-                    );
+
+                    // Reload the expense table
+                    $('#expense-list').DataTable().ajax.reload(null, false);
 
                     $(".add-card").fadeOut();
                     
@@ -116,90 +108,6 @@ $(document).ready(function () {
         });
     });
 
-    // ========================================== Search Expense(READ) =========================================
-
-    // ======================== Search operation filters section ============================
-
-    // Clear all filters
-    $(document).on("click", "#reset-filters", function () {
-        $("#search-input").val("");
-        $("#filter-category").val("All");
-        $("#start-date").val("");
-        $("#end-date").val("");
-
-        loadExpenses("All", 1, "", "", "");
-    });
-
-    //  Filter based on name
-    $(document).on("input", "#search-input", function () {
-        let searchVal = $(this).val();
-        clearTimeout(searchTimer);
-
-        // send request after a small 300ms delay
-        searchTimer = setTimeout(function () {
-            loadExpenses($("#filter-category").val(), 1, searchVal);
-        }, 300);
-    });
-
-    //  Filter based on category
-    $(document).on("change", "#filter-category", function () {
-        defaultPageNo = 1;
-        loadExpenses($(this).val(), defaultPageNo, $("#search-input").val());
-        $("#selected-category").text($(this).val());
-    });
-
-    //  Filter based on page number
-    $(document).on("click", ".page-btn", function () {
-        defaultPageNo = $(this).data("page");
-        loadExpenses(
-            $("#filter-category").val(),
-            defaultPageNo,
-            $("#search-input").val(),
-            $("#start-date").val(),
-            $("#end-date").val(),
-        );
-    });
-
-    // Filter based on month
-    $(document).on("change", ".select-month", function () {
-        const month = $(".select-month").val();
-        const category = $(".select-category").val() ?? "All";
-        
-        loadExpenses(category, 1, "", "", "", year);
-
-        if ($(".table-data").is(":visible")) {
-            showTable(category, month, year);
-        } else {
-            $(".table-data").fadeOut();
-            $("#toggle-view").text("📒 View Table");
-            lineChart(category, month, year);
-        }
-
-        if (category === "All") {
-            pieChart(year);
-        } else {
-            barChart(category, year);
-        }
-    });
-
-    //  Filter Data based on Date range provided
-    $(document).on("change", ".select-date", function () {
-        let start_date = $("#start-date").val();
-        let end_date = $("#end-date").val();
-        let current_filter = $("#filter-category").val();
-        let search_input = $("#search-input").val();
-
-        if (start_date && end_date) {
-            if (new Date(start_date) > new Date(end_date)) {
-                showToast("End date cannot be set before start date", "error");
-                return;
-            }
-        }
-
-        loadExpenses(current_filter, 1, search_input, start_date, end_date, year);
-    });
-    // ================== End of Filters section =========================
-
     // ========================================== Edit Expense(UPDATE) =========================================
 
     // Show edit form
@@ -207,25 +115,19 @@ $(document).ready(function () {
         $("#modal-overlay").addClass("active");
         $(".edit-card").fadeIn();
 
-        const id = $(this).data("id");
-        const row = $(this).closest("tr");
-        const description = row.find('[data-field="description"]').text();
-        const amount = row
-            .find('[data-field="amount"]')
-            .text()
-            .trim()
-            .replace(/[^\d.-]/g, "");
-        const category = row.find('[data-field="category"] span').text().trim();
-        const date = row.find('[data-field="expense_date"]').text();
+        const table = $('#expense-list').DataTable();
+        const rowData = table.row($(this).closest('tr')).data();
 
-        $("#data_id-edit").val(id);
-        $("#description-edit").val(description);
-        $("#amount-edit").val(amount);
-        $("#exp_date-edit").val(date);
+        if (!rowData) return;
+
+        $("#data_id-edit").val(rowData.id);
+        $("#description-edit").val(rowData.description);
+        $("#amount-edit").val(rowData.amount);
+        $("#exp_date-edit").val(rowData.expense_date);
 
         // Set category name corresponding to its id
         $('#category-edit option').filter(function() {
-            return $(this).text().trim() === category;
+            return $(this).text().trim() === rowData.category;
         }).prop('selected', true);
     });
 
@@ -253,7 +155,7 @@ $(document).ready(function () {
                 $(".edit-card").fadeOut();
                 $("#modal-overlay").removeClass("active");
 
-                loadExpenses("All", 1, "");
+                $('#expense-list').DataTable().ajax.reload(null, false);
                 showToast("Expense successfully updated!", "success");
             },
             error: function (xhr) {
@@ -313,11 +215,7 @@ $(document).ready(function () {
                             if (response.status === "success") {
                                 row.fadeOut(500, function () {
                                     $(this).remove();
-                                    loadExpenses(
-                                        $("#filter-category").val(),
-                                        defaultPageNo,
-                                        $("#search-input").val(),
-                                    );
+                                    initExpenseTable();
                                     pieChart();
                                 });
                                 showToast(
@@ -383,146 +281,98 @@ $(document).ready(function () {
 
 // ======================================== Main Function to load data =========================================
 
-function loadExpenses(
-    category = "All",
-    page_no = 1,
-    search = "",
-    start_date = "",
-    end_date = "",
-    year = "",
-) {
-    $.ajax({
-        url: "/expenses/fetch-expense",
-        type: "GET",
-        data: {
-            category: category,
-            page: page_no,
-            search: search,
-            start_date: start_date,
-            end_date: end_date,
-            year: year,
-        },
-        dataType: "json",
-        beforeSend: function () {
-            showTableLoader();
-        },
-        success: function (response) {
-            if (response.status === "success") {
-                // Total Amount calculation and Value printing
-                $("#total-amount").text(response.total);
-                $("#dashboard-amount").text(response.total);
+function initExpenseTable() {
+    if ($.fn.DataTable.isDataTable('#expense-list')) {
+        return $('#expense-list').DataTable();
+    }
 
-                // Call functions for table data and page numbers
-                tableData(response);
-                renderPages(response);
-
-                // Handled empty response (if no data is present)
-                if (response.data.length === 0) {
-                    $(".select-category option:first").text(
-                        "-- No data in table --",
-                    );
-
-                    $("#page-numbers").empty();
-                    $("#total-amount").text("0.00");
-                    $("#dashboard-category").text("No expense!");
-                    return;
-                } else {
-                    $(".select-category option:first")
-                        .text("-- Select a category --")
-                        .prop("disabled", "true");
-                }
-
-                $("#expenses-count").text(response.total_expenses);
-                response.data.forEach(function (item) {
-                    $(".select-category option:first").text(
-                        "-- Select a category --",
-                    );
-                });
+    const expenseTable = $('#expense-list').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollX: true,
+        ajax: {
+            url: '/expenses/fetch-expense',
+            type: 'GET',
+            data: function(d) {
+                d.category = $('#filter-category').val() || 'All',
+                d.start_date = $('#start-date').val() || '',
+                d.end_date = $('#end-date').val() || ''
             }
         },
+        columns: [
+            { data: 'expense_date', name: 'expense_date' },
+            { data: 'description', name: 'description' },
+            {
+                data: 'category',
+                name: 'category',
+                render: function(data, type, row) {
+                    return `<span class="pill" style="background-color: ${row.category_color}">${data}</span>`
+                }
+            },
+            {
+                data: 'amount',
+                name: 'amount',
+                render: function (data) { return `₹${parseFloat(data).toFixed(2)}`; }
+            },
+            {
+                data: 'id',
+                name: 'edit_action',
+                orderable: false,
+                searchable: false,
+                render: function (data) {
+                    return `<button class="show-edit" id="edit-expense" data-id="${data}"><i class="fa-solid fa-pen-to-square"></i> Edit</button>`;
+                }
+            },
+            {
+                data: 'id',
+                name: 'delete_action',
+                orderable: false,
+                searchable: false,
+                render: function (data) {
+                    return `<button class="delete-btn" id="delete-expense" data-id="${data}"><i class="fa-solid fa-trash">
+                    </i> Delete</button>`;
+                }
+            }
+        ],
+
+        layout: {
+            topStart: 'search',
+            topEnd: 'pageLength'
+        },
+
+        drawCallback: function (settings) {
+            const json = settings.json;
+            if (json) {
+                $('#total-amount').text(parseFloat(json.totalAmount).toFixed(2));
+                $('#expenses-count').text(json.totalExpenses);
+            }
+        },
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search description...",
+            paginate: {
+                next: '<i class="fa-solid fa-chevron-right"></i>',
+                previous: '<i class="fa-solid fa-chevron-left"></i>'
+            }
+        },
+        order: [[0, 'desc']]
     });
-}
 
-// Separate function to populate and display table
-function tableData(response) {
-    let rows = "";
-    if (response.status === "success") {
-        // Handled empty response (if no data is present)
-        if (response.data.length === 0) {
-            $("#expense-list").html(`
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 60px 20px;">
-                                <div style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;">🔍</div>
-                                <h3 style="color: var(--text-main); margin-bottom: 10px;">No matching expenses</h3>
-                                <p style="color: var(--text-main); opacity: 0.7;">Try adjusting your search or filters to find what you're looking for.</p>
-                            </td>
-                        </tr>
-                    `);
-            return;
-        }
+    $('#filter-category, #start-date, #end-date').on('change', function () {
+        $('#selected-category').text($('#filter-category').val());
+        expenseTable.draw(); 
+    });
 
-        response.data.forEach(function (item) {
-            const categoryColor = item.category_color;
-            rows += `
-                        <tr>
-                            <td data-field="expense_date">${item.expense_date}</td>
-                            <td data-field="description">${item.description}</td>
-                            <td data-field="category">
-                                <span class="pill" style="background-color:${categoryColor}">${item.category}</span>
-                            </td>
-                            <td data-field="amount">₹${item.amount}</td>
-                            <td style="text-align:center"><button class="show-edit" id="edit-expense" data-id="${item.id}">
-                                <i class="fa-solid fa-pen-to-square"></i>Edit</button>
-                            </td>
-                            <td style="text-align:center"><button class="delete-btn" id="delete-expense" data-id="${item.id}">
-                                <i class="fa-solid fa-trash"></i> Delete</button>
-                            </td>
-                        </tr>
-                    `;
-        });
-        setTimeout(function () {
-            $("#expense-list").html(rows);
-        }, 500);
-    }
-}
+    $('#reset-filters').on('click', function (e) {
+        e.preventDefault();
+        $('#filter-category').val('All');
+        $('#start-date').val('');
+        $('#end-date').val('');
+        $('#selected-category').text('All');
+        
+        // Clear out the native search box input string text field too
+        expenseTable.search('').draw();
+    });
 
-function renderPages(response) {
-    $("#page-numbers").empty();
-
-    // Previous Button
-    let prevButton = response.curr_page <= 1 ? "disabled" : "";
-    $("#page-numbers").append(
-        `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) - 1}" 
-                ${prevButton}>&laquo; Prev</button>`,
-    );
-
-    // Range of page numbers to be shown
-    let range = 1;
-    let total = response.pages;
-    let current = Number(response.curr_page);
-    for (let i = 1; i <= total; i++) {
-        // Deciding which page numbers to display based on range
-        if (
-            i === 1 ||
-            i === total ||
-            (i >= current - range && i <= current + range)
-        ) {
-            let active = i === current ? "active" : "";
-
-            $("#page-numbers").append(
-                `<button class="page-btn ${active}" data-page="${i}">${i}</button>`,
-            );
-        }
-
-        // Adding dots for remaining page numbers
-        else if (i === current - range - 1 || i === current + range + 1) {
-            $("#page-numbers").append('<span class="dots">...</span>');
-        }
-    }
-
-    // Next Button
-    let nextButton = response.curr_page >= response.pages ? "disabled" : "";
-    $("#page-numbers").append(
-        `<button class="page-btn nav-btn" data-page="${Number(response.curr_page) + 1}" ${nextButton}>Next &raquo</button>`,
-    );
+    return expenseTable;
 }

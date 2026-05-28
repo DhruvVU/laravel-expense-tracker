@@ -9,6 +9,7 @@ use Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Yajra\DataTables\DataTables;
 class ExpenseController extends Controller
 {
     // Using expense service to make the controller thinner
@@ -17,7 +18,9 @@ class ExpenseController extends Controller
         $this->expenseService = $expenseService;
     }
 
-// ============================================ Add Expense(CREATE) ============================================
+// ===========================================================================================================
+//  ************************* Add Expense(CREATE) **************************
+// ===========================================================================================================
 
     public function store(ExpenseRequest $request): ExpenseResource
     {
@@ -29,11 +32,39 @@ class ExpenseController extends Controller
                 ]);
     }
 
-// =========================================== Fetch Expense(READ) =============================================
+// =========================================================================================================== 
+// ************************ Fetch Expense(READ) **************************
+// ===========================================================================================================
 
     public function fetch(Request $request)
     {
         $query = $this->expenseService->getFilteredQuery($request);
+
+        // Check if the request is a ajax request and also not forwarded from any of the dashboard functions
+        if ($request->ajax() && !$request->has('for_chart') && !$request->has('table_data')) {
+            $totalAmount = $query->sum('amount');
+            $totalExpenses = $query->count();
+
+            return DataTables::of($query)
+                ->editColumn('expense_date', function($expense) {
+                    return $expense->expense_date->format('Y-m-d');
+                })
+                ->addColumn('amount', function($expense) {
+                    return (float) $expense->amount;
+                }) 
+                ->addColumn('category', function($expense) {
+                    return $expense->category ? $expense->category->name : 'Other';
+                })
+                ->addColumn('category_color', function($expense) {
+                    return $expense->category ? $expense->category->color : '#383d41';
+                })
+                ->with([
+                    'totalAmount' => (float) $totalAmount,
+                    'totalExpenses' => $totalExpenses
+                ])
+                ->make(true);
+        }
+
         $year = $request->year ?? date('Y');
 
         // Filter for table data
@@ -55,7 +86,8 @@ class ExpenseController extends Controller
             ]);
         }
 
-        // Filter for line chart 
+        // ********************************** Filter for line chart *************************************
+        
         if ($request->boolean('for_chart')) {
             $year = $request->year ?? date('Y');
             $chartQuery = clone $query;
@@ -81,21 +113,20 @@ class ExpenseController extends Controller
         }
 
         $totalAmount = $query->sum('amount');
-        // Pagination 
-        $expenses = $query->orderBy('expense_date', 'desc')->paginate(5);
+        $expenses = $query->orderBy('expense_date', 'desc')->get();
         $total_expenses = $query->count();
 
         return ExpenseResource::collection($expenses)->additional([
             'status' => 'success',
             'message' => 'Data fetch successful',
             'total' => $totalAmount,
-            'pages' => $expenses->lastPage(),
-            'curr_page' => $expenses->currentPage(),
             'total_expenses' => $total_expenses
         ]);
     }
     
-    // ============================= Fetch Chart Data =============================
+    // ================================= 
+    // Fetch Chart Data
+    //  =============================
     public function getChartData(Request $request): JsonResponse
     {
         $query = Expense::where('expenses.user_id', auth()->id());
@@ -149,7 +180,9 @@ class ExpenseController extends Controller
         ]);
     }
 
-// ============================================ Edit Expense(UPDATE) ===========================================
+// ========================================================================================================== 
+// *************************** Edit Expense(UPDATE) ***********************
+// ==========================================================================================================
 
     public function edit(ExpenseRequest $request, Expense $expense): JsonResponse
     {
@@ -163,7 +196,9 @@ class ExpenseController extends Controller
         ]);
     }
 
-// ============================================ Delete Expense(DELETE) =========================================
+// ========================================================================================================= 
+// ********************** Delete Expense(DELETE) **************************
+// =========================================================================================================
 
     public function delete(Expense $expense): JsonResponse
     {
@@ -177,7 +212,9 @@ class ExpenseController extends Controller
         ]);
     }
 
-// ============================================ Download CSV File ==============================================
+// ========================================================================================================== 
+// ************************ Download CSV File **************************
+// ==========================================================================================================
 
     public function exportCsv(Request $request): StreamedResponse
     {

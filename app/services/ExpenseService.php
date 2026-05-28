@@ -29,11 +29,6 @@ class ExpenseService
             });
         }
 
-        // Filter by Search values
-        if ($request->filled('search')) {
-            $query->where('description', 'like', '%' . $request->search . '%');
-        }
-
         // Filter by date range 
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('expense_date', [$request->start_date, $request->end_date]);
@@ -78,6 +73,7 @@ class ExpenseService
     public function getExpenseStats($user, Request $request): JsonResponse {
         $budget = $user->monthly_budget ?? 0;
         $year = $request->year ?? now()->year;
+        $category = $request->category ?? 'All';
 
         $total_spent = $user->expenses()
                             ->whereYear('expense_date', $year)

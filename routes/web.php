@@ -45,12 +45,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/dashboard/set-budget', [DashboardController::class, 'setBudget'])->name('set_budget');
 
     // ==============================================================================================
-    // ******************************* History page routes *********************************
+    // ******************************* Expense page routes *********************************
     // ==============================================================================================
 
-    Route::get('/history', function () {
+    Route::get('/expenses', function () {
         return view('layouts.history');
-    })->name('history');
+    })->name('expenses');
 
     // ==============================================================================================
     // *************************** User Profile Controller routes *****************************

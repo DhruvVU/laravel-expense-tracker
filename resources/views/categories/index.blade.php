@@ -34,7 +34,6 @@
                 <button type="submit" class="save-btn" id="save-category-btn">
                     Save Category
                 </button>
-
             </form>
         </div>
 
@@ -43,59 +42,18 @@
             </div>
 
         <div class="categories-show" id="categories-list-container">
-            <table class="custom-data">
+            <table class="custom-data" id="category-data">
                 <thead>
                     <tr>
                         <th style="padding: 12px; text-align: left;">NAME</th>
                         <th style="padding: 12px; text-align: left;">COLOR</th>
                         <th style="padding: 12px; text-align: left;">EXPENSES</th>
-                        <th style="padding: 12px; text-align: left;">CREATED</th>
+                        <th style="padding: 12px; text-align: left;">CREATED AT</th>
                         <th colspan="2" style="padding: 12px; text-align: center;">ACTION</th>
                     </tr>
                 </thead>
+                {{-- This will be autofilled by DataTables  --}}
                 <tbody id="categories-table-body">
-                    @if($categories->isEmpty())
-                        <tr id="empty-state-row">
-                            <td colspan="4" style="padding: 24px; text-align: center;" class="color-picker-hint">
-                                No custom tracking categories found.
-                            </td>
-                        </tr>
-                    @else
-                        @foreach($categories as $category)
-                            <tr style="border-bottom: 1px solid var(--border-color);" data-category-id="{{   $category->id }}">
-                                <td class="editable-name" style="padding: 14px 12px;" data-name="{{ $category->name }}">
-                                    {{ $category->name }}
-                                </td>
-                                <td class="editable-color" style="padding: 14px 12px;" data-color="{{ $category->color }}">
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span
-                                            style="width: 12px; height: 12px; border-radius: 50%;background-color: {{ $category->color }}; display: inline-block;">
-                                        </span>
-                                        <code>{{ $category->color }}</code>
-                                    </div>
-                                </td>
-                                <td style="padding: 14px 12px;">{{ $category->expenses_count ?? 0 }}</td>
-                                <td style="padding: 14px 12px;" class="color-picker-hint">
-                                    {{ $category->created_at->format('Y-m-d') }}</td>
-                                <td style="text-align: center">
-                                    <button 
-                                        id="edit-category" 
-                                        class="show-edit"
-                                        data-id="{{ $category->id }}"
-                                    >
-                                    <i class="fa-solid fa-pen-to-square"></i>Edit</button>
-                                </td>
-                                <td style="text-align: center">
-                                    <button 
-                                        id="delete-category" 
-                                        class="delete-btn" 
-                                        data-id="{{ $category->id }}"
-                                    >
-                                    <i class="fa-solid fa-trash"></i> Delete</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
                 </tbody>
             </table>
         </div>

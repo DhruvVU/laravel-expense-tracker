@@ -12,7 +12,9 @@ Route::get('/', function () {
     return Auth::check() ? redirect('/dashboard') : redirect('/login');
 });
 
-// Show login form
+// ==============================================================================================
+// ******************************* Authentication routes *********************************
+// ==============================================================================================
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
@@ -30,7 +32,10 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
 
-    // Dashboard page route
+    // ==============================================================================================
+    // ******************************* Dashboard page route *********************************
+    // ==============================================================================================
+
     Route::get('/dashboard', function() {
         return view('layouts.dashboard');
     })->name('dashboard');
@@ -39,25 +44,38 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/budget-stats', [DashboardController::class, 'getBudget'])->name('get_budget');
     Route::patch('/dashboard/set-budget', [DashboardController::class, 'setBudget'])->name('set_budget');
 
-    // History page route 
+    // ==============================================================================================
+    // ******************************* History page routes *********************************
+    // ==============================================================================================
+
     Route::get('/history', function () {
         return view('layouts.history');
     })->name('history');
 
-    // User profile controller routes
+    // ==============================================================================================
+    // *************************** User Profile Controller routes *****************************
+    // ==============================================================================================
+
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile/clear-expenses', [ProfileController::class, 'clearExpenses'])->name('profile.clear-expense');
     Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Category controller routes
-    Route::get('/categories', [CategoryController::class , 'index'])->name('categories.index');
+    // ==============================================================================================
+    // ******************************* Category page routes *********************************
+    // ==============================================================================================
+
+    Route::get('/category', [CategoryController::class , 'index'])->name('categories.index');
+    Route::get('/category/fetch', [CategoryController::class, 'fetch'])->name('categories.fetch');
     Route::post('/category/add', [CategoryController::class, 'store'])->name('categories.add');
     Route::put('/category/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
 
-    // Expense data related routes
+    // ==============================================================================================
+    // ******************************* Expense data routes *********************************
+    // ==============================================================================================
+
     Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {
 
         Route::get('/fetch-expense', 'fetch')->name('fetch');
@@ -75,6 +93,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/export-csv', 'exportCsv')->name('exportCsv');
     });
 
+    // ==============================================================================================
+    // *************************** Authentication routes(logout) *****************************
+    // ==============================================================================================
+    
     Route::post('/logout', function () {
         Auth::logout();
         request()->session()->invalidate();

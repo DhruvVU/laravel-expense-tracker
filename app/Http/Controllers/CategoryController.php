@@ -3,21 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\StoreExpenseRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Contracts\DataTable;
+use Yajra\DataTables\DataTables;
 
 class CategoryController extends Controller
 {
-    // Fetch all categories
+    // Land on categories home page
     public function index(): View 
     {      
-        $categories = auth()->user()->categories()
-                            ->withCount('expenses')
-                            ->orderBy('created_at', 'desc')
-                            ->get();
-        return view('categories.index', compact('categories'));
+        return view('categories.index');
+    }
+
+    // Fetch all data and display it using DataTables library
+    public function fetch(): JsonResponse
+    {
+        $query = auth()->user()->categories()
+                    ->withCount('expenses')
+                    ->orderBy('created_at', 'desc');
+
+        return DataTables::of($query)
+            ->addColumn('color_badge', function($category) {
+                return '
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="width: 12px; height: 12px; border-radius: 50%; background-color: ' . $category->color . '; display: inline-block;"></span>
+                        <code>' . $category->color . '</code>
+                    </div>
+                ';
+            })
+            ->addColumn('created_at', function($category) {
+                return $category->created_at->format('Y-m-d');
+            })
+            ->addColumn('edit_action', function($category) {
+                return '
+                    <button class="show-edit" id="edit-category" data-id="' . $category->id . '">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                ';
+            })
+            ->addColumn('delete_action', function($category) {
+                return '
+                    <button class="delete-btn" id="delete-category" data-id="' . $category->id . '">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                ';
+            })
+            ->rawColumns(['color_badge', 'edit_action', 'delete_action'])
+            ->make(true);
     }
 
     // Add a new category 

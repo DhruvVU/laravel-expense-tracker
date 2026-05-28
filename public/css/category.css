@@ -123,34 +123,79 @@
     border-radius: 8px;
 }
 
-.custom-data {
-    background-color: var(--container-bg);
-    width: 100%;
-    padding: 5px;
-    border: 1px solid var(--border-color);
-    border-collapse: collapse;
+/* ==========================================================================
+   DataTables Custom Themes
+   ========================================================================== */
+
+.dataTables_filter {
+    margin-bottom: 20px;
+    text-align: right;
 }
 
-.custom-data th {
-    background-color: var(--table-header);
-    font-weight: 700;
+.dataTables_filter input {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 10px !important;
+    padding: 8px 16px !important;
+    font-size: 0.95rem;
+    outline: none;
 }
 
-.custom-data tbody {
-    border-bottom: 1px solid var(--border-color);
+/* Pagination Control Button alignment and structural updates */
+.dataTables_paginate {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
 }
 
-.custom-data td {
-    font-size: 1rem;
+.dataTables_paginate .paginate_button {
+    background: var(--container-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.custom-data th:nth-last-child(1) {
-    width: 25%;
+.dt-input {
+    padding: 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--border-color) !important;
 }
 
-.custom-data tr:hover {
-    background-color: var(--table-hover);
-    transition: background-color 0.2s ease;
+.dt-type-numeric, .dt-type-date {
+    text-align: center !important;
+}
+
+.custom-data td:nth-last-child(1) {
+    text-align: center !important;
+}
+
+.custom-data td:nth-last-child(2) {
+    text-align: right !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: white !important;
+    border-color: #2563eb !important;
+}
+
+.dataTables_paginate .paginate_button.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Informational counter row layout text styling */
+.dataTables_info {
+    color: var(--text-main) !important;
+    opacity: 0.6;
+    font-size: 0.9rem;
+    margin-top: 20px;
 }
 
 /* Styling for input section */
@@ -170,6 +215,10 @@
         min-width: 150px;
     }
 
+    .color-picker-hint {
+        font-size: 0.8rem;
+    }
+
     .category-display-panel {
         min-width: 150px;
     }
@@ -178,11 +227,10 @@
         overflow-x: auto;
     }
 
-    .color-picker-hint {
-        font-size: 0.8rem;
-    }
-
-    .custom-data td:nth-child(3) {
-        text-align: center;
+    .dt-layout-row {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: left !important;
+        gap: 5px !important;
     }
 }

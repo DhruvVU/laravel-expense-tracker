@@ -32,22 +32,7 @@ $(document).ready(function() {
 
                     $('#empty-state-msg').remove();
 
-                    const date = new Date().toISOString().split('T')[0];
-
-                    const newRow = `
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 14px 12px; font-weight: 600;">${response.data.name}</td>
-                            <td style="padding: 14px 12px;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="width: 12px; height: 12px; border-radius: 50%; background-color: ${response.data.color}; display: inline-block;"></span>
-                                    <code>${response.data.color}</code>
-                                </div>
-                            </td>
-                            <td style="padding: 14px 12px;">0</td>
-                            <td style="padding: 14px 12px;" class="color-picker-hint">${date}</td>
-                        </tr>
-                    `;
-
+                    $('#category-data').DataTable().ajax.reload(null, false);                    
                     $('#categories-table-body').append(newRow);
 
                     $('#category_name').val('');
@@ -131,6 +116,37 @@ $(document).ready(function() {
                 btn.prop('disabled', false).text('Confirm');
             }
         })
+    });
+
+    // =======================================================================================================
+    // ******************** Edit category ********************
+    // =======================================================================================================
+
+    const categoryTable = $('#category-data').DataTable({
+        processing: true,
+        serverside: true,
+        ajax: '/category/fetch',
+
+        columns: [
+            {data: 'name', name: 'name', className: 'editable-name'},
+            {data: 'color_badge', name: 'color', orderable: false, searchable: false},
+            {data: 'expenses_count', name: 'expenses_count', searchable: false},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'edit_action', name: 'edit_action', orderable: false, searchable: false},
+            {data: 'delete_action', name: 'delete_action', orderable: false, searchable: false}
+        ],
+
+        language: {
+            search: '_INPUT_',
+            searchPlaceholder: 'Search Categories...',
+            paginate: {
+                next: '<i class="fa-solid fa-chevron-right"></i>',
+                previous: '<i class="fa-solid fa-chevron-left"></i>'
+            }
+        },
+
+        order: [[0, 'asc']],
+        pageLength: 5
     });
 
     // =======================================================================================================

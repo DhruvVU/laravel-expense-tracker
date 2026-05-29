@@ -143,8 +143,9 @@ h2 {
     gap: 20px;
 }
 
-.btn-update, .btn-update-pass {
-    margin: 15px;
+/* Buttons styling */
+.btn-update, .btn-update-pass, .btn-cancel {
+    margin: 5px;
     padding: 14px 28px;
     font-size: 1rem;
     font-weight: 600;
@@ -163,8 +164,20 @@ h2 {
 
 .btn-update:hover,
 .btn-update-pass:hover {
-    transform: translateY(-2px);
     box-shadow: var(--button-shadow-blue);
+}
+
+.btn-cancel {
+    background:
+        linear-gradient(
+            135deg,
+            #f63b3b,
+            #eb2525
+        );
+}
+
+.btn-cancel:hover {
+    box-shadow: 0 4px 12px rgba(246, 59, 59, 0.3);
 }
 
 /* User account action buttons styling */
@@ -219,6 +232,12 @@ h2 {
 
     .profile-card, .user-stats {
         width: 100%;
+    }
+
+    .form-btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
     }
 
     .input-group-profile tr td {

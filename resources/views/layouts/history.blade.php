@@ -31,6 +31,9 @@
                 <div class="filter-wrapper">
                     <label>Category:</label>
                     <select id="filter-category">
+                        @if ($categories->isEmpty()) 
+                            <option value="" selected>No Categories Available</option>
+                        @endif
                         <option value="All">All Categories</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->name }}">{{ $category->name }}</option>

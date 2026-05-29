@@ -223,7 +223,11 @@ function showTable(category, label, year) {
             }
 
             $(".category-data").html(rows);
-            $(".table-data").show();
+
+            // Small delay for better UX
+            setTimeout(() => {
+                $(".table-data").show();
+            }, 500);
         },
         error: function (xhr) {
             showToast("Error displaying data! Check console", "error");

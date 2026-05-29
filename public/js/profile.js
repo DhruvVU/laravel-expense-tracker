@@ -8,7 +8,10 @@ $(document).ready(function () {
     
     $(document).on("click", ".edit-button", function (e) {
         // Fade in the update button
-        $(".btn-update").fadeIn().removeAttr("disabled");
+        const btn = $('.btn-update');
+
+        btn.fadeIn().removeAttr("disabled");
+        $('.btn-cancel').fadeIn();
 
         // Get the current field where the icon is clicked and enable it and mark as active
         const curr_field = $(this)
@@ -16,6 +19,12 @@ $(document).ready(function () {
             .removeAttr("disabled")
             .addClass("active");
     });
+
+    $(document).on('click', '.btn-cancel', function() {
+        $('input').attr('disabled', true).removeClass('active');
+        $('.btn-update').fadeOut();
+        $(this).fadeOut();
+    })
 
     // ======================== User clicks the update button ===========================
     

@@ -93,7 +93,8 @@
                     </table>
 
                     <div class="form-btn-container">
-                        <button type="submit" class="btn-update" style="display: none" disabled>Update Profile</button>
+                        <button type="submit" class="btn-update" style="display: none" disabled>Update</button>
+                        <button type="button" class="btn-cancel" style="display: none">Cancel</button>
                     </div>
                 </form>
             </div>

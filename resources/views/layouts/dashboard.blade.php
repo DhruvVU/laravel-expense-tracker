@@ -16,6 +16,9 @@
             <div class="stat-card-mini">
                 <span class="stat-label">Select Category</span>
                 <select class="select-category">
+                    @if ($categories->isEmpty())
+                    <option value="" selected>No Categories Available</option>                    
+                    @endif
                     <option value="All" selected>All Categories</option>
                     @foreach ($categories as $category) 
                         <option value="{{ $category->name }}">{{ $category->name }}</option>

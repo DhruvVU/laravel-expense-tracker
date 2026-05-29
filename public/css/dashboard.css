@@ -45,9 +45,9 @@ First Row styling Section
     align-items: center;
 }
 
-.stat-card-mini:hover {
+/* .stat-card-mini:hover {
     font-weight: 700;
-}
+} */
 
 .select-category {
     background-color: var(--container-bg);

@@ -76,7 +76,7 @@ class ExpenseService
     // ======================================================================================================
     // ********************* Fetch Dashboard stats for user **************************
     // ======================================================================================================
-    public function getExpenseStats($user,Builder $query, Request $request): JsonResponse {
+    public function getExpenseStats($user, Builder $query, Request $request): JsonResponse {
         $budget = $user->monthly_budget ?? 0;
         $year = $request->year ?? now()->year;
 

@@ -24,7 +24,6 @@ $(document).ready(function() {
             dataType: 'json',
             beforeSend: function() {
                 $('#save-category-button').prop('disabled', true).text('Saving...');
-                showTableLoader();
             },
             success: function(response) {
                 if (response.status === 'success') {

@@ -14,7 +14,7 @@ class CategoryController extends Controller
     // Land on categories home page
     public function index(): View 
     {      
-        return view('categories.index');
+        return view('category.index');
     }
 
     // Fetch all data and display it using DataTables library

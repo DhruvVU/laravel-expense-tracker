@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - Tracker.io</title>
     
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user/login.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
      <!-- Sweet Alert JavaScript -->
@@ -28,6 +28,6 @@
     </div>
 
     @include('components.toast')
-    @stack('page-scripts')
+    @stack('auth-scripts')
 </body>
 </html>

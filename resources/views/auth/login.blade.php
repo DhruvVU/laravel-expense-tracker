@@ -31,7 +31,7 @@
         </div>
 
     @endsection
-    @push('page-scripts')
+    @push('auth-scripts')
         <script src="{{ asset('js/auth.js') }}"></script>
     @endpush
 </x-guest>

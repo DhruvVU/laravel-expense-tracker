@@ -1,38 +1,27 @@
 {{-- Main Styling for Expense Tracker --}}
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}"> 
 
-{{-- Tables custom styling --}}
-<link rel="stylesheet" href="{{ asset('css/table-styling.css') }}">
+{{-- Layouts styling section --}}
+<link rel="stylesheet" href="{{ asset('css/layouts/dashboard.css') }}"> {{-- Dashboard page --}}
+<link rel="stylesheet" href="{{ asset('css/layouts/history.css') }}"> {{-- History page --}}
 
-{{-- Table action buttons styling --}}
-<link rel="stylesheet" href="{{ asset('css/table-action-buttons.css') }}">
+{{-- Partial section styling files  --}}
+<link rel="stylesheet" href="{{ asset('css/partials/side-nav.css') }}"> {{-- Side Navbar --}}
+<link rel="stylesheet" href="{{ asset('css/partials/top-nav.css') }}"> {{-- Top Navbar --}}
 
-{{-- Dashboard styling --}}
-<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+{{-- Components styling section --}}
+<link rel="stylesheet" href="{{ asset('css/components/form/form-styling.css') }}"> {{-- Form --}}
+<link rel="stylesheet" href="{{ asset('css/components/table/table-styling.css') }}"> {{-- Table --}}
+<link rel="stylesheet" href="{{ asset('css/components/table/table-action-buttons.css') }}"> {{-- Table buttons --}}
 
-{{-- History page styling --}}
-<link rel="stylesheet" href="{{ asset('css/history.css') }}">
-
-{{-- Sidebar styling --}}
-<link rel="stylesheet" href="{{ asset('css/side-nav.css') }}">   
-
-{{-- Top Navbar styling --}}
-<link rel="stylesheet" href="{{ asset('css/top-nav.css') }}">
-
-{{-- Form styling --}}
-<link rel="stylesheet" href="{{ asset('css/form-styling.css') }}">
-
-{{-- -- Profile section styling -- --}}
-<link rel="stylesheet" href="{{  asset('css/profile.css') }}">
+{{-- User Profile and Authentication section styling files --}}
+<link rel="stylesheet" href="{{  asset('css/user/profile.css') }}"> {{-- Profile page --}}
 
 {{-- Category section styling --}}
-<link rel="stylesheet" href="{{ asset('css/category.css') }}">
+<link rel="stylesheet" href="{{ asset('css/category/category.css') }}"> {{-- Category page --}}
 
 <!-- Icons  -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-{{-- Loading skeleton --}}
-<link href=" https://cdn.jsdelivr.net/npm/skeleton-elements@4.0.1/css/skeleton-elements.min.css " rel="stylesheet">
 
 {{-- Select2 Library --}}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />

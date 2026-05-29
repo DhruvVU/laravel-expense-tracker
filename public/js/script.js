@@ -184,9 +184,6 @@ function showTable(category, label, year) {
             year: year,
         },
         dataType: "json",
-        beforeSend: function () {
-            showTableLoader();
-        },
         success: function (response) {
             $("#lineChart").fadeOut();
             $("#toggle-view").text("📉 View Chart");
@@ -225,31 +222,12 @@ function showTable(category, label, year) {
                 `;
             }
 
-            setTimeout(function () {
-                $(".category-data").html(rows);
-                $(".table-data").show();
-            }, 500);
+            $(".category-data").html(rows);
+            $(".table-data").show();
         },
         error: function (xhr) {
             showToast("Error displaying data! Check console", "error");
             console.log(xhr.response);
         },
     });
-}
-
-function showTableLoader() {
-    let loaderRows = "";
-    for (let i = 0; i < 5; i++) {
-        loaderRows += `
-            <tr>
-                <td><div class="skeleton-text skeleton-effect-wave">Date</div></td>
-                <td><div class="skeleton-text skeleton-effect-wave">Description goes here</div></td>
-                <td><div class="skeleton-block skeleton-effect-wave" style="width:60px; height:24px; border-radius:20px;"></div></td>
-                <td><div class="skeleton-text skeleton-effect-wave">000.00</div></td>
-            </tr>
-        `;
-    }
-    $("#expense-list").html(loaderRows);
-    $(".category-data").html(loaderRows);
-    $('#categories-table-body').html(loaderRows);
 }

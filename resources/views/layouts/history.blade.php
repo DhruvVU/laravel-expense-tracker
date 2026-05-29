@@ -62,7 +62,7 @@
                             <th>Description</th>
                             <th>Category</th>
                             <th>Amount</th>
-                            <th colspan="2" style="text-align: center">Action</th>
+                            <th style="text-align: center">Action</th>
                         </tr>
                     </thead>
 

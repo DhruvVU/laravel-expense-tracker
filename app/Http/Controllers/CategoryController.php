@@ -39,21 +39,17 @@ class CategoryController extends Controller
             ->addColumn('updated_at', function($category) {
                 return $category->updated_at->format('Y-m-d');
             })
-            ->addColumn('edit_action', function($category) {
+            ->addColumn('action_buttons', function($category) {
                 return '
-                    <button class="show-edit" id="edit-category" data-id="' . $category->id . '">
-                        <i class="fa-solid fa-pen-to-square"></i> Edit
-                    </button>
+                    <div class="action-buttons">
+                        <button class="show-edit" id="edit-category" data-id="' . $category->id . '">
+                            <i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn" id="delete-category" data-id="' . $category->id . '">
+                            <i class="fa-solid fa-trash"></i></button>
+                    </div>
                 ';
             })
-            ->addColumn('delete_action', function($category) {
-                return '
-                    <button class="delete-btn" id="delete-category" data-id="' . $category->id . '">
-                        <i class="fa-solid fa-trash"></i> Delete
-                    </button>
-                ';
-            })
-            ->rawColumns(['color_badge', 'edit_action', 'delete_action'])
+            ->rawColumns(['color_badge', 'action_buttons'])
             ->make(true);
     }
 

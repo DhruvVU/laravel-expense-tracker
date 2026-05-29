@@ -53,14 +53,6 @@
     text-align: center !important;
 }
 
-.custom-data td:nth-last-child(1) {
-    text-align: center !important;
-}
-
-.custom-data td:nth-last-child(2) {
-    text-align: right !important;
-}
-
 .dataTables_paginate .paginate_button.current {
     background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
     color: white !important;

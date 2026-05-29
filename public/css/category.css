@@ -123,6 +123,10 @@
     border-radius: 8px;
 }
 
+.custom-data td:nth-last-child(1) {
+    text-align: center !important;
+}
+
 @media (max-width:768px) {
     .category-page-container {
         margin: 0 auto;

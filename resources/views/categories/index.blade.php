@@ -50,7 +50,7 @@
                         <th style="padding: 12px; text-align: left;">EXPENSES</th>
                         <th style="padding: 12px; text-align: left;">CREATED</th>                        
                         <th style="padding: 12px; text-align: left;">UPDATED</th>                        
-                        <th colspan="2" style="padding: 12px; text-align: center;">ACTION</th>
+                        <th style="padding: 12px; text-align: center;">ACTION</th>
                     </tr>
                 </thead>
                 {{-- This will be autofilled by DataTables  --}}

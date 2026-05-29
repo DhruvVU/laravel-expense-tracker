@@ -134,8 +134,7 @@ $(document).ready(function() {
             {data: 'expenses_count', name: 'expenses_count', searchable: false},
             {data: 'created_at', name: 'created_at'},
             {data: 'updated_at', name: 'updated_at'},
-            {data: 'edit_action', name: 'edit_action', orderable: false, searchable: false},
-            {data: 'delete_action', name: 'delete_action', orderable: false, searchable: false}
+            {data: 'action_buttons', name: 'action_buttons', orderable: false, searchable: false}
         ],
 
         language: {
@@ -163,6 +162,7 @@ $(document).ready(function() {
         e.preventDefault();
         
         const btn = $(this);
+        const del_btn = btn.next('button');
         let row = btn.closest('tr');
         const categoryId = btn.data('id');
         const nameRow = row.find('td:nth-child(1)');
@@ -192,7 +192,7 @@ $(document).ready(function() {
                             </div>
                         `);
 
-                        btn.html('<i class="fa-solid fa-pen-to-square"></i>Edit').removeClass('save-inline-btn');
+                        btn.html('<i class="fa-solid fa-pen-to-square"></i>').removeClass('save-inline-btn');
                         row.find('.cancel-inline-btn').remove();
                         row.removeClass('editing-row');
                     }
@@ -224,11 +224,7 @@ $(document).ready(function() {
         `);
 
         btn.html('<i class="fa-solid fa-floppy-disk"></i> Save').addClass('save-inline-btn');
-        btn.after(`
-            <button class="delete-btn cancel-inline-btn" style="margin: 5px auto;">
-                <i class="fa-solid fa-xmark"></i> Cancel
-            </button>
-        `);
+        del_btn.addClass('cancel-inline-btn').removeAttr('id').text('Cancel');
     });
 
     // Button for cancelling the input update
@@ -249,9 +245,9 @@ $(document).ready(function() {
             </div>
         `);
 
-        editBtn.html('<i class="fa-solid fa-pen-to-square"></i>Edit').removeClass('save-inline-btn');
+        editBtn.html('<i class="fa-solid fa-pen-to-square"></i>').removeClass('save-inline-btn');
+        btn.removeClass('cancel-inline-btn').html('<i class="fa-solid fa-trash"></i>').attr('id', 'delete-category');
         row.removeClass('editing-row');
-        btn.remove();
     });
 
     // =======================================================================================================

@@ -71,7 +71,13 @@ First Row styling Section
 }
 
 #last-active {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
+    margin-top: 10px;
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden; /* prevents text to overflow out of the card */
+    text-overflow: ellipsis; /* ... will be added for overflowing text in smaller screens */
 }
 
 /* ==========================================================================================================

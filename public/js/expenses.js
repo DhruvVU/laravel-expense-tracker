@@ -316,21 +316,19 @@ function initExpenseTable() {
             },
             {
                 data: 'id',
-                name: 'edit_action',
+                name: 'action_buttons',
+                className: 'text-center',
                 orderable: false,
                 searchable: false,
                 render: function (data) {
-                    return `<button class="show-edit" id="edit-expense" data-id="${data}"><i class="fa-solid fa-pen-to-square"></i> Edit</button>`;
-                }
-            },
-            {
-                data: 'id',
-                name: 'delete_action',
-                orderable: false,
-                searchable: false,
-                render: function (data) {
-                    return `<button class="delete-btn" id="delete-expense" data-id="${data}"><i class="fa-solid fa-trash">
-                    </i> Delete</button>`;
+                    return `
+                        <div class="action-buttons">
+                            <button class="show-edit" id="edit-expense" data-id="' . $category->id . '">
+                                <i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="delete-btn" id="delete-expense" data-id="' . $category->id . '">
+                                <i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
                 }
             }
         ],

@@ -161,6 +161,8 @@ function pieChart(year = "") {
         dataType: "json",
         success: function (response) {
             const canvas = document.getElementById("pie-chart");
+            const ctx = canvas.getContext('2d');
+            
             if (!response.data || response.data.length === 0) {
                 showEmptyChartState(canvas);
                 return;
@@ -175,7 +177,7 @@ function pieChart(year = "") {
                 expensesPieChart.destroy();
             }
 
-            expensesPieChart = new Chart(canvas, {
+            expensesPieChart = new Chart(ctx, {
                 type: "doughnut",
                 data: {
                     labels: labels,

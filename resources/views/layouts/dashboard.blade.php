@@ -30,7 +30,7 @@
 
             <div class="stat-card-mini">
                 <span class="stat-label">Last Active Category</span>
-                <h2 id="last-active" style="margin-top: 10px">None</h2>
+                <h2 id="last-active">None</h2>
             </div>
         </div>
 

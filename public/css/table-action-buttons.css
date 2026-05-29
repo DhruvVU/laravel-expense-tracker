@@ -1,0 +1,72 @@
+/* Button container styling */
+.action-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 15px !important;
+    justify-content: center;
+}
+
+/* Button to delete an entry */
+.delete-btn {
+    background: linear-gradient(
+        135deg,
+        rgba(246, 59, 59, 0.1),
+        rgba(235, 37, 37, 0.1)
+    );
+    color: red;
+    border: 1px solid red;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Button to edit entry */
+.show-edit {
+    background-color: var(--button-gradient);
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.delete-btn:hover {
+    background-color: #a9160c;
+    color: white;
+}
+.show-edit:hover {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* ======================================= Responsive Design ==================================== */
+
+@media (max-width: 768px) {
+    .delete-btn {
+        background: none !important;
+        color: #d93025;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+        border: none;
+    }
+
+    .show-edit {
+        background: none;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+        border: none;
+        color: white;
+    }
+
+    .delete-btn:hover,
+    .show-edit:hover {
+        background: none;
+        text-decoration: underline;
+    }
+}

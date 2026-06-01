@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use App\Models\User;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Auth;
@@ -43,9 +44,11 @@ class AppServiceProvider extends ServiceProvider
                     $years = collect([now()->year]);
                 }
 
-                $categories = $user->categories()
-                                   ->orderBy('name', 'asc')
-                                   ->get();
+                $categories = Category::whereHas('expenses', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->orderBy('name', 'asc')
+                ->get();
 
                 $view->with([
                     'years' => $years,

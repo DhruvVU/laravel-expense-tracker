@@ -54,6 +54,7 @@ $(document).on('change', '.select-year', function() {
 $(document).on("change", ".select-month", function () {
     const month = $(".select-month").val();
     const category = $(".select-category").val() ?? "All";
+    const year = $('.select-year').val();
         
     fetchBudgetStats(category, year);
 

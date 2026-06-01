@@ -1,7 +1,10 @@
 .navbar {
     height: 60px;
-    width: 84%;
+    width: calc(100% - 250px);
+    left: 250px;
+    right: 0;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     padding: 15px;
     justify-content: space-between;

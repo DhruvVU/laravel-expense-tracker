@@ -1,5 +1,5 @@
 <x-main>
-    @section('title', 'History - Tracker.io')
+    @section('title', 'Expenses - Tracker.io')
 
     <div class="container">
 
